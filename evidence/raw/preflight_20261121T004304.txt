@@ -1,0 +1,59 @@
+=== 2026-11-20T13:43:04Z preflight ===
+--- uname -a ---
+Darwin Chirags-MacBook-Pro.local 25.5.0 Darwin Kernel Version 25.5.0: Tue Jun  9 22:18:58 PDT 2026; root:xnu-12377.121.10~1/RELEASE_ARM64_T6000 arm64
+--- macOS version ---
+ProductName:		macOS
+ProductVersion:		26.5.2
+BuildVersion:		25F84
+--- disk ---
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s3s1   460Gi    16Gi   119Gi    12%    459k  1.2G    0%   /
+--- memory ---
+hw.memsize: 17179869184
+--- tools ---
+brew: FOUND (/opt/homebrew/bin/brew)
+multipass: MISSING
+python3: FOUND (/Library/Frameworks/Python.framework/Versions/3.14/bin/python3)
+dot: MISSING
+pandoc: MISSING
+xelatex: FOUND (/Library/TeX/texbin/xelatex)
+tshark: MISSING
+git: FOUND (/usr/local/bin/git)
+--- repo tree ---
+.
+./2. Capstone Project.pdf
+./CLAUDE (3).md
+./CLAUDE_CODE_GUIDE (1).md
+./Capstone project marking Rubric.pdf
+./Makefile
+./deliverables
+./docs
+./docs/decisions.md
+./evidence
+./evidence/processed
+./evidence/raw
+./evidence/raw/preflight_20261121T004304.txt
+./evidence/screenshots
+./evidence/screenshots/original
+./experiments
+./figures
+./lab
+./lab/cloud-init
+./lab/configs
+./lab/configs/apache
+./lab/configs/fail2ban
+./lab/configs/logrotate
+./lab/configs/mariadb
+./lab/configs/nginx
+./lab/configs/sshd
+./lab/configs/systemd
+./lab/configs/ufw
+./lab/scripts
+./lab/scripts/preflight.sh
+./report
+./site
+./site/app
+./site/assets
+./site/css
+./site/js
+./slides

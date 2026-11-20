@@ -1,0 +1,27 @@
+#cloud-config
+# db VM: MariaDB, reachable only from the web VM IP (enforced by ufw in Phase 4)
+hostname: db
+manage_etc_hosts: true
+
+users:
+  - name: admin
+    gecos: Capstone Admin
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYrfGW7wg/vagJcloVzw6gQyW/MxZzWW5K5FqYSDWoi capstone-admin
+
+package_update: true
+package_upgrade: false
+
+packages:
+  - mariadb-server
+  - ufw
+  - sysstat
+  - htop
+  - curl
+  - jq
+
+runcmd:
+  - [bash, -c, "echo 'db VM base provisioning complete' > /var/log/capstone_provision.log"]

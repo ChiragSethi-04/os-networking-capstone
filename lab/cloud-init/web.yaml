@@ -1,0 +1,40 @@
+#cloud-config
+# web VM: Nginx (TLS, reverse proxy, rate limit) + Apache (benchmark baseline) + Flask app
+hostname: web
+manage_etc_hosts: true
+
+users:
+  - name: admin
+    gecos: Capstone Admin
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYrfGW7wg/vagJcloVzw6gQyW/MxZzWW5K5FqYSDWoi capstone-admin
+
+package_update: true
+package_upgrade: false
+
+packages:
+  - nginx
+  - apache2
+  - apache2-utils
+  - ufw
+  - fail2ban
+  - logrotate
+  - sysstat
+  - htop
+  - tcpdump
+  - curl
+  - openssl
+  - python3-venv
+  - python3-pip
+  - build-essential
+  - libssl-dev
+  - git
+  - jq
+
+runcmd:
+  - [bash, -c, "systemctl stop apache2 || true"]
+  - [bash, -c, "systemctl disable apache2 || true"]
+  - [bash, -c, "echo 'web VM base provisioning complete' > /var/log/capstone_provision.log"]

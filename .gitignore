@@ -1,0 +1,9 @@
+lab/.secrets
+lab/.env
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+evidence/raw/*.pcap
+*.key
+*.pem
