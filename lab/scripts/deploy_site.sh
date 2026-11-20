@@ -113,10 +113,20 @@ echo "web VM: Nginx deployed, admin basic auth set."
 
 echo "=== web VM: Apache baseline on 8080 (installed, kept stopped) ==="
 multipass transfer lab/configs/apache/meridian-8080.conf web:/tmp/meridian-8080.conf
+multipass transfer lab/configs/apache/security-capstone.conf web:/tmp/security-capstone.conf
 multipass exec web -- sudo bash -c '
   set -e
   mv /tmp/meridian-8080.conf /etc/apache2/sites-available/meridian-8080.conf
+  mv /tmp/security-capstone.conf /etc/apache2/conf-available/security-capstone.conf
+  # The default site listens on port 80 via ports.confs own "Listen 80",
+  # which Apache tries to bind regardless of which sites are enabled and
+  # collides with Nginx already owning 80; disable both the default site
+  # and the global Listen 80 so only our own "Listen 8080" (in
+  # meridian-8080.conf) applies.
+  a2dissite 000-default.conf || true
+  sed -i "/^Listen 80$/d" /etc/apache2/ports.conf
   a2ensite meridian-8080.conf
+  a2enconf security-capstone
   apache2ctl configtest
   systemctl stop apache2
   systemctl disable apache2

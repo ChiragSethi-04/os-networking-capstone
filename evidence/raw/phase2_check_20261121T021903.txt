@@ -1,0 +1,43 @@
+--- curl http://web/ ---
+HTTP 200
+<title>Meridian Logistics</title>
+--- /api/health ---
+{"db_reachable":true,"status":"ok","uptime_seconds":75.0}
+
+--- POST /api/contact ---
+{"status":"received"}
+
+--- row visible from db ---
+2
+--- systemctl status (web) ---
+active
+active
+inactive
+active
+--- enable Apache baseline and check 8080 ---
+HTTP 200
+Apache 8080 serves identical page
+--- ss -tulpn (web, db) ---
+Netid State  Recv-Q Send-Q      Local Address:Port Peer Address:PortProcess                                                                                  
+udp   UNCONN 0      0               127.0.0.1:323       0.0.0.0:*    users:(("chronyd",pid=1106,fd=4))                                                       
+udp   UNCONN 0      0              127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=636,fd=18))                                               
+udp   UNCONN 0      0           127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=636,fd=16))                                               
+udp   UNCONN 0      0      192.168.252.9%eth0:68        0.0.0.0:*    users:(("systemd-network",pid=888,fd=33))                                               
+udp   UNCONN 0      0                   [::1]:323          [::]:*    users:(("chronyd",pid=1106,fd=5))                                                       
+tcp   LISTEN 0      4096        127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=636,fd=17))                                               
+tcp   LISTEN 0      511               0.0.0.0:80        0.0.0.0:*    users:(("nginx",pid=4284,fd=5),("nginx",pid=4283,fd=5),("nginx",pid=4282,fd=5))         
+tcp   LISTEN 0      2048            127.0.0.1:8000      0.0.0.0:*    users:(("gunicorn",pid=4171,fd=5),("gunicorn",pid=4168,fd=5),("gunicorn",pid=4163,fd=5))
+tcp   LISTEN 0      4096              0.0.0.0:22        0.0.0.0:*    users:(("sshd",pid=1072,fd=3),("systemd",pid=1,fd=235))                                 
+tcp   LISTEN 0      4096           127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=636,fd=19))                                               
+tcp   LISTEN 0      4096                 [::]:22           [::]:*    users:(("sshd",pid=1072,fd=4),("systemd",pid=1,fd=236))                                 
+Netid State  Recv-Q Send-Q       Local Address:Port Peer Address:PortProcess                                                 
+udp   UNCONN 0      0               127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=613,fd=18))              
+udp   UNCONN 0      0            127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=613,fd=16))              
+udp   UNCONN 0      0      192.168.252.10%eth0:68        0.0.0.0:*    users:(("systemd-network",pid=825,fd=33))              
+udp   UNCONN 0      0                127.0.0.1:323       0.0.0.0:*    users:(("chronyd",pid=1062,fd=4))                      
+udp   UNCONN 0      0                    [::1]:323          [::]:*    users:(("chronyd",pid=1062,fd=5))                      
+tcp   LISTEN 0      4096            127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=613,fd=19))              
+tcp   LISTEN 0      4096               0.0.0.0:22        0.0.0.0:*    users:(("sshd",pid=1053,fd=3),("systemd",pid=1,fd=251))
+tcp   LISTEN 0      4096         127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=613,fd=17))              
+tcp   LISTEN 0      80          192.168.252.10:3306      0.0.0.0:*    users:(("mariadbd",pid=2311,fd=29))                    
+tcp   LISTEN 0      4096                  [::]:22           [::]:*    users:(("sshd",pid=1053,fd=4),("systemd",pid=1,fd=252))

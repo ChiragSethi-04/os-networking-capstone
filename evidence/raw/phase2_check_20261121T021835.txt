@@ -1,0 +1,17 @@
+--- curl http://web/ ---
+HTTP 200
+<title>Meridian Logistics</title>
+--- /api/health ---
+{"db_reachable":true,"status":"ok","uptime_seconds":44.6}
+
+--- POST /api/contact ---
+{"status":"received"}
+
+--- row visible from db ---
+1
+--- systemctl status (web) ---
+active
+active
+inactive
+active
+--- enable Apache baseline and check 8080 ---
