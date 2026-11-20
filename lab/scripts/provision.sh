@@ -135,6 +135,12 @@ for name in web db attacker; do
     || echo "[$name] WARNING: ubuntu authorized_keys missing expected key"
 done
 
+echo "Disabling unattended-upgrades (it rebooted the web VM mid-Phase-4 once without warning; see docs/decisions.md)..."
+for name in web db attacker; do
+  multipass transfer lab/configs/systemd/disable-auto-updates.sh "$name:/tmp/disable-auto-updates.sh"
+  multipass exec "$name" -- sudo bash /tmp/disable-auto-updates.sh
+done
+
 echo "Installing wrk on web and attacker (not always in Ubuntu apt, build from source if missing)..."
 for name in web attacker; do
   multipass exec "$name" -- bash -c '

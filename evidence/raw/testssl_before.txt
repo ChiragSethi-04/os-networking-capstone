@@ -1,0 +1,60 @@
+date_utc=2026-11-20T15:36:09Z
+curl -sk https://192.168.252.9/ (expect: connection refused, port 443 not listening):
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridian Logistics</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="brand">Meridian Logistics</div>
+    <nav>
+      <ul>
+        <li><a href="/" class="active">Home</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/services.html">Services</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Freight and warehousing, run on schedule</h1>
+    <p>Meridian Logistics moves and stores goods for small and mid-size manufacturers
+      across the region, with real-time shipment tracking and dedicated account support.</p>
+    <a class="btn" href="/contact.html">Request a quote</a>
+  </div>
+
+  <main>
+    <section>
+      <h2>Why Meridian</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>On-time delivery</h3>
+          <p>Route planning and a regional warehouse network keep lead times short
+            and predictable.</p>
+        </div>
+        <div class="card">
+          <h3>Shipment visibility</h3>
+          <p>Every order is tracked from pickup to delivery, with status updates
+            available to your account team.</p>
+        </div>
+        <div class="card">
+          <h3>Flexible storage</h3>
+          <p>Short and long-term warehousing, scaled to seasonal demand without
+            long-term contracts.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2026 Meridian Logistics. This is a fictional company created for an academic
+    capstone project (OS &amp; Networking, Group 6).
+  </footer>
+  <script src="/js/script.js"></script>
+</body>
+</html>

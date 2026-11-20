@@ -163,3 +163,71 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   stdout/stderr straight to `/dev/null`, directly or by inheriting an
   ancestor's redirection; a real file or a `| cat >/dev/null` pipe is used
   instead whenever output needs discarding.
+
+## Phase 3/4 (testssl.sh against a non-TLS port hangs; sshd restart once left the web VM unreachable)
+
+- `harden.sh`'s original "before hardening" TLS grade ran `testssl.sh`
+  against the web VM's plain HTTP port (443 did not exist yet at that
+  point in the script). Observed result: it hangs indefinitely rather than
+  failing - a TLS tool retrying a handshake against a port that will never
+  speak TLS has no natural exit. Replaced with a simple proof that no TLS
+  endpoint exists yet (`curl -sk https://<ip>/` times out/refuses); the
+  real grade is only ever an "after" grade, and the report explains why
+  there is no "before" grade to compare it to, rather than inventing one.
+- Separately, an indirect-variable bug (`${name^^}_IP` / `${!ip_var}`)
+  tried to read `$ATTACKER_IP` for the `attacker` VM, which does not
+  exist - the real variable is `ATT_IP`. Fixed with an explicit `case`
+  statement instead of relying on the hostname matching the env var name.
+- Most seriously: after `systemctl restart ssh` on the web VM, sshd
+  stopped accepting connections entirely (`nc -z <ip> 22` got an immediate
+  refusal, confirmed with `ping` and `nc` to ports 80/443 still working
+  fine from the Mac - only port 22 was affected). This also broke
+  Multipass's own control channel (`multipass info web`, `multipass exec
+  web`, even `multipass restart web`, all failed with "ssh connection
+  failed: Connection refused"), which means `multipass exec` is NOT
+  independent of the guest's own sshd on this setup, contradicting
+  `CLAUDE_CODE_GUIDE.md`'s Part E troubleshooting table ("multipass exec
+  ... always works, even with SSH disabled"). `db` and `attacker` got the
+  identical hardening in the same run and were unaffected, so this reads
+  as a one-off failure of that specific `systemctl restart ssh` rather
+  than a config error repeated on every VM.
+- Recovery that worked, in order tried: `multipass restart web` (also
+  fails, since it too depends on the SSH channel) did not help;
+  `multipass stop web` followed by `multipass start web` did - this uses
+  the hypervisor-level control path (visible in the running `qemu-system-
+  aarch64` process), not a guest SSH session, so it works even when sshd
+  itself is wedged. `harden.sh`'s SSH-hardening step now checks
+  `systemctl is-active ssh` after each restart, retries the restart a
+  couple of times, and falls back to a `multipass stop && start` cycle
+  automatically if sshd still is not answering, instead of silently
+  leaving a VM unreachable for the rest of the pipeline.
+- Root cause found after it recurred a second time (during the Fail2Ban
+  step, unrelated to sshd at all): `journalctl -b -1` on the web VM showed
+  a completely orderly `systemd` shutdown sequence ending in
+  `unattended-upgrades.service: ... Stopped unattended-upgrades.service -
+  Unattended Upgrades Shutdown` and `Reached target poweroff.target`. This
+  was never a crash, hang, or misconfiguration of anything we deployed -
+  Ubuntu's `unattended-upgrades` package rebooted the VM on its own
+  schedule, mid-provisioning, with no warning. This can happen to any of
+  the three VMs at any time, including during a benchmark run or the live
+  demo, which would be far worse than during Phase 4.
+- Fixed in two places: applied live to all three already-running VMs
+  (`systemctl disable unattended-upgrades.service apt-daily-upgrade.timer
+  apt-daily.timer`, plus `APT::Periodic::Enable "0"` and
+  `Unattended-Upgrade::Automatic-Reboot "false"` in
+  `/etc/apt/apt.conf.d/52-capstone-no-auto-updates`), and added to every
+  `lab/cloud-init/*.yaml`'s `runcmd` and to `lab/scripts/provision.sh`
+  (new script: `lab/configs/systemd/disable-auto-updates.sh`), so a fresh
+  launch or a re-run against existing VMs both get it, not just the VMs
+  that happened to be running when this was found. Disabling background
+  auto-updates entirely is deliberate and reasonable for a disposable lab
+  whose package set we fully control and script ourselves; the trade-off
+  (no automatic security patches) is a non-issue for a short-lived
+  teaching environment with no real external exposure.
+- The `clean-baseline` snapshots taken at the end of Phase 1 predate this
+  fix, so `lab/scripts/demo_reset.sh` (which restores those snapshots)
+  will re-apply Phases 2-5 on top of a restored snapshot that still has
+  unattended-upgrades enabled; a fresh `clean-baseline` snapshot should be
+  retaken once Phase 4 is finalised so the demo-reset path also starts
+  from the patched state, and this is tracked as a to-do rather than
+  silently assumed.

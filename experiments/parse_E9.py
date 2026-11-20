@@ -10,7 +10,7 @@ from parse_common import RAW_DIR, PROCESSED_DIR, append_note  # noqa: E402
 
 def grade(text):
     m = re.search(r"Overall Grade\s+(\S+)", text)
-    return m.group(1) if m else "not reported"
+    return m.group(1) if m else "N/A_no_TLS_listener"
 
 
 def protocols(text):

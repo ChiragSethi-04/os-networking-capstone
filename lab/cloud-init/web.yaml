@@ -39,4 +39,11 @@ packages:
 runcmd:
   - [bash, -c, "systemctl stop apache2 || true"]
   - [bash, -c, "systemctl disable apache2 || true"]
+  # Unattended-upgrades rebooted this VM mid-Phase-4 without warning once
+  # (see docs/decisions.md); disabled here too so a fresh launch never hits
+  # the same surprise, not just the already-running VMs patched live.
+  - [bash, -c, "systemctl stop unattended-upgrades.service apt-daily-upgrade.timer apt-daily.timer 2>/dev/null || true"]
+  - [bash, -c, "systemctl disable unattended-upgrades.service apt-daily-upgrade.timer apt-daily.timer 2>/dev/null || true"]
+  - [bash, -c, "echo 'APT::Periodic::Enable \"0\";' > /etc/apt/apt.conf.d/52-capstone-no-auto-updates"]
+  - [bash, -c, "echo 'Unattended-Upgrade::Automatic-Reboot \"false\";' >> /etc/apt/apt.conf.d/52-capstone-no-auto-updates"]
   - [bash, -c, "echo 'web VM base provisioning complete' > /var/log/capstone_provision.log"]

@@ -238,8 +238,11 @@ Appendix A, full raw logs in Appendix B).
    Nginx and Apache installed; MariaDB schema and a least-privilege
    application user created on `db`.
 3. **TLS**: local CA and server certificate generated and installed;
-   Nginx TLS 1.2/1.3 configuration with HSTS and HTTP/2; `testssl.sh`
-   run before and after.
+   Nginx TLS 1.2/1.3 configuration with HSTS and HTTP/2; `testssl.sh` run
+   once the TLS listener exists (there is no earlier "before" grade to
+   compare against, since port 443 is not listening at all until this
+   step: the honest before-state evidence is simply a refused HTTPS
+   connection, not a scan).
 4. **Hardening**: `ufw` rules on both VMs; directory listing disabled;
    security headers; SSH key-only login; Fail2Ban; Nginx rate limiting;
    MariaDB anonymous-user/test-database removal.

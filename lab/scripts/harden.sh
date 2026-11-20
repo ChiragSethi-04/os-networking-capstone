@@ -59,9 +59,20 @@ multipass exec web -- sudo bash -c '
 '
 echo "Server certificate installed on web VM."
 
-echo "--- testssl.sh BEFORE hardening (port 443 not yet enabled) ---"
-multipass exec attacker -- bash -c "/opt/testssl.sh/testssl.sh --quiet ${WEB_IP}:80 2>&1 || true" \
-  > evidence/raw/testssl_before.txt || true
+# "Before" state: port 443 is not listening at all yet (TLS is enabled a
+# few lines below), so there is no TLS endpoint for testssl.sh to grade -
+# pointing it at the plain HTTP port is not just unhelpful but genuinely
+# hangs (observed: testssl.sh spins indefinitely retrying a TLS ClientHello
+# against a port that will never answer one). The honest "before" proof is
+# simply that no TLS connection can be made at all; testssl_after.txt is
+# the only real grade, and the report's Discussion explains why there is
+# no "before" grade to compare it to.
+echo "--- proving no TLS endpoint exists yet (before hardening) ---"
+{
+  echo "date_utc=$(date -u +%FT%TZ)"
+  echo "curl -sk https://${WEB_IP}/ (expect: connection refused, port 443 not listening):"
+  multipass exec attacker -- bash -c "curl -sk --max-time 5 https://${WEB_IP}/ 2>&1" || true
+} > evidence/raw/testssl_before.txt
 
 echo "--- enabling TLS on Nginx ---"
 multipass transfer lab/configs/nginx/meridian-full.conf.template web:/tmp/meridian-full.conf
@@ -122,12 +133,44 @@ for name in web db attacker; do
     sshd -t
     systemctl restart ssh
   '
+
+  # `systemctl restart ssh` was observed, once, to leave sshd not actually
+  # accepting connections afterward (port 22 refused outright, breaking
+  # both our own key login AND Multipass's own control channel, which also
+  # goes over SSH on this setup despite the guide's troubleshooting table
+  # claiming `multipass exec` is independent of the guest's sshd - see
+  # docs/decisions.md). A `multipass stop && multipass start` resolved it
+  # without data loss. Retry the exec-based restart a few times first
+  # (cheap, usually enough); fall back to a VM restart only if needed.
+  recovered=0
+  for attempt in 1 2 3; do
+    if multipass exec "$name" -- bash -c 'systemctl is-active ssh' 2>&1 | grep -q '^active$'; then
+      recovered=1
+      break
+    fi
+    echo "[$name] sshd not active after restart (attempt $attempt/3), retrying..."
+    multipass exec "$name" -- sudo systemctl restart ssh 2>&1 | cat >/dev/null || true
+    sleep 3
+  done
+  if [[ "$recovered" -ne 1 ]]; then
+    echo "[$name] sshd still not responding after retries; stopping and starting the VM to recover..."
+    multipass stop "$name"
+    multipass start "$name"
+    multipass exec "$name" -- bash -c 'systemctl is-active ssh' 2>&1 | cat >/dev/null
+  fi
 done
 
 echo "--- verifying key login still works after sshd hardening ---"
+# Not `${name^^}_IP` + `${!ip_var}`: "attacker" maps to ATT_IP, not
+# ATTACKER_IP, so that indirect-expansion trick picks the wrong (unset)
+# variable name for exactly one of the three VMs. An explicit case
+# statement does not depend on the env var names matching the hostnames.
 for name in web db attacker; do
-  ip_var="${name^^}_IP"
-  ip="${!ip_var}"
+  case "$name" in
+    web) ip="$WEB_IP" ;;
+    db) ip="$DB_IP" ;;
+    attacker) ip="$ATT_IP" ;;
+  esac
   ssh -i lab/.secrets/capstone_id_ed25519 -o StrictHostKeyChecking=accept-new \
     -o ConnectTimeout=5 "ubuntu@${ip}" "echo key login ok on $name"
 done

@@ -418,8 +418,10 @@ def f14_e9():
     text = summary_path.read_text()
     before = re.search(r"## Before hardening\nGrade: (\S+)", text)
     after = re.search(r"## After hardening\nGrade: (\S+)", text)
-    rows = [("Before Phase 3 hardening", before.group(1) if before else "n/a"),
-            ("After Phase 3 hardening", after.group(1) if after else "n/a")]
+    before_label = (before.group(1) if before else "n/a").replace("_", " ")
+    after_label = (after.group(1) if after else "n/a").replace("_", " ")
+    rows = [("Before Phase 3 hardening", before_label),
+            ("After Phase 3 hardening", after_label)]
 
     fig, ax = plt.subplots(figsize=(6, 2))
     ax.axis("off")

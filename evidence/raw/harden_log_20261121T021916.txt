@@ -1,0 +1,6 @@
+=== Phase 3: building local CA and server certificate ===
+Generated local root CA at lab/.secrets/ca/ca.crt
+Certificate request self-signature ok
+subject=C=IN, O=Meridian Logistics, CN=web
+Server certificate installed on web VM.
+--- testssl.sh BEFORE hardening (port 443 not yet enabled) ---

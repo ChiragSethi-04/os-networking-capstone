@@ -1,0 +1,7 @@
+=== Phase 3: building local CA and server certificate ===
+Certificate request self-signature ok
+subject=C=IN, O=Meridian Logistics, CN=web
+Server certificate installed on web VM.
+--- proving no TLS endpoint exists yet (before hardening) ---
+--- enabling TLS on Nginx ---
+ssh connection failed: 'Connection refused'

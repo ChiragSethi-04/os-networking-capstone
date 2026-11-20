@@ -22,4 +22,12 @@ packages:
   - jq
 
 runcmd:
+  # Unattended-upgrades rebooted the web VM mid-Phase-4 without warning
+  # once (see docs/decisions.md); disabled here too, pre-emptively.
+  - [bash, -c, "systemctl stop unattended-upgrades.service apt-daily-upgrade.timer apt-daily.timer 2>/dev/null || true"]
+  - [bash, -c, "systemctl disable unattended-upgrades.service apt-daily-upgrade.timer apt-daily.timer 2>/dev/null || true"]
+  - [bash, -c, "echo 'APT::Periodic::Enable \"0\";' > /etc/apt/apt.conf.d/52-capstone-no-auto-updates"]
+  - [bash, -c, "echo 'Unattended-Upgrade::Automatic-Reboot \"false\";' >> /etc/apt/apt.conf.d/52-capstone-no-auto-updates"]
+
+runcmd:
   - [bash, -c, "echo 'db VM base provisioning complete' > /var/log/capstone_provision.log"]
