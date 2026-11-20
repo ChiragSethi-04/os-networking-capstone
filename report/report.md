@@ -264,8 +264,8 @@ guess. A throwaway SSH user and a throwaway Nginx basic-auth path, both
 using one deliberately weak password that also appears in
 `lab/wordlist.txt`, are created immediately before E5 and removed
 immediately after (`lab/scripts/setup_e5_demo_accounts.sh` /
-`teardown_e5_demo_accounts.sh`); the real `admin` account and the real
-`/admin/` path are untouched throughout. This is recorded in
+`teardown_e5_demo_accounts.sh`); the real `ubuntu` SSH account and the real
+`/admin/` HTTP basic-auth path are untouched throughout. This is recorded in
 `docs/decisions.md` and repeated here because it is a methodological
 choice a marker would reasonably ask about in the viva (Section 3c of the
 rubric).

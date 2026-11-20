@@ -238,10 +238,13 @@ benchmark chart out loud.
     user should be able to write to site content, following the project
     brief's own Task 2.2 template.
 
-39. **Why `AllowUsers admin` and `PermitRootLogin no` together?**
+39. **Why `AllowUsers ubuntu` and `PermitRootLogin no` together?**
     Defence in depth again: even if root's password were somehow known,
     direct root login over SSH is refused outright, and only the named
-    `admin` account (key-only) is permitted to authenticate at all.
+    `ubuntu` account (key-only) is permitted to authenticate at all. This
+    is Multipass's own default account rather than a custom one we
+    created, because adding a custom user via cloud-init's `users:`
+    module hung every VM on this setup (see `docs/decisions.md`).
 
 40. **What would you change first if this had to serve real production
     traffic at scale?**

@@ -23,8 +23,8 @@ after `make demo-reset`.
 - [ ] `multipass exec web -- tail -n 5 /var/log/web_status.log` shows
       recent timestamped lines (the monitor timer is running).
 - [ ] SSH key login works: `ssh -i lab/.secrets/capstone_id_ed25519
-      admin@<WEB_IP> echo ok` prints `ok`.
-- [ ] SSH password login is refused for the `admin` account.
+      ubuntu@<WEB_IP> echo ok` prints `ok`.
+- [ ] SSH password login is refused for the `ubuntu` account.
 - [ ] `report/Capstone_Report.pdf` opens, has a table of contents, and the
       Executive Summary reads correctly.
 - [ ] `slides/deck.pptx` (or `deck.pdf`) opens and every content slide has

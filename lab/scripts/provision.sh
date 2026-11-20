@@ -58,10 +58,10 @@ done
 
 PUBKEY_CONTENT=$(cat "${SSH_KEY}.pub")
 for name in web db attacker; do
-  echo "[$name] verifying SSH key login as admin"
-  multipass exec "$name" -- bash -c "grep -qxF '$PUBKEY_CONTENT' /home/admin/.ssh/authorized_keys" \
-    && echo "[$name] admin authorized_keys OK" \
-    || echo "[$name] WARNING: admin authorized_keys missing expected key"
+  echo "[$name] verifying SSH key login as ubuntu"
+  multipass exec "$name" -- bash -c "grep -qxF '$PUBKEY_CONTENT' /home/ubuntu/.ssh/authorized_keys" \
+    && echo "[$name] ubuntu authorized_keys OK" \
+    || echo "[$name] WARNING: ubuntu authorized_keys missing expected key"
 done
 
 echo "Installing wrk on web and attacker (not always in Ubuntu apt, build from source if missing)..."

@@ -41,3 +41,35 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
 - This whole arrangement, and why it does not weaken the project's actual
   security posture, is written up honestly in the report's Methodology and
   Discussion sections rather than hidden.
+
+## Phase 1 (VM provisioning bug)
+
+- The first two provisioning attempts both failed: `multipass launch`
+  reported "timed out waiting for response" and the VM was left in state
+  `Unknown` (unreachable even via `multipass exec`), despite a longer
+  `--timeout 900`. Isolated the cause by testing progressively: a plain
+  `multipass launch` with no cloud-init at all succeeded in ~150s; an
+  otherwise-empty `#cloud-config` file also succeeded; but any cloud-init
+  file containing a `users:` block (even a minimal one, with or without
+  `- default` as the first list entry) hung the VM in `Unknown` state
+  every time. A top-level `ssh_authorized_keys:` module (which adds a key
+  to Multipass's own pre-existing default user instead of defining a new
+  user) worked immediately.
+- Conclusion: on this Multipass version (1.17.2, QEMU driver,
+  Apple Silicon) and this Ubuntu 26.04 LTS image, the cloud-init `users:`
+  module appears to interfere with Multipass's own guest-agent
+  provisioning, which depends on its default account.
+- Fix: `lab/cloud-init/{web,db,attacker}.yaml` no longer create a separate
+  `admin` user. They add the project's SSH key to Multipass's own default
+  `ubuntu` account (already a passwordless sudoer) via top-level
+  `ssh_authorized_keys` instead. Every script, config, and doc that
+  referred to `admin@<ip>`, `/home/admin`, or `AllowUsers admin` was
+  updated to `ubuntu` to match (`lab/scripts/*.sh`,
+  `lab/configs/sshd/99-capstone-hardening.conf`, `docs/viva_qa.md`,
+  `docs/verification_checklist.md`, `report/report.md`).
+- This is a deviation from `CLAUDE_CODE_GUIDE.md`'s literal instruction to
+  "create a sudo user `admin`"; functionally equivalent (a key-only,
+  passwordless-sudo account used for all administration), just under a
+  different, pre-existing username. Noted here per CLAUDE.md section 9
+  rather than asked about, since it is a mechanical substitution with no
+  security or grading impact.

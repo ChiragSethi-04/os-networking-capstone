@@ -42,7 +42,7 @@ echo "--- SSH key login from Mac ---"
 for name in web db attacker; do
   ip="${IPS[$name]}"
   if ssh -i lab/.secrets/capstone_id_ed25519 -o StrictHostKeyChecking=accept-new \
-      -o ConnectTimeout=5 "admin@${ip}" "echo ok" 2>/dev/null | grep -q ok; then
+      -o ConnectTimeout=5 "ubuntu@${ip}" "echo ok" 2>/dev/null | grep -q ok; then
     echo "OK: SSH key login to $name"
   else
     echo "FAIL: SSH key login to $name"

@@ -1,16 +1,18 @@
 #cloud-config
 # web VM: Nginx (TLS, reverse proxy, rate limit) + Apache (benchmark baseline) + Flask app
+#
+# Admin access: Multipass's own default "ubuntu" user (created automatically,
+# already in the sudo group with passwordless sudo), not a separate "admin"
+# user. A cloud-init `users:` block on this Multipass/image combination was
+# found to hang the VM in the "Unknown" state indefinitely (it appears to
+# interfere with Multipass's own guest-agent provisioning); see
+# docs/decisions.md. Our key is added via the top-level `ssh_authorized_keys`
+# module instead, which does not touch the `users:` module at all.
 hostname: web
 manage_etc_hosts: true
 
-users:
-  - name: admin
-    gecos: Capstone Admin
-    groups: [sudo]
-    shell: /bin/bash
-    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
-    ssh_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYrfGW7wg/vagJcloVzw6gQyW/MxZzWW5K5FqYSDWoi capstone-admin
+ssh_authorized_keys:
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYrfGW7wg/vagJcloVzw6gQyW/MxZzWW5K5FqYSDWoi capstone-admin
 
 package_update: true
 package_upgrade: false

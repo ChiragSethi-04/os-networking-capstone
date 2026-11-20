@@ -24,7 +24,7 @@ multipass exec web -- sudo bash -c "
   echo 'bftest:${DEMO_WEAK_PASSWORD}' | chpasswd
 "
 multipass exec web -- sudo bash -c '
-  sed -i "s/^AllowUsers admin$/AllowUsers admin bftest/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
+  sed -i "s/^AllowUsers ubuntu$/AllowUsers ubuntu bftest/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
   sed -i "s/^PasswordAuthentication no$/PasswordAuthentication yes/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
   sshd -t
   systemctl restart ssh
@@ -38,20 +38,26 @@ multipass exec web -- sudo bash -c '
   htpasswd -b -c /etc/nginx/.htpasswd-demo admin "$(cat /tmp/demopw)"
   rm -f /tmp/demopw
 '
-multipass exec web -- sudo bash -c "cat >> /etc/nginx/sites-available/meridian.conf <<'EOF'
-# --- E5 demo path, added by setup_e5_demo_accounts.sh, removed by teardown ---
-server {
-    listen 443 ssl;
-    server_name web;
-    ssl_certificate     /etc/ssl/certs/web.crt;
-    ssl_certificate_key /etc/ssl/private/web.key;
-    location = /admin-demo/ {
-        auth_basic \"Demo\";
+# Inserted as a `location` block inside the EXISTING 443 server block
+# (not a second server block on the same listen/server_name - nginx would
+# only ever route requests to the first-defined block in that case, so a
+# second block's location would silently never be reached).
+multipass exec web -- sudo python3 - <<'PYEOF'
+path = "/etc/nginx/sites-available/meridian.conf"
+marker = "# --- E5 demo path, added by setup_e5_demo_accounts.sh, removed by teardown ---"
+block = f"""
+    {marker}
+    location = /admin-demo/ {{
+        auth_basic "Demo";
         auth_basic_user_file /etc/nginx/.htpasswd-demo;
         root /var/www/html;
-    }
-}
-EOF"
+    }}
+"""
+text = open(path).read()
+idx = text.rstrip().rfind("}")
+text = text[:idx] + block + text[idx:]
+open(path, "w").write(text)
+PYEOF
 multipass exec web -- sudo bash -c 'nginx -t && systemctl reload nginx'
 
 echo "E5 demo accounts ready. Run experiments/run_E5.sh next, then teardown_e5_demo_accounts.sh."

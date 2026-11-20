@@ -129,7 +129,7 @@ for name in web db attacker; do
   ip_var="${name^^}_IP"
   ip="${!ip_var}"
   ssh -i lab/.secrets/capstone_id_ed25519 -o StrictHostKeyChecking=accept-new \
-    -o ConnectTimeout=5 "admin@${ip}" "echo key login ok on $name"
+    -o ConnectTimeout=5 "ubuntu@${ip}" "echo key login ok on $name"
 done
 
 echo "--- Fail2Ban on web ---"

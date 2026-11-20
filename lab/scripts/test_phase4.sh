@@ -29,10 +29,10 @@ echo "code=$code"
 
 echo "--- SSH key login works, password login refused ---"
 ssh -i lab/.secrets/capstone_id_ed25519 -o StrictHostKeyChecking=accept-new \
-  -o ConnectTimeout=5 "admin@${WEB_IP}" "echo key login ok" || { echo "FAIL: key login broken"; fail=1; }
+  -o ConnectTimeout=5 "ubuntu@${WEB_IP}" "echo key login ok" || { echo "FAIL: key login broken"; fail=1; }
 
 if ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no \
-    -o ConnectTimeout=5 -o BatchMode=yes "admin@${WEB_IP}" "echo should not happen" 2>&1 | grep -qi "Permission denied\|denied (publickey"; then
+    -o ConnectTimeout=5 -o BatchMode=yes "ubuntu@${WEB_IP}" "echo should not happen" 2>&1 | grep -qi "Permission denied\|denied (publickey"; then
   echo "OK: password auth refused"
 else
   echo "FAIL: password auth was not clearly refused"
