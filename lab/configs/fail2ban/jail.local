@@ -1,0 +1,28 @@
+; Dropped into /etc/fail2ban/jail.local on the web VM.
+; maxretry 3, findtime 10m, bantime 10m: chosen to ban an attacker within a
+; small number of guesses while tolerating a legitimate user mistyping a
+; password twice (E5 measures actual attempts-before-ban and time-to-ban).
+
+[DEFAULT]
+bantime = 10m
+findtime = 10m
+maxretry = 3
+backend = systemd
+
+[sshd]
+enabled = true
+port = ssh
+logpath = %(sshd_log)s
+
+[nginx-http-auth]
+enabled = true
+port = http,https
+logpath = /var/log/nginx/error.log
+
+[nginx-limit-req]
+enabled = true
+port = http,https
+logpath = /var/log/nginx/error.log
+maxretry = 10
+findtime = 2m
+bantime = 5m

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Purpose: ufw rules for the db VM. Default deny incoming, 3306 only from the
+# web VM's IP, SSH only from the web VM and the Mac's public IP on the
+# Multipass bridge. WEB_IP and MAC_IP are substituted from lab/.env by
+# lab/scripts/harden.sh.
+set -euo pipefail
+
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw logging on
+
+sudo ufw allow from WEB_IP to any port 3306 proto tcp comment 'MariaDB, web VM only'
+sudo ufw allow from WEB_IP to any port 22 proto tcp comment 'SSH from web VM'
+sudo ufw allow from MAC_IP to any port 22 proto tcp comment 'SSH from Mac admin workstation'
+
+sudo ufw --force enable
+sudo ufw status verbose

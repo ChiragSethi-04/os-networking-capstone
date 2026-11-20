@@ -21,6 +21,7 @@ lab:
 	bash lab/scripts/provision.sh
 	bash lab/scripts/deploy_site.sh
 	bash lab/scripts/harden.sh
+	bash lab/scripts/setup_monitoring.sh
 
 test: test-phase1 test-phase2 test-phase3 test-phase4 test-phase5
 
@@ -56,6 +57,11 @@ report-check:
 
 slides: venv
 	$(PY) slides/build_deck.py
+	@if command -v soffice >/dev/null 2>&1; then \
+		soffice --headless --convert-to pdf --outdir slides slides/deck.pptx; \
+	else \
+		echo "soffice (LibreOffice) not found; deck.pdf not generated. Install with: brew install --cask libreoffice"; \
+	fi
 
 demo:
 	bash lab/scripts/demo.sh

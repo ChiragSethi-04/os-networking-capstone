@@ -1,0 +1,6 @@
+[Unit]
+Description=Capstone web/app/TLS status monitor (one-shot run)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/web_status_monitor.sh

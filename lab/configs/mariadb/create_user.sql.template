@@ -1,0 +1,13 @@
+-- Least-privilege application user, restricted to the web VM's IP.
+-- WEB_IP and APP_DB_PASSWORD are substituted by lab/scripts/deploy_site.sh
+-- from lab/.env and lab/.secrets (never committed, never printed to the report).
+
+CREATE USER IF NOT EXISTS 'meridian_app'@'WEB_IP' IDENTIFIED BY 'APP_DB_PASSWORD';
+GRANT SELECT, INSERT ON meridian.contact_messages TO 'meridian_app'@'WEB_IP';
+
+-- Hardening (Phase 4): remove anonymous users and the remote-root account,
+-- drop the test database, matching `mysql_secure_installation`.
+DELETE FROM mysql.user WHERE User='';
+DROP DATABASE IF EXISTS test;
+DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+FLUSH PRIVILEGES;

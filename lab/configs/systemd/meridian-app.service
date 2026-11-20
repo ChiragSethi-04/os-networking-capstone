@@ -1,0 +1,16 @@
+[Unit]
+Description=Meridian Logistics Flask app (gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/meridian-app
+EnvironmentFile=/etc/meridian-app.env
+ExecStart=/var/www/meridian-app/venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 app:app
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

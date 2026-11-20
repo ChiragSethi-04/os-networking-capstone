@@ -1,0 +1,6 @@
+; Dropped into /etc/mysql/mariadb.conf.d/60-capstone-bind.cnf
+; Binds MariaDB to the db VM's own IP (DB_IP), not 0.0.0.0, so the only path
+; in is through ufw's allow-from-WEB_IP rule on 3306/tcp (defence in depth:
+; even a firewall misconfiguration would not expose this on every interface).
+[mysqld]
+bind-address = DB_IP
