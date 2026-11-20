@@ -29,7 +29,7 @@ declare -A IPS=(["web"]=$WEB_IP ["db"]=$DB_IP ["attacker"]=$ATT_IP)
 for src in web db attacker; do
   for dst in web db attacker; do
     [[ "$src" == "$dst" ]] && continue
-    if multipass exec "$src" -- ping -c1 -W2 "${IPS[$dst]}" >/dev/null 2>&1; then
+    if multipass exec "$src" -- ping -c1 -W2 "${IPS[$dst]}" 2>&1 | cat >/dev/null; then
       echo "OK: $src -> $dst ping"
     else
       echo "FAIL: $src -> $dst ping"

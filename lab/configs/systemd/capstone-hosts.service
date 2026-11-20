@@ -1,0 +1,12 @@
+[Unit]
+Description=Ensure web/db/attacker /etc/hosts entries (survives cloud-init's per-boot regeneration)
+Before=network-online.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ensure_hosts.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

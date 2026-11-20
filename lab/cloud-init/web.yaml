@@ -9,7 +9,7 @@
 # docs/decisions.md. Our key is added via the top-level `ssh_authorized_keys`
 # module instead, which does not touch the `users:` module at all.
 hostname: web
-manage_etc_hosts: true
+manage_etc_hosts: false
 
 ssh_authorized_keys:
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYrfGW7wg/vagJcloVzw6gQyW/MxZzWW5K5FqYSDWoi capstone-admin

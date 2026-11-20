@@ -33,8 +33,8 @@ echo "elapsed_seconds=$((END - START))" >> "$OUT"
 echo "--- AFTER: restarting fail2ban on web (protected) ---" | tee -a "$OUT"
 multipass exec web -- sudo systemctl start fail2ban
 sleep 2
-multipass exec web -- sudo fail2ban-client set sshd unbanip --all >/dev/null 2>&1 || true
-multipass exec web -- sudo fail2ban-client set nginx-http-auth unbanip --all >/dev/null 2>&1 || true
+multipass exec web -- sudo fail2ban-client set sshd unbanip --all 2>&1 | cat >/dev/null || true
+multipass exec web -- sudo fail2ban-client set nginx-http-auth unbanip --all 2>&1 | cat >/dev/null || true
 
 echo "--- hydra vs SSH (bftest), protected: expect ban partway through ---" >> "$OUT"
 START=$(date +%s)

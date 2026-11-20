@@ -1,0 +1,30 @@
+[web] already exists, skipping launch
+[db] already exists, skipping launch
+[attacker] already exists, skipping launch
+Waiting for cloud-init to finish on all VMs...
+status: done
+status: done
+status: done
+Recorded IPs in lab/.env:
+WEB_IP=192.168.252.9
+DB_IP=192.168.252.10
+ATT_IP=192.168.252.11
+[web] deploying the hosts-entry systemd unit
+Created symlink '/etc/systemd/system/multi-user.target.wants/capstone-hosts.service' → '/etc/systemd/system/capstone-hosts.service'.
+[db] deploying the hosts-entry systemd unit
+Created symlink '/etc/systemd/system/multi-user.target.wants/capstone-hosts.service' → '/etc/systemd/system/capstone-hosts.service'.
+[attacker] deploying the hosts-entry systemd unit
+Created symlink '/etc/systemd/system/multi-user.target.wants/capstone-hosts.service' → '/etc/systemd/system/capstone-hosts.service'.
+[web] verifying SSH key login as ubuntu
+[web] ubuntu authorized_keys OK
+[db] verifying SSH key login as ubuntu
+[db] ubuntu authorized_keys OK
+[attacker] verifying SSH key login as ubuntu
+[attacker] ubuntu authorized_keys OK
+Installing wrk on web and attacker (not always in Ubuntu apt, build from source if missing)...
+wrk installed via apt
+wrk installed via apt
+Ensuring testssl.sh is present on attacker (cloud-init's runcmd clone can race the network at first boot)...
+Cloning into '/opt/testssl.sh'...
+warning: You appear to have cloned an empty repository.
+chmod: cannot access '/opt/testssl.sh/testssl.sh': No such file or directory

@@ -5,7 +5,7 @@
 # user - see the comment in lab/cloud-init/web.yaml and docs/decisions.md
 # for why (a `users:` cloud-config block hangs the VM on this setup).
 hostname: db
-manage_etc_hosts: true
+manage_etc_hosts: false
 
 ssh_authorized_keys:
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYrfGW7wg/vagJcloVzw6gQyW/MxZzWW5K5FqYSDWoi capstone-admin

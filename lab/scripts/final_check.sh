@@ -9,11 +9,18 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 fail=0
 check() {
+  # Logs to a real file, not /dev/null: a wrapped command that runs
+  # `multipass exec` inherits whatever fd this redirects to, and Multipass's
+  # client hangs/spins if its own stdout+stderr resolve straight to the
+  # /dev/null device (see docs/decisions.md) - a real file avoids that and
+  # also gives something to show on failure.
   local label="$1"; shift
-  if "$@" >/dev/null 2>&1; then
+  local log; log="$(mktemp)"
+  if "$@" >"$log" 2>&1; then
     echo "PASS: $label"
   else
-    echo "FAIL: $label"
+    echo "FAIL: $label (see $log)"
+    tail -n 20 "$log" | sed 's/^/    /'
     fail=1
   fi
 }

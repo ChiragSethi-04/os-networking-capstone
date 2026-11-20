@@ -73,3 +73,93 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   different, pre-existing username. Noted here per CLAUDE.md section 9
   rather than asked about, since it is a mechanical substitution with no
   security or grading impact.
+
+## Phase 1 (launch command hang, separate from the `users:` bug above)
+
+- Even after the `users:` fix above, `multipass launch` itself hung
+  indefinitely on the third VM. Diagnosis: all three VMs actually reached
+  `Running` with an IP, and `cloud-init status --long` on each showed
+  `status: done` / `extended_status: degraded done`, with the only
+  recorded issue being a harmless, repeating warning: `Failed to rename
+  devices: ... Error renaming mac=... from enp0s1 to eth0 [busy]`. This is
+  a cosmetic NIC-naming race on this image/network combination, not a
+  failure of anything we configured (all target packages were verified
+  present with `dpkg -l` on all three VMs despite it). `multipass launch`
+  appears to wait for a CLEAN "done" status before it will return, which
+  this setup will never produce, so the command hangs forever even though
+  the VM is already fully usable.
+- Fix: `lab/scripts/provision.sh`'s `launch_vm` now launches each VM in the
+  background and polls `multipass list` (for `Running`) and `cloud-init
+  status` (for `done` or `error`, accepting "degraded") itself, then kills
+  the still-hanging `multipass launch` process rather than waiting on it.
+  This keeps `make lab` (and `make demo-reset`, Phase 10's rebuild)
+  reliable from a cold start instead of hanging on every future relaunch.
+- One git-clone step in `attacker.yaml`'s `runcmd` (cloning `testssl.sh`)
+  did not run before the hang (cloud-init's package stage completed, but
+  this `runcmd` step either raced the network or was never reached before
+  provisioning was interrupted the first time); it was completed manually
+  and `lab/scripts/provision.sh` doesn't change there, since the original
+  cloud-init step is correct and this was a one-off side effect of the
+  earlier hang, not a repeatable bug.
+
+## Phase 1 (wrong testssl.sh repository)
+
+- `attacker.yaml`'s `runcmd` and `lab/scripts/provision.sh`'s fallback both
+  cloned `https://github.com/drwetter/testssl.sh.git`, which `git
+  clone`/`git ls-remote` silently returns as an empty repository (no
+  error, just "You appear to have cloned an empty repository"), even
+  though `curl -I` against the same URL path returns a normal 200 (it's
+  GitHub's web UI responding, not the git smart-HTTP backend). The actual
+  maintained repository is under the `testssl` organisation, not the
+  `drwetter` personal account: `https://github.com/testssl/testssl.sh.git`
+  (confirmed with `git ls-remote`, which lists real branches/HEAD for the
+  org URL and nothing for the personal-account URL). Fixed both places.
+
+## Phase 1 (bash 3.2 on macOS breaks associative arrays and `${var^^}`)
+
+- `lab/scripts/test_phase1.sh` failed with `web: unbound variable` on a
+  `declare -A IPS=(["web"]=$WEB_IP ...)` line, and separately
+  `lab/scripts/harden.sh`'s `${name^^}_IP` indirect-variable lookup would
+  have failed the same way. Root cause: macOS ships bash 3.2 as `/bin/bash`
+  (Apple stopped updating it over the GPLv3 license change), which
+  predates associative arrays and `${var^^}` case conversion entirely
+  (both are bash 4.0+ features); no newer bash was installed via Homebrew.
+  `declare -A` on bash 3.2 does not simply error out, it mis-parses the
+  subscript and throws a confusing unrelated-looking "unbound variable"
+  error under `set -u`.
+- Fixed by installing a modern bash (`brew install bash`, got 5.3.20),
+  which Homebrew places at `/opt/homebrew/bin/bash` - already first on
+  this Mac's `$PATH` ahead of `/bin/bash`, so plain `bash script.sh`
+  invocations and every script's own `#!/usr/bin/env bash` shebang now
+  resolve to the modern one without any script changes. Recorded here
+  because it is a precondition for `make lab`/`make test` working at all
+  on a machine that does not already have a non-system bash, and would be
+  worth adding to Part A of the setup guide.
+
+## Phase 1 (Multipass CLI hangs if its own output is bound straight to /dev/null)
+
+- `lab/scripts/test_phase1.sh`'s mutual-ping check hung indefinitely (100%
+  CPU on the `multipass exec` process) on every run, reproduced down to a
+  single isolated command: `multipass exec web -- ping -c1 -W2 <ip>
+  >/dev/null 2>&1` hangs every time, while the exact same command
+  redirected to a real file, or piped through `cat >/dev/null`, returns in
+  well under a second. The bug needs Multipass's own stdout bound directly
+  to the `/dev/null` character device; redirecting only stderr to
+  `/dev/null` while stdout goes elsewhere (a pipe or command substitution)
+  does not trigger it, and it is not specific to `ping` or to `multipass
+  exec` (`multipass info ... >/dev/null 2>&1` reproduces it too). The
+  binding does not have to be on the `multipass` line itself: a wrapper
+  that redirects a whole wrapped command to `/dev/null` and then has that
+  command invoke `multipass exec` internally hangs the same way, because
+  the inherited file descriptor is what matters, not which line wrote the
+  redirection.
+- Fixed every such case (`lab/scripts/provision.sh`,
+  `lab/scripts/test_phase1.sh`, `experiments/run_E5.sh`,
+  `lab/scripts/final_check.sh`'s `check()` helper) by piping through `cat
+  >/dev/null` (relying on `pipefail`, already set in all of these scripts,
+  to still surface the real command's exit status) or redirecting to a
+  real temp file instead of `/dev/null` directly. General rule applied
+  project-wide from here on: never bind a `multipass` command's own
+  stdout/stderr straight to `/dev/null`, directly or by inheriting an
+  ancestor's redirection; a real file or a `| cat >/dev/null` pipe is used
+  instead whenever output needs discarding.

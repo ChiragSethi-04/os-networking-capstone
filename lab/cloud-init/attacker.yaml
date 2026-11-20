@@ -6,7 +6,7 @@
 # user - see the comment in lab/cloud-init/web.yaml and docs/decisions.md
 # for why (a `users:` cloud-config block hangs the VM on this setup).
 hostname: attacker
-manage_etc_hosts: true
+manage_etc_hosts: false
 
 ssh_authorized_keys:
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYrfGW7wg/vagJcloVzw6gQyW/MxZzWW5K5FqYSDWoi capstone-admin
@@ -27,6 +27,6 @@ packages:
   - jq
 
 runcmd:
-  - [bash, -c, "cd /opt && git clone --depth 1 https://github.com/drwetter/testssl.sh.git || true"]
+  - [bash, -c, "cd /opt && git clone --depth 1 https://github.com/testssl/testssl.sh.git || true"]
   - [bash, -c, "chmod +x /opt/testssl.sh/testssl.sh || true"]
   - [bash, -c, "echo 'attacker VM base provisioning complete' > /var/log/capstone_provision.log"]

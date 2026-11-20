@@ -1,0 +1,105 @@
+[web] already exists, skipping launch
+[db] already exists, skipping launch
+[attacker] already exists, skipping launch
+Waiting for cloud-init to finish on all VMs...
+status: done
+status: done
+status: done
+Recorded IPs in lab/.env:
+WEB_IP=192.168.252.9
+DB_IP=192.168.252.10
+ATT_IP=192.168.252.11
+[web] deploying the hosts-entry systemd unit
+[db] deploying the hosts-entry systemd unit
+[attacker] deploying the hosts-entry systemd unit
+[web] verifying SSH key login as ubuntu
+[web] ubuntu authorized_keys OK
+[db] verifying SSH key login as ubuntu
+[db] ubuntu authorized_keys OK
+[attacker] verifying SSH key login as ubuntu
+[attacker] ubuntu authorized_keys OK
+Installing wrk on web and attacker (not always in Ubuntu apt, build from source if missing)...
+wrk already present
+wrk already present
+Ensuring testssl.sh is present on attacker (cloud-init's runcmd clone can race the network at first boot)...
+Cloning into '/opt/testssl.sh'...
+Taking clean-baseline snapshots...
+[2K[0A[0EStopping web  /-\|/-\|/-\|/- [2K[0A[0E[2K[0A[0ETaking snapshot  / [2K[0A[0ESnapshot taken: web.clean-baseline
+[2K[0A[0EStarting web  /-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/ [2K[0A[0E[2K[0A[0EStopping db  /-\|/-\|/-\|/-\|/ [2K[0A[0E[2K[0A[0ETaking snapshot  / [2K[0A[0ESnapshot taken: db.clean-baseline
+[2K[0A[0EStarting db  /-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\| [2K[0A[0E[2K[0A[0EStopping attacker  /-\|/-\|/-\|/-\ [2K[0A[0E[2K[0A[0ETaking snapshot  / [2K[0A[0ESnapshot taken: attacker.clean-baseline
+[2K[0A[0EStarting attacker  /-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\ [2K[0A[0E=== 2026-11-20T14:56:58Z lab inventory ===
+Name                    State             IPv4             Image               Zone
+attacker                Running           192.168.252.11   Ubuntu 26.04 LTS    zone1
+db                      Running           192.168.252.10   Ubuntu 26.04 LTS    zone1
+web                     Running           192.168.252.9    Ubuntu 26.04 LTS    zone1
+--- lab/.env ---
+WEB_IP=192.168.252.9
+DB_IP=192.168.252.10
+ATT_IP=192.168.252.11
+--- web: lscpu ---
+Architecture:                            aarch64
+CPU op-mode(s):                          64-bit
+Byte Order:                              Little Endian
+CPU(s):                                  2
+On-line CPU(s) list:                     0,1
+Vendor ID:                               Apple
+Model name:                              -
+Model:                                   0
+Thread(s) per core:                      1
+Core(s) per socket:                      2
+Socket(s):                               1
+Stepping:                                0x0
+BogoMIPS:                                48.00
+Flags:                                   fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint
+NUMA node(s):                            1
+--- web: free -h ---
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       345Mi       1.4Gi       1.1Mi       260Mi       1.6Gi
+Swap:             0B          0B          0B
+--- web: uname -a ---
+Linux web 7.0.0-43-generic #43-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:33:03 UTC 2026 aarch64 GNU/Linux
+--- db: lscpu ---
+Architecture:                            aarch64
+CPU op-mode(s):                          64-bit
+Byte Order:                              Little Endian
+CPU(s):                                  1
+On-line CPU(s) list:                     0
+Vendor ID:                               Apple
+Model name:                              -
+Model:                                   0
+Thread(s) per core:                      1
+Core(s) per socket:                      1
+Socket(s):                               1
+Stepping:                                0x0
+BogoMIPS:                                48.00
+Flags:                                   fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint
+NUMA node(s):                            1
+--- db: free -h ---
+               total        used        free      shared  buff/cache   available
+Mem:           943Mi       429Mi       295Mi       1.1Mi       295Mi       513Mi
+Swap:             0B          0B          0B
+--- db: uname -a ---
+Linux db 7.0.0-43-generic #43-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:33:03 UTC 2026 aarch64 GNU/Linux
+--- attacker: lscpu ---
+Architecture:                            aarch64
+CPU op-mode(s):                          64-bit
+Byte Order:                              Little Endian
+CPU(s):                                  1
+On-line CPU(s) list:                     0
+Vendor ID:                               Apple
+Model name:                              -
+Model:                                   0
+Thread(s) per core:                      1
+Core(s) per socket:                      1
+Socket(s):                               1
+Stepping:                                0x0
+BogoMIPS:                                48.00
+Flags:                                   fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint
+NUMA node(s):                            1
+--- attacker: free -h ---
+               total        used        free      shared  buff/cache   available
+Mem:           943Mi       370Mi       395Mi       1.1Mi       254Mi       572Mi
+Swap:             0B          0B          0B
+--- attacker: uname -a ---
+Linux attacker 7.0.0-43-generic #43-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:33:03 UTC 2026 aarch64 GNU/Linux
+Phase 1 provisioning complete. Evidence: evidence/raw/lab_inventory.txt

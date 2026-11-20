@@ -16,13 +16,51 @@ if [[ ! -f "$SSH_KEY" ]]; then
 fi
 
 launch_vm() {
+  # On this Multipass/QEMU/Ubuntu-26.04-image combination, `multipass launch`
+  # itself can hang indefinitely: it waits for cloud-init to reach a CLEAN
+  # "done" status, but cloud-init here always ends "degraded done" because
+  # of a harmless NIC-rename race (enp0s1 -> eth0, "[busy]") that never
+  # resolves differently. Launching in the background and polling `multipass
+  # list` + `cloud-init status` ourselves avoids depending on the launch
+  # command's own (unreliable, on this setup) completion signal. See
+  # docs/decisions.md.
   local name="$1" cpus="$2" mem="$3" disk="$4" cloudinit="$5"
-  if multipass info "$name" >/dev/null 2>&1; then
+  if multipass info "$name" 2>&1 | cat >/dev/null; then
     echo "[$name] already exists, skipping launch"
-  else
-    echo "[$name] launching..."
-    multipass launch lts --name "$name" --cpus "$cpus" --memory "$mem" --disk "$disk" \
-      --cloud-init "$cloudinit" --timeout 900
+    return
+  fi
+
+  echo "[$name] launching (backgrounded, polling instead of trusting launch's own wait)..."
+  multipass launch lts --name "$name" --cpus "$cpus" --memory "$mem" --disk "$disk" \
+    --cloud-init "$cloudinit" >/tmp/multipass_launch_${name}.log 2>&1 &
+  local launch_pid=$!
+
+  local waited=0 state=""
+  while (( waited < 600 )); do
+    state=$(multipass info "$name" --format csv 2>/dev/null | tail -1 | cut -d',' -f2)
+    [[ "$state" == "Running" ]] && break
+    sleep 5
+    waited=$(( waited + 5 ))
+  done
+  if [[ "$state" != "Running" ]]; then
+    echo "[$name] ERROR: did not reach Running within ${waited}s (state=$state)" >&2
+    exit 1
+  fi
+  echo "[$name] Running after ${waited}s, waiting for cloud-init to reach a terminal state..."
+
+  waited=0
+  while (( waited < 300 )); do
+    if multipass exec "$name" -- cloud-init status 2>/dev/null | grep -qE "status: (done|error)"; then
+      break
+    fi
+    sleep 5
+    waited=$(( waited + 5 ))
+  done
+  multipass exec "$name" -- cloud-init status --long 2>&1 || true
+
+  if kill -0 "$launch_pid" 2>/dev/null; then
+    echo "[$name] launch command still waiting on its own (unreliable) clean-done check; killing it, the VM itself is fine"
+    kill "$launch_pid" 2>/dev/null || true
   fi
 }
 
@@ -35,9 +73,27 @@ for name in web db attacker; do
   multipass exec "$name" -- cloud-init status --wait || true
 done
 
-WEB_IP=$(multipass info web --format csv | tail -1 | cut -d',' -f3 | cut -d'/' -f1 | tr -d '[:space:]')
-DB_IP=$(multipass info db --format csv | tail -1 | cut -d',' -f3 | cut -d'/' -f1 | tr -d '[:space:]')
-ATT_IP=$(multipass info attacker --format csv | tail -1 | cut -d',' -f3 | cut -d'/' -f1 | tr -d '[:space:]')
+# Column position is looked up by header name ("Ipv4"), not a hardcoded
+# index: multipass's CSV schema has changed between versions (an extra
+# "Zone"/"Zone available" pair was inserted before Ipv4 on this version),
+# and a hardcoded `cut -f3` silently grabbed the zone name instead of an IP.
+get_ip() {
+  multipass info "$1" --format csv | awk -F, '
+    NR==1 { for (i=1;i<=NF;i++) if ($i=="Ipv4") col=i }
+    NR==2 { print $col }
+  ' | cut -d'/' -f1 | tr -d '[:space:]'
+}
+WEB_IP=$(get_ip web)
+DB_IP=$(get_ip db)
+ATT_IP=$(get_ip attacker)
+
+for pair in "WEB_IP:$WEB_IP" "DB_IP:$DB_IP" "ATT_IP:$ATT_IP"; do
+  name="${pair%%:*}"; value="${pair#*:}"
+  if ! [[ "$value" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+    echo "ERROR: $name did not resolve to an IPv4 address (got '$value')" >&2
+    exit 1
+  fi
+done
 
 cat > lab/.env <<EOF
 WEB_IP=$WEB_IP
@@ -47,14 +103,29 @@ EOF
 echo "Recorded IPs in lab/.env:"
 cat lab/.env
 
-HOSTS_BLOCK="$WEB_IP web
-$DB_IP db
-$ATT_IP attacker"
+# Deployed as a boot-time systemd oneshot, not a one-time `tee -a`: this
+# instance's cloud-init `manage_etc_hosts` setting was baked in at first
+# launch and re-applies itself on every subsequent boot, which would wipe
+# a plain append (see docs/decisions.md and
+# lab/configs/systemd/ensure_hosts.sh.template).
+sed -e "s/WEB_IP_PLACEHOLDER/${WEB_IP}/" -e "s/DB_IP_PLACEHOLDER/${DB_IP}/" \
+    -e "s/ATT_IP_PLACEHOLDER/${ATT_IP}/" \
+    lab/configs/systemd/ensure_hosts.sh.template > /tmp/ensure_hosts.sh
 
 for name in web db attacker; do
-  echo "[$name] writing /etc/hosts entries for web/db/attacker"
-  echo "$HOSTS_BLOCK" | multipass exec "$name" -- sudo tee -a /etc/hosts >/dev/null
+  echo "[$name] deploying the hosts-entry systemd unit"
+  multipass transfer /tmp/ensure_hosts.sh "$name:/tmp/ensure_hosts.sh"
+  multipass transfer lab/configs/systemd/capstone-hosts.service "$name:/tmp/capstone-hosts.service"
+  multipass exec "$name" -- sudo bash -c '
+    set -e
+    mv /tmp/ensure_hosts.sh /usr/local/bin/ensure_hosts.sh
+    chmod +x /usr/local/bin/ensure_hosts.sh
+    mv /tmp/capstone-hosts.service /etc/systemd/system/capstone-hosts.service
+    systemctl daemon-reload
+    systemctl enable --now capstone-hosts.service
+  '
 done
+rm -f /tmp/ensure_hosts.sh
 
 PUBKEY_CONTENT=$(cat "${SSH_KEY}.pub")
 for name in web db attacker; do
@@ -82,6 +153,17 @@ for name in web attacker; do
     fi
   '
 done
+
+echo "Ensuring testssl.sh is present on attacker (cloud-init's runcmd clone can race the network at first boot)..."
+multipass exec attacker -- bash -c '
+  if [[ -x /opt/testssl.sh/testssl.sh ]]; then
+    echo "testssl.sh already present"
+  else
+    sudo rm -rf /opt/testssl.sh
+    sudo git clone --depth 1 https://github.com/testssl/testssl.sh.git /opt/testssl.sh
+    sudo chmod +x /opt/testssl.sh/testssl.sh
+  fi
+'
 
 echo "Taking clean-baseline snapshots..."
 for name in web db attacker; do

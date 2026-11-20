@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Idempotently ensures web/db/attacker hosts entries exist in /etc/hosts.
+# Deployed to /usr/local/bin/ensure_hosts.sh (with WEB_IP/DB_IP/ATT_IP
+# substituted from lab/.env) and run at every boot by
+# capstone-hosts.service, because cloud-init's own update_etc_hosts module
+# re-applies this instance's original `manage_etc_hosts` setting (recorded
+# at first launch) on every boot and would otherwise wipe a plain one-time
+# append - see docs/decisions.md.
+set -euo pipefail
+
+for line in "WEB_IP_PLACEHOLDER web" "DB_IP_PLACEHOLDER db" "ATT_IP_PLACEHOLDER attacker"; do
+  grep -qxF "$line" /etc/hosts || echo "$line" >> /etc/hosts
+done

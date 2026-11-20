@@ -1,0 +1,12 @@
+[web] already exists, skipping launch
+[db] already exists, skipping launch
+[attacker] already exists, skipping launch
+Waiting for cloud-init to finish on all VMs...
+status: done
+status: done
+status: done
+Recorded IPs in lab/.env:
+WEB_IP=zone1
+DB_IP=zone1
+ATT_IP=zone1
+[web] writing /etc/hosts entries for web/db/attacker
