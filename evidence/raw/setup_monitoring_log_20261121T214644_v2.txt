@@ -1,0 +1,43 @@
+--- monitor script + timer on web ---
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass transfer lab/configs/systemd/capstone-monitor.timer web:/tmp/capstone-monitor.timer
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass transfer lab/configs/systemd/capstone-monitor.timer web:/tmp/capstone-monitor.timer
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass transfer lab/configs/systemd/capstone-monitor.timer web:/tmp/capstone-monitor.timer
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  set -e
+  mv /tmp/web_status_monitor.sh /usr/local/bin/web_status_monitor.sh
+  chmod +x /usr/local/bin/web_status_monitor.sh
+  mv /tmp/capstone-monitor.service /etc/systemd/system/capstone-monitor.service
+  mv /tmp/capstone-monitor.timer /etc/systemd/system/capstone-monitor.timer
+  touch /var/log/web_status.log
+  systemctl daemon-reload
+  systemctl enable --now capstone-monitor.timer
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  set -e
+  mv /tmp/web_status_monitor.sh /usr/local/bin/web_status_monitor.sh
+  chmod +x /usr/local/bin/web_status_monitor.sh
+  mv /tmp/capstone-monitor.service /etc/systemd/system/capstone-monitor.service
+  mv /tmp/capstone-monitor.timer /etc/systemd/system/capstone-monitor.timer
+  touch /var/log/web_status.log
+  systemctl daemon-reload
+  systemctl enable --now capstone-monitor.timer
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  set -e
+  mv /tmp/web_status_monitor.sh /usr/local/bin/web_status_monitor.sh
+  chmod +x /usr/local/bin/web_status_monitor.sh
+  mv /tmp/capstone-monitor.service /etc/systemd/system/capstone-monitor.service
+  mv /tmp/capstone-monitor.timer /etc/systemd/system/capstone-monitor.timer
+  touch /var/log/web_status.log
+  systemctl daemon-reload
+  systemctl enable --now capstone-monitor.timer
+
+Created symlink '/etc/systemd/system/timers.target.wants/capstone-monitor.timer' → '/etc/systemd/system/capstone-monitor.timer'.
+--- Restart=on-failure drop-ins for nginx and meridian-app ---
+exec failed: ssh connection failed: 'Connection refused'

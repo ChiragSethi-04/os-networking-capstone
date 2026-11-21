@@ -41,26 +41,26 @@ mp_retry multipass exec web -- sudo bash -c '
 '
 
 echo "--- Restart=on-failure drop-ins for nginx and meridian-app ---"
-multipass exec web -- sudo bash -c '
+mp_retry multipass exec web -- sudo bash -c '
   mkdir -p /etc/systemd/system/nginx.service.d /etc/systemd/system/meridian-app.service.d
 '
-multipass transfer lab/configs/systemd/nginx-override.conf web:/tmp/nginx-override.conf
-multipass exec web -- sudo bash -c '
+mp_retry multipass transfer lab/configs/systemd/nginx-override.conf web:/tmp/nginx-override.conf
+mp_retry multipass exec web -- sudo bash -c '
   mv /tmp/nginx-override.conf /etc/systemd/system/nginx.service.d/override.conf
   cp /etc/systemd/system/nginx.service.d/override.conf /etc/systemd/system/meridian-app.service.d/override.conf
   systemctl daemon-reload
 '
 
 echo "--- logrotate ---"
-multipass transfer lab/configs/logrotate/capstone web:/tmp/capstone
-multipass exec web -- sudo bash -c '
+mp_retry multipass transfer lab/configs/logrotate/capstone web:/tmp/capstone
+mp_retry multipass exec web -- sudo bash -c '
   mv /tmp/capstone /etc/logrotate.d/capstone
   chmod 644 /etc/logrotate.d/capstone
 '
 
 echo "--- sysstat (web, db) ---"
 for name in web db; do
-  multipass exec "$name" -- sudo bash -c '
+  mp_retry multipass exec "$name" -- sudo bash -c '
     apt-get install -y sysstat >/dev/null 2>&1 || true
     sed -i "s/ENABLED=\"false\"/ENABLED=\"true\"/" /etc/default/sysstat || true
     systemctl enable --now sysstat
