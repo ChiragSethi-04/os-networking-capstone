@@ -8,6 +8,13 @@
 # append - see docs/decisions.md.
 set -euo pipefail
 
-for line in "WEB_IP_PLACEHOLDER web" "DB_IP_PLACEHOLDER db" "ATT_IP_PLACEHOLDER attacker"; do
-  grep -qxF "$line" /etc/hosts || echo "$line" >> /etc/hosts
+# Upsert, not append-if-missing: a VM that gets rebuilt (see
+# docs/decisions.md on hypervisor stalls) comes back with a new IP, and a
+# plain "append if this exact line isn't already there" check left the
+# OLD IP's line in place alongside the new one - two conflicting entries
+# for the same hostname, undefined/first-match-wins resolution.
+for entry in "WEB_IP_PLACEHOLDER web" "DB_IP_PLACEHOLDER db" "ATT_IP_PLACEHOLDER attacker"; do
+  host="${entry##* }"
+  sed -i "/[[:space:]]${host}\$/d" /etc/hosts
+  echo "$entry" >> /etc/hosts
 done

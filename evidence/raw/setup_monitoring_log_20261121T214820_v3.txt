@@ -1,0 +1,92 @@
+--- monitor script + timer on web ---
+--- Restart=on-failure drop-ins for nginx and meridian-app ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mkdir -p /etc/systemd/system/nginx.service.d /etc/systemd/system/meridian-app.service.d
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mkdir -p /etc/systemd/system/nginx.service.d /etc/systemd/system/meridian-app.service.d
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mkdir -p /etc/systemd/system/nginx.service.d /etc/systemd/system/meridian-app.service.d
+
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass transfer lab/configs/systemd/nginx-override.conf web:/tmp/nginx-override.conf
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass transfer lab/configs/systemd/nginx-override.conf web:/tmp/nginx-override.conf
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass transfer lab/configs/systemd/nginx-override.conf web:/tmp/nginx-override.conf
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/nginx-override.conf /etc/systemd/system/nginx.service.d/override.conf
+  cp /etc/systemd/system/nginx.service.d/override.conf /etc/systemd/system/meridian-app.service.d/override.conf
+  systemctl daemon-reload
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/nginx-override.conf /etc/systemd/system/nginx.service.d/override.conf
+  cp /etc/systemd/system/nginx.service.d/override.conf /etc/systemd/system/meridian-app.service.d/override.conf
+  systemctl daemon-reload
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/nginx-override.conf /etc/systemd/system/nginx.service.d/override.conf
+  cp /etc/systemd/system/nginx.service.d/override.conf /etc/systemd/system/meridian-app.service.d/override.conf
+  systemctl daemon-reload
+
+--- logrotate ---
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass transfer lab/configs/logrotate/capstone web:/tmp/capstone
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass transfer lab/configs/logrotate/capstone web:/tmp/capstone
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass transfer lab/configs/logrotate/capstone web:/tmp/capstone
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/capstone /etc/logrotate.d/capstone
+  chmod 644 /etc/logrotate.d/capstone
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/capstone /etc/logrotate.d/capstone
+  chmod 644 /etc/logrotate.d/capstone
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/capstone /etc/logrotate.d/capstone
+  chmod 644 /etc/logrotate.d/capstone
+
+--- sysstat (web, db) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+    apt-get install -y sysstat >/dev/null 2>&1 || true
+    sed -i "s/ENABLED=\"false\"/ENABLED=\"true\"/" /etc/default/sysstat || true
+    systemctl enable --now sysstat
+  
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+    apt-get install -y sysstat >/dev/null 2>&1 || true
+    sed -i "s/ENABLED=\"false\"/ENABLED=\"true\"/" /etc/default/sysstat || true
+    systemctl enable --now sysstat
+  
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+    apt-get install -y sysstat >/dev/null 2>&1 || true
+    sed -i "s/ENABLED=\"false\"/ENABLED=\"true\"/" /etc/default/sysstat || true
+    systemctl enable --now sysstat
+  
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+    apt-get install -y sysstat >/dev/null 2>&1 || true
+    sed -i "s/ENABLED=\"false\"/ENABLED=\"true\"/" /etc/default/sysstat || true
+    systemctl enable --now sysstat
+  
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+    apt-get install -y sysstat >/dev/null 2>&1 || true
+    sed -i "s/ENABLED=\"false\"/ENABLED=\"true\"/" /etc/default/sysstat || true
+    systemctl enable --now sysstat
+  
+Phase 5 monitoring setup complete.

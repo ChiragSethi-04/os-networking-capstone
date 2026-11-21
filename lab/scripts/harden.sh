@@ -18,7 +18,7 @@ mkdir -p evidence/raw lab/.secrets/ca
 # Wraps a multipass command with a short retry instead of letting one bad
 # timing window abort the whole script under `set -e`.
 mp_retry() {
-  local attempt=1 max=6
+  local attempt=1 max=15
   until "$@"; do
     if (( attempt >= max )); then
       echo "mp_retry: giving up after $max attempts: $*" >&2

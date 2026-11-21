@@ -333,3 +333,46 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   Fail2Ban-deployment `multipass transfer`/`exec` calls and the
   directory-listing-proof step right after, so a single bad-timing window
   no longer aborts the whole script under `set -e`.
+
+## Phase 5 (host memory pressure returned; stale /etc/hosts entries after a VM rebuild; monitor script missing a DB client)
+
+- The SSH blip above recurred far more persistently during
+  `setup_monitoring.sh` - every single call, for several minutes straight,
+  not the ~10-30s seen before. Checked `vm_stat`/`top` again: free memory
+  had dropped back to ~76MB (from ~157MB after the user closed some apps
+  earlier), confirming this is genuinely host memory pressure recurring
+  with normal Mac usage, not a one-off. Raised `mp_retry`'s budget from 6
+  attempts (max ~1 minute) to 15 (max ~2.5 minutes) in both `harden.sh`
+  and `setup_monitoring.sh` to ride out longer pressure spells, rather
+  than treating every occurrence as a VM to rebuild.
+- `test_phase5.sh` had the same unguarded-`multipass exec` problem (no
+  `mp_retry`), which is why the Phase 5 acceptance check itself failed
+  with exit code 2 even though the actual resilience behaviour being
+  tested (monitor detects nginx down, restarts it) had already passed and
+  logged correctly - the failure was purely in capturing evidence
+  afterward. Added the same `mp_retry` helper and wrapped the nginx-stop,
+  log-tail, and `logrotate -f` calls.
+- Found a real, unrelated bug while investigating: the monitor log showed
+  `db_reachable=no` on every run. `lab/configs/systemd/monitor_on_web.sh`
+  calls `mysqladmin ping -h db`, but `mariadb-client` (which provides
+  `mysqladmin`) was never in `web`'s package list - only `db` needs the
+  server, but `web` needs the *client* to check it. Added
+  `mariadb-client` to `lab/cloud-init/web.yaml` and installed it live on
+  the running VM. Once installed, `mysqladmin ping` still failed with a
+  TLS error (`self-signed certificate`) because MariaDB now defaults to
+  requiring TLS and the client doesn't trust its self-signed cert; added
+  `--skip-ssl` (this health check only needs to confirm network/protocol
+  reachability, not authenticate as a real app user - app traffic to
+  MariaDB was never intended to be TLS-secured in this design, which
+  relies on `ufw` + `bind-address` instead, per report Section 3.1).
+- Found a second real bug in the same investigation: `/etc/hosts` on all
+  three VMs had TWO entries for `db` - the stale `192.168.252.10` from
+  before its hypervisor-stall rebuild, alongside the correct current
+  `192.168.252.14`. `ensure_hosts.sh.template`'s `grep -qxF "$line" ||
+  append` logic only skips adding a line that's an *exact* match; it does
+  nothing to remove a now-wrong line for the same hostname at a different
+  IP, which is exactly what a VM rebuild produces. Fixed to upsert: delete
+  any existing line ending in that hostname first, then append the
+  current one. Redeployed live to all three VMs (confirmed clean,
+  one line per hostname) and the template fix applies to future rebuilds
+  automatically via `provision.sh`.

@@ -45,7 +45,7 @@ log "disk_used=$DISK_PCT load=$LOAD"
 HTTP_CODE=$(curl -sk -o /dev/null -w "%{http_code}" https://127.0.0.1/api/health || echo 000)
 log "api_health_http=$HTTP_CODE"
 
-if mysqladmin ping -h db --connect-timeout=3 >/dev/null 2>&1; then
+if mysqladmin ping -h db --connect-timeout=3 --skip-ssl >/dev/null 2>&1; then
   log "db_reachable=yes"
 else
   log "db_reachable=no"

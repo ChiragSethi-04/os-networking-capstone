@@ -1,0 +1,20 @@
+2026-11-21T10:50:23Z db_reachable=no
+2026-11-21T10:50:53Z nginx UP
+2026-11-21T10:50:53Z meridian-app UP
+2026-11-21T10:50:53Z cert_days_left=364
+2026-11-21T10:50:53Z disk_used=34% load=0.31 0.18 0.11
+2026-11-21T10:50:53Z api_health_http=200
+2026-11-21T10:50:53Z db_reachable=no
+2026-11-21T10:51:28Z nginx UP
+2026-11-21T10:51:28Z meridian-app UP
+2026-11-21T10:51:28Z cert_days_left=364
+2026-11-21T10:51:28Z disk_used=34% load=0.19 0.16 0.11
+2026-11-21T10:51:28Z api_health_http=200
+2026-11-21T10:51:28Z db_reachable=no
+2026-11-21T10:52:03Z nginx DOWN
+2026-11-21T10:52:03Z nginx RESTARTED
+2026-11-21T10:52:03Z meridian-app UP
+2026-11-21T10:52:03Z cert_days_left=364
+2026-11-21T10:52:03Z disk_used=34% load=0.09 0.14 0.10
+2026-11-21T10:52:03Z api_health_http=200
+2026-11-21T10:52:03Z db_reachable=no

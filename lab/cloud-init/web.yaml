@@ -35,6 +35,7 @@ packages:
   - libssl-dev
   - git
   - jq
+  - mariadb-client
 
 runcmd:
   - [bash, -c, "systemctl stop apache2 || true"]
