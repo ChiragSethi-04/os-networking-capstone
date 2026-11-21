@@ -20,7 +20,12 @@ else
 fi
 
 echo "--- nmap db (expect 3306 filtered/closed from attacker) ---"
-multipass exec attacker -- nmap -p 3306 "${DB_IP}"
+# -Pn: db's ufw correctly blocks unsolicited traffic (including nmap's own
+# ping probe) from the attacker VM, which isn't in its allow-list at all
+# (only web's IP and the Mac's are) - without -Pn, nmap's host-discovery
+# probe gets no reply and it reports "Host seems down" without ever
+# actually checking port 3306, which is not what this check is for.
+multipass exec attacker -- nmap -Pn -p 3306 "${DB_IP}"
 
 echo "--- directory listing (expect 403/404) ---"
 code=$(curl -sk -o /dev/null -w "%{http_code}" "https://${WEB_IP}/no-index/")
@@ -31,8 +36,14 @@ echo "--- SSH key login works, password login refused ---"
 ssh -i lab/.secrets/capstone_id_ed25519 -o StrictHostKeyChecking=accept-new \
   -o ConnectTimeout=5 "ubuntu@${WEB_IP}" "echo key login ok" || { echo "FAIL: key login broken"; fail=1; }
 
-if ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no \
-    -o ConnectTimeout=5 -o BatchMode=yes "ubuntu@${WEB_IP}" "echo should not happen" 2>&1 | grep -qi "Permission denied\|denied (publickey"; then
+# Captured into a variable first, not piped directly into `grep -q`:
+# ssh exits 255 on this expected auth failure, and under `pipefail` that
+# propagates as the whole pipeline's result regardless of whether grep
+# matched - the same masking bug documented in docs/decisions.md for
+# provision.sh's cloud-init check and test_phase3.sh's openssl checks.
+password_auth_output=$(ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no \
+    -o ConnectTimeout=5 -o BatchMode=yes "ubuntu@${WEB_IP}" "echo should not happen" 2>&1 || true)
+if echo "$password_auth_output" | grep -qi "Permission denied\|denied (publickey"; then
   echo "OK: password auth refused"
 else
   echo "FAIL: password auth was not clearly refused"

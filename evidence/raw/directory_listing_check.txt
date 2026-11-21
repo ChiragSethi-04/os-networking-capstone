@@ -1,0 +1,4 @@
+HTTP (port 80):
+HTTP 301
+HTTPS (port 443, self-signed, -k):
+HTTP 403

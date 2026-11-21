@@ -1,6 +1,6 @@
 openssl s_client -tls1_1 (expect failure):
 Connecting to 192.168.252.12
-E00CF367E6EE0000:error:0A0000BF:SSL routines:tls_setup_handshake:no protocols available:../ssl/statem/statem_lib.c:155:
+E08C781D76F60000:error:0A0000BF:SSL routines:tls_setup_handshake:no protocols available:../ssl/statem/statem_lib.c:155:
 CONNECTED(00000003)
 ---
 no peer certificate available
@@ -38,21 +38,21 @@ Certificate chain
  0 s:C=IN, O=Meridian Logistics, CN=web
    i:C=IN, O=Capstone Group 6, CN=Capstone Lab Root CA
    a:PKEY: EC, (prime256v1); sigalg: ecdsa-with-SHA256
-   v:NotBefore: Nov 21 10:28:04 2026 GMT; NotAfter: Nov 21 10:28:04 2027 GMT
+   v:NotBefore: Nov 21 10:31:12 2026 GMT; NotAfter: Nov 21 10:31:12 2027 GMT
 ---
 Server certificate
 -----BEGIN CERTIFICATE-----
-MIIB5DCCAYqgAwIBAgIUajlxpQJSIWxhnWt1dVGsNyYpmYgwCgYIKoZIzj0EAwIw
+MIIB5TCCAYqgAwIBAgIUajlxpQJSIWxhnWt1dVGsNyYpmYkwCgYIKoZIzj0EAwIw
 RzELMAkGA1UEBhMCSU4xGTAXBgNVBAoMEENhcHN0b25lIEdyb3VwIDYxHTAbBgNV
-BAMMFENhcHN0b25lIExhYiBSb290IENBMB4XDTI2MTEyMTEwMjgwNFoXDTI3MTEy
-MTEwMjgwNFowODELMAkGA1UEBhMCSU4xGzAZBgNVBAoMEk1lcmlkaWFuIExvZ2lz
-dGljczEMMAoGA1UEAwwDd2ViMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEKMKj
-7psp4dzWfnMsIdSvb5TwndUD29Ws6JuC2+6WCKkziZCoFt8k0XuRsBrm8XJhkOiW
-kFOlPMyNJFzWkz55dKNjMGEwHwYDVR0RBBgwFoIDd2Vigglsb2NhbGhvc3SHBMCo
-/AwwHQYDVR0OBBYEFElWP4qu93FIQ8DuPpf42ZlHJnDgMB8GA1UdIwQYMBaAFDkF
-wA23dmIAqIbrVS4EeKGRvs3lMAoGCCqGSM49BAMCA0gAMEUCIQCqnJhpARfDfLQg
-Vn1rYoQ9hoBLxtP+tDGOuSRBGlVchAIgX2d5TQE+9L+Ybcnw0m5jkncYvjEnflH7
-nnsL7D11gzA=
+BAMMFENhcHN0b25lIExhYiBSb290IENBMB4XDTI2MTEyMTEwMzExMloXDTI3MTEy
+MTEwMzExMlowODELMAkGA1UEBhMCSU4xGzAZBgNVBAoMEk1lcmlkaWFuIExvZ2lz
+dGljczEMMAoGA1UEAwwDd2ViMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEM+N5
+snv9jgMqH1BcF9YbCN8mGJujJxS/szC7X+SEiB0jHjsWnCogjCNmkn6xSpnPXGv7
+Gb03ISqjlvLgkatgxqNjMGEwHwYDVR0RBBgwFoIDd2Vigglsb2NhbGhvc3SHBMCo
+/AwwHQYDVR0OBBYEFETPMVMiiUefAVz2nnpdYX4isOeSMB8GA1UdIwQYMBaAFDkF
+wA23dmIAqIbrVS4EeKGRvs3lMAoGCCqGSM49BAMCA0kAMEYCIQC3XyYd5awdRYGw
+r6S9Q0db4MyJI0co3MWpnB9kYoS2OwIhAJXz4xR3F2MAFWcPdXhRarb5o2/rqK3E
+aDjJnFpvauni
 -----END CERTIFICATE-----
 subject=C=IN, O=Meridian Logistics, CN=web
 issuer=C=IN, O=Capstone Group 6, CN=Capstone Lab Root CA

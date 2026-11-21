@@ -1,0 +1,52 @@
+--- ufw status (web) ---
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     LIMIT IN    Anywhere                   # SSH, rate-limited by ufw
+80/tcp                     ALLOW IN    Anywhere                   # HTTP
+443/tcp                    ALLOW IN    Anywhere                   # HTTPS
+22/tcp (v6)                LIMIT IN    Anywhere (v6)              # SSH, rate-limited by ufw
+80/tcp (v6)                ALLOW IN    Anywhere (v6)              # HTTP
+443/tcp (v6)               ALLOW IN    Anywhere (v6)              # HTTPS
+
+--- ufw status (db) ---
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+3306/tcp                   ALLOW IN    192.168.252.12             # MariaDB, web VM only
+22/tcp                     ALLOW IN    192.168.252.12             # SSH from web VM
+22/tcp                     ALLOW IN    192.168.252.1              # SSH from Mac admin workstation
+
+--- sshd -T (web) ---
+maxauthtries 3
+permitrootlogin no
+passwordauthentication no
+allowusers ubuntu
+--- fail2ban-client status ---
+Status
+|- Number of jail:	3
+`- Jail list:	nginx-http-auth, nginx-limit-req, sshd
+--- security headers ---
+HTTP/2 200 
+server: nginx
+date: Sat, 21 Nov 2026 10:39:10 GMT
+content-type: text/html
+content-length: 1821
+last-modified: Sat, 21 Nov 2026 10:27:41 GMT
+etag: "6b01721d-71d"
+strict-transport-security: max-age=63072000; includeSubDomains
+x-content-type-options: nosniff
+x-frame-options: DENY
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: geolocation=(), microphone=(), camera=()
+content-security-policy: default-src 'self'
+accept-ranges: bytes
+

@@ -3,7 +3,7 @@
 
 [1mTesting all IPv4 addresses (port 443): [m192.168.252.12
 -----------------------------------------------------
-[7m Start 2026-11-21 21:28:07 (UTC offset: +1100)        -->> 192.168.252.12:443 (192.168.252.12) <<--[m
+[7m Start 2026-11-21 21:31:15 (UTC offset: +1100)        -->> 192.168.252.12:443 (192.168.252.12) <<--[m
 
 [1m rDNS [m(192.168.252.12):  web.
 [1m DNS HTTPS RR[m (expt.):   --
@@ -86,15 +86,15 @@ Hexcode  Cipher Suite Name (OpenSSL)       KeyExch.   Encryption  Bits     Ciphe
 [1m Server key size              [mEC [0;32m256[m bits (curve P-256)
 [1m Server key usage             [m--
 [1m Server extended key usage    [m--
-[1m Serial                       [m6A3971A50252216C619D6B757551AC3726299988 (OK: length 20)
-[1m Fingerprints                 [mSHA1 482E83CCF90AA53F8452B64B37BA0EB22024D7DD
-                              SHA256 3402BF9E0AF0E1AF1521F865DF545A23DEAD70C43EA1648BFEF1CE77AE760A2B
+[1m Serial                       [m6A3971A50252216C619D6B757551AC3726299989 (OK: length 20)
+[1m Fingerprints                 [mSHA1 BCC4D58BB13FD0F54D9634FF02C104DE3A0179C8
+                              SHA256 7DBE539F940A6F54547D78FD60AE38E509D092BFBF18FAEB371318379F83558E
 [1m Common Name (CN)             [m[3mweb [m
 [1m subjectAltName (SAN)         [m[3mweb localhost 192.168.252.12 [m
 [1m Trust (hostname)             [m[0;32mOk via SAN[m
 [1m Chain of trust[m               [1;31mNOT ok[m (chain incomplete)
 [1m EV cert[m (experimental)       no 
-[1m Certificate Validity (UTC)   [m[0;32m364 >= 60 days[m (2026-11-21 10:28 --> 2027-11-21 10:28)
+[1m Certificate Validity (UTC)   [m[0;32m364 >= 60 days[m (2026-11-21 10:31 --> 2027-11-21 10:31)
 [1m ETS/"eTLS"[m, visibility info  not present
 [1m Certificate Revocation List  [m--
 [1m OCSP URI                     [m--
@@ -202,7 +202,7 @@ Hexcode  Cipher Suite Name (OpenSSL)       KeyExch.   Encryption  Bits     Ciphe
 [1m Grade cap reasons            [mGrade capped to B. Issues with chain of trust
                                 (chain incomplete)
 
-[7m Done 2026-11-21 21:29:01 (UTC offset: +1100) [  56s] -->> 192.168.252.12:443 (192.168.252.12) <<--[m
+[7m Done 2026-11-21 21:32:08 (UTC offset: +1100) [  54s] -->> 192.168.252.12:443 (192.168.252.12) <<--[m
 
 -----------------------------------------------------
 [1mDone testing now all IP addresses (on port 443): [m192.168.252.12

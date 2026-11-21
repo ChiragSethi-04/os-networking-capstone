@@ -1,0 +1,116 @@
+=== Phase 3: building local CA and server certificate ===
+Certificate request self-signature ok
+subject=C=IN, O=Meridian Logistics, CN=web
+Server certificate installed on web VM.
+--- proving no TLS endpoint exists yet (before hardening) ---
+--- enabling TLS on Nginx ---
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+TLS enabled, HTTP to HTTPS redirect active.
+--- testssl.sh AFTER hardening ---
+--- certificate text ---
+--- TLS protocol checks ---
+=== Phase 4: firewall, SSH, Fail2Ban, MariaDB hardening ===
+nmap BEFORE hardening (web)
+nmap BEFORE hardening (db)
+--- ufw on web ---
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+Logging enabled
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Firewall is active and enabled on system startup
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     LIMIT IN    Anywhere                   # SSH, rate-limited by ufw
+80/tcp                     ALLOW IN    Anywhere                   # HTTP
+443/tcp                    ALLOW IN    Anywhere                   # HTTPS
+22/tcp (v6)                LIMIT IN    Anywhere (v6)              # SSH, rate-limited by ufw
+80/tcp (v6)                ALLOW IN    Anywhere (v6)              # HTTP
+443/tcp (v6)               ALLOW IN    Anywhere (v6)              # HTTPS
+
+Detected Mac/gateway IP on the Multipass network: 192.168.252.1
+--- ufw on db ---
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+Logging enabled
+Skipping adding existing rule
+Skipping adding existing rule
+Skipping adding existing rule
+Firewall is active and enabled on system startup
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+3306/tcp                   ALLOW IN    192.168.252.12             # MariaDB, web VM only
+22/tcp                     ALLOW IN    192.168.252.12             # SSH from web VM
+22/tcp                     ALLOW IN    192.168.252.1              # SSH from Mac admin workstation
+
+--- SSH hardening (web, db, attacker) ---
+--- verifying key login still works after sshd hardening ---
+key login ok on web
+key login ok on db
+key login ok on attacker
+--- Fail2Ban on web ---
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass transfer lab/configs/fail2ban/jail.local web:/tmp/jail.local
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass transfer lab/configs/fail2ban/jail.local web:/tmp/jail.local
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass transfer lab/configs/fail2ban/jail.local web:/tmp/jail.local
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass transfer lab/configs/fail2ban/filter-nginx-limit-req.conf web:/tmp/filter-nginx-limit-req.conf
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass transfer lab/configs/fail2ban/filter-nginx-limit-req.conf web:/tmp/filter-nginx-limit-req.conf
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass transfer lab/configs/fail2ban/filter-nginx-limit-req.conf web:/tmp/filter-nginx-limit-req.conf
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/jail.local /etc/fail2ban/jail.local
+  mv /tmp/filter-nginx-limit-req.conf /etc/fail2ban/filter.d/nginx-limit-req.conf
+  systemctl enable fail2ban
+  systemctl restart fail2ban
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/jail.local /etc/fail2ban/jail.local
+  mv /tmp/filter-nginx-limit-req.conf /etc/fail2ban/filter.d/nginx-limit-req.conf
+  systemctl enable fail2ban
+  systemctl restart fail2ban
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  mv /tmp/jail.local /etc/fail2ban/jail.local
+  mv /tmp/filter-nginx-limit-req.conf /etc/fail2ban/filter.d/nginx-limit-req.conf
+  systemctl enable fail2ban
+  systemctl restart fail2ban
+
+Synchronizing state of fail2ban.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable fail2ban
+--- directory listing proof (expect 403/404) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo mkdir -p /var/www/html/no-index
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo mkdir -p /var/www/html/no-index
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo mkdir -p /var/www/html/no-index
+nmap AFTER hardening (web)
+nmap AFTER hardening (db)
+--- nikto scan ---
+Phase 3 and Phase 4 hardening complete. Evidence in evidence/raw/.

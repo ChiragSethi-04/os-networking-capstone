@@ -2,34 +2,34 @@ Certificate:
     Data:
         Version: 3 (0x2)
         Serial Number:
-            6a:39:71:a5:02:52:21:6c:61:9d:6b:75:75:51:ac:37:26:29:99:88
+            6a:39:71:a5:02:52:21:6c:61:9d:6b:75:75:51:ac:37:26:29:99:89
         Signature Algorithm: ecdsa-with-SHA256
         Issuer: C=IN, O=Capstone Group 6, CN=Capstone Lab Root CA
         Validity
-            Not Before: Nov 21 10:28:04 2026 GMT
-            Not After : Nov 21 10:28:04 2027 GMT
+            Not Before: Nov 21 10:31:12 2026 GMT
+            Not After : Nov 21 10:31:12 2027 GMT
         Subject: C=IN, O=Meridian Logistics, CN=web
         Subject Public Key Info:
             Public Key Algorithm: id-ecPublicKey
                 Public-Key: (256 bit)
                 pub:
-                    04:28:c2:a3:ee:9b:29:e1:dc:d6:7e:73:2c:21:d4:
-                    af:6f:94:f0:9d:d5:03:db:d5:ac:e8:9b:82:db:ee:
-                    96:08:a9:33:89:90:a8:16:df:24:d1:7b:91:b0:1a:
-                    e6:f1:72:61:90:e8:96:90:53:a5:3c:cc:8d:24:5c:
-                    d6:93:3e:79:74
+                    04:33:e3:79:b2:7b:fd:8e:03:2a:1f:50:5c:17:d6:
+                    1b:08:df:26:18:9b:a3:27:14:bf:b3:30:bb:5f:e4:
+                    84:88:1d:23:1e:3b:16:9c:2a:20:8c:23:66:92:7e:
+                    b1:4a:99:cf:5c:6b:fb:19:bd:37:21:2a:a3:96:f2:
+                    e0:91:ab:60:c6
                 ASN1 OID: prime256v1
                 NIST CURVE: P-256
         X509v3 extensions:
             X509v3 Subject Alternative Name: 
                 DNS:web, DNS:localhost, IP Address:192.168.252.12
             X509v3 Subject Key Identifier: 
-                49:56:3F:8A:AE:F7:71:48:43:C0:EE:3E:97:F8:D9:99:47:26:70:E0
+                44:CF:31:53:22:89:47:9F:01:5C:F6:9E:7A:5D:61:7E:22:B0:E7:92
             X509v3 Authority Key Identifier: 
                 39:05:C0:0D:B7:76:62:00:A8:86:EB:55:2E:04:78:A1:91:BE:CD:E5
     Signature Algorithm: ecdsa-with-SHA256
     Signature Value:
-        30:45:02:21:00:aa:9c:98:69:01:17:c3:7c:b4:20:56:7d:6b:
-        62:84:3d:86:80:4b:c6:d3:fe:b4:31:8e:b9:24:41:1a:55:5c:
-        84:02:20:5f:67:79:4d:01:3e:f4:bf:98:6d:c9:f0:d2:6e:63:
-        92:77:18:be:31:27:7e:51:fb:9e:7b:0b:ec:3d:75:83:30
+        30:46:02:21:00:b7:5f:26:1d:e5:ac:1d:45:81:b0:af:a4:bd:
+        43:47:5b:e0:cc:89:23:47:28:dc:c5:a9:9c:1f:64:62:84:b6:
+        3b:02:21:00:95:f3:e3:14:77:17:63:00:15:67:0f:75:78:51:
+        6a:b6:f9:a3:6f:eb:a8:ad:c4:68:38:c9:9c:5a:6f:6a:e9:e2
