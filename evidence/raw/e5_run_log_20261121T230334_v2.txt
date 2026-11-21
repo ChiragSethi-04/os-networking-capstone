@@ -1,0 +1,25 @@
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+--- BEFORE: stopping fail2ban on web (baseline, unprotected) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo systemctl stop fail2ban
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo systemctl stop fail2ban
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo systemctl stop fail2ban

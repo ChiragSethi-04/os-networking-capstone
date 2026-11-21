@@ -1,0 +1,51 @@
+--- creating bftest SSH user on web (password auth, demo only) ---
+--- creating /admin-demo/ Nginx path with weak htpasswd (demo only) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo mkdir -p /var/www/html/admin-demo
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo mkdir -p /var/www/html/admin-demo
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo mkdir -p /var/www/html/admin-demo
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c echo '<h1>demo</h1>' | sudo tee /var/www/html/admin-demo/index.html >/dev/null
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c echo '<h1>demo</h1>' | sudo tee /var/www/html/admin-demo/index.html >/dev/null
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c echo '<h1>demo</h1>' | sudo tee /var/www/html/admin-demo/index.html >/dev/null
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c echo 'Summer2026!' | sudo tee /tmp/demopw >/dev/null
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c echo 'Summer2026!' | sudo tee /tmp/demopw >/dev/null
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c echo 'Summer2026!' | sudo tee /tmp/demopw >/dev/null
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  htpasswd -b -c /etc/nginx/.htpasswd-demo admin "$(cat /tmp/demopw)"
+  rm -f /tmp/demopw
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  htpasswd -b -c /etc/nginx/.htpasswd-demo admin "$(cat /tmp/demopw)"
+  rm -f /tmp/demopw
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  htpasswd -b -c /etc/nginx/.htpasswd-demo admin "$(cat /tmp/demopw)"
+  rm -f /tmp/demopw
+
+Adding password for user admin
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo python3 -
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo python3 -
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo python3 -
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c nginx -t && systemctl reload nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c nginx -t && systemctl reload nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c nginx -t && systemctl reload nginx
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+E5 demo accounts ready. Run experiments/run_E5.sh next, then teardown_e5_demo_accounts.sh.

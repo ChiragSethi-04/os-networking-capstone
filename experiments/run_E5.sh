@@ -7,6 +7,11 @@
 # Author: [GROUP MEMBER PLACEHOLDER]
 # Date: [DATE PLACEHOLDER]
 set -euo pipefail
+# E5 itself has no repeats loop (each scenario runs once), so this only
+# affects the informational REPEATS/QUICK line raw_header() prints -
+# without it, the evidence header misleadingly said "quick=0" even when
+# --quick was passed, which matters for an honest reproducibility record.
+QUICK=0; for a in "$@"; do [[ "$a" == "--quick" ]] && QUICK=1; done
 source "$(dirname "$0")/common.sh"
 
 mkdir -p evidence/raw
