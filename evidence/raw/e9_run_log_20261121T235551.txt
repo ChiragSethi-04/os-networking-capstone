@@ -1,0 +1,2 @@
+E9 raw output: evidence/raw/E9_20261121T235551.txt
+(Phase 3 before/after pair: evidence/raw/testssl_before.txt, testssl_after.txt)

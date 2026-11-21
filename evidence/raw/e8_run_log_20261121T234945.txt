@@ -1,2 +1,61 @@
 exec failed: ssh connection failed: 'Connection refused'
 mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- tail -n 15 /var/log/web_status.log
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- tail -n 15 /var/log/web_status.log
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- tail -n 15 /var/log/web_status.log
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c ls -la /var/log/web_status.log* /var/log/nginx/*.gz 2>/dev/null
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c ls -la /var/log/web_status.log* /var/log/nginx/*.gz 2>/dev/null
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c ls -la /var/log/web_status.log* /var/log/nginx/*.gz 2>/dev/null
+E8 raw output: evidence/raw/E8_20261121T234945.txt

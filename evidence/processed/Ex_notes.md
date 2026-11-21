@@ -134,3 +134,19 @@ Parsed from `E6_20261121T234428.txt`.
 
 HTTP readable: False. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the full tshark excerpts.
 
+## E8: resilience
+
+Parsed from `E8_20261121T234945.txt`.
+
+- Recovery detected after: s
+- Monitor logged DOWN: False, RESTARTED: False
+- logrotate produced a compressed rotated file: True
+
+## E9: TLS quality
+
+Before grade: N/A_no_TLS_listener. After grade: [m[0;33mB[m. See `evidence/processed/E9_summary.md`.
+
+## E9: TLS quality
+
+Before grade: N/A_no_TLS_listener. After grade: B. See `evidence/processed/E9_summary.md`.
+

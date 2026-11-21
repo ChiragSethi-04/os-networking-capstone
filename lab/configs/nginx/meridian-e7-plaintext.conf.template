@@ -1,0 +1,86 @@
+# E7 ONLY: identical to meridian-full.conf.template except port 80 serves
+# /api/ directly instead of redirecting to HTTPS. Deployed as a full
+# replacement of /etc/nginx/sites-available/meridian.conf by
+# experiments/run_E7.sh for the few seconds its plaintext-HTTP capture
+# needs (not added alongside the real config - nginx would refuse two
+# "listen 80 default_server" blocks and duplicate limit_req_zone names),
+# then immediately swapped back with meridian-full.conf.template so the
+# real hardened state (301 redirect, no plaintext path at all) returns.
+#
+# Why this exists: a plain `curl http://<web>/api/contact` against the
+# real hardened config gets nginx's 301 redirect with no payload at all -
+# there is no plaintext application data to capture once the redirect is
+# in place, which is the whole point of the redirect. Demonstrating what
+# the equivalent unprotected request looks like needs an endpoint that
+# actually accepts it in plaintext, for this one comparison only. See
+# docs/decisions.md.
+
+limit_req_zone $binary_remote_addr zone=api_zone:10m rate=5r/s;
+limit_req_zone $binary_remote_addr zone=admin_zone:10m rate=2r/s;
+limit_conn_zone $binary_remote_addr zone=conn_zone:10m;
+
+server {
+    listen 80 default_server;
+    server_name web;
+    server_tokens off;
+
+    location /api/ {
+        limit_req zone=api_zone burst=10 nodelay;
+        limit_conn conn_zone 20;
+        proxy_pass http://127.0.0.1:8000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name web;
+
+    ssl_certificate     /etc/ssl/certs/web.crt;
+    ssl_certificate_key /etc/ssl/private/web.key;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1h;
+    ssl_session_tickets off;
+
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    add_header Content-Security-Policy "default-src 'self'" always;
+
+    server_tokens off;
+    autoindex off;
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /api/ {
+        limit_req zone=api_zone burst=10 nodelay;
+        limit_conn conn_zone 20;
+        proxy_pass http://127.0.0.1:8000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /admin/ {
+        limit_req zone=admin_zone burst=5 nodelay;
+        auth_basic "Meridian Admin";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+        root /var/www/html;
+        try_files $uri $uri/ =404;
+    }
+}

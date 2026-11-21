@@ -105,7 +105,7 @@ multipass exec web -- sudo bash -c '
 echo "TLS enabled, HTTP to HTTPS redirect active."
 
 echo "--- testssl.sh AFTER hardening ---"
-multipass exec attacker -- bash -c "/opt/testssl.sh/testssl.sh --quiet https://${WEB_IP} 2>&1 || true" \
+multipass exec attacker -- bash -c "/opt/testssl.sh/testssl.sh --quiet --color 0 https://${WEB_IP} 2>&1 || true" \
   > evidence/raw/testssl_after.txt || true
 
 echo "--- certificate text ---"

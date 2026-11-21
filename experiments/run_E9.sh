@@ -14,7 +14,7 @@ OUT="evidence/raw/E9_$(date +%Y%m%dT%H%M%S).txt"
 {
   echo "=== E9 raw output ==="
   echo "date_utc=$(date -u +%FT%TZ)"
-  mp_retry multipass exec attacker -- bash -c "/opt/testssl.sh/testssl.sh --quiet https://${WEB_IP}"
+  mp_retry multipass exec attacker -- bash -c "/opt/testssl.sh/testssl.sh --quiet --color 0 https://${WEB_IP}"
 } > "$OUT" 2>&1 || true
 
 echo "E9 raw output: $OUT"
