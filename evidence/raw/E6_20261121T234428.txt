@@ -1,0 +1,260 @@
+=== E6 raw output ===
+date_utc=2026-11-21T12:44:28Z
+repeats=5 quick=0
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- WITH limit_req (current hardened config) ---
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.10ms    2.73ms 103.10ms   90.37%
+    Req/Sec     9.76k     1.59k   19.48k    83.72%
+  774143 requests in 20.10s, 470.27MB read
+  Non-2xx or 3xx responses: 774032
+Requests/sec:  38522.80
+Transfer/sec:     23.40MB
+Linux 7.0.0-43-generic (web) 	11/21/26 	_aarch64_	(2 CPU)
+
+23:44:29      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:44:30        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+23:44:30       33      3128    0.00    1.00    0.00    1.00    1.00     0  gunicorn
+23:44:30       33      3156    1.00    1.00    0.00    1.00    2.00     1  gunicorn
+23:44:30        0     30775    0.00    1.00    0.00    0.00    1.00     1  fail2ban-server
+23:44:30       33     31418   19.00   35.00    0.00    4.00   54.00     0  nginx
+23:44:30       33     31419   28.00   38.00    0.00    1.00   66.00     1  nginx
+
+23:44:30      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:44:31        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+23:44:31        0       618    1.00    0.00    0.00    0.00    1.00     0  multipathd
+23:44:31       33      3156    0.00    1.00    0.00    0.00    1.00     0  gunicorn
+23:44:31       33     31418   22.00   49.00    0.00    4.00   71.00     0  nginx
+23:44:31       33     31419   35.00   49.00    0.00    1.00   84.00     1  nginx
+
+23:44:31      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:44:32        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+23:44:32       33      3128    1.00    0.00    0.00    1.00    1.00     0  gunicorn
+23:44:32       33      3156    1.00    1.00    0.00    1.00    2.00     0  gunicorn
+23:44:32       33     31418   22.00   49.00    0.00    5.00   71.00     0  nginx
+23:44:32       33     31419   36.00   49.00    0.00    0.00   85.00     1  nginx
+
+23:44:32      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:44:33        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+23:44:33       33      3156    0.00    1.00    0.00    1.00    1.00     0  gunicorn
+23:44:33        0     30775    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+23:44:33       33     31418   20.00   50.00    0.00    5.00   70.00     0  nginx
+23:44:33       33     31419   34.00   51.00    0.00    1.00   85.00     1  nginx
+23:44:33        0     32390    0.00    1.00    0.00    0.00    1.00     1  kworker/u8:4-ext4-rsv-conversion
+23:44:33     1000     33047    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+23:44:33      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:44:34        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+23:44:34       33      3156    1.00    0.00    0.00    0.00    1.00     0  gunicorn
+23:44:34       33     31418   22.00   53.00    0.00    4.00   75.00     0  nginx
+23:44:34       33     31419   33.00   51.00    0.00    1.00   84.00     1  nginx
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    1.20    0.00    0.00    1.20     -  ksoftirqd/0
+Average:        0       618    0.20    0.00    0.00    0.00    0.20     -  multipathd
+Average:       33      3128    0.20    0.20    0.00    0.40    0.40     -  gunicorn
+Average:       33      3156    0.60    0.80    0.00    0.60    1.40     -  gunicorn
+Average:        0     30775    0.20    0.20    0.00    0.00    0.40     -  fail2ban-server
+Average:       33     31418   21.00   47.20    0.00    4.40   68.20     -  nginx
+Average:       33     31419   33.20   47.60    0.00    0.80   80.80     -  nginx
+Average:        0     32390    0.00    0.20    0.00    0.00    0.20     -  kworker/u8:4-events_power_efficient
+Average:     1000     33047    0.00    0.20    0.00    0.00    0.20     -  pidstat
+--- status code mix (sampled requests, limit_req active) ---
+200
+200
+200
+200
+200
+503
+200
+503
+503
+200
+200
+200
+503
+503
+200
+200
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+200
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+--- temporarily disabling limit_req for comparison ---
+--- WITHOUT limit_req ---
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.96ms   10.76ms 224.84ms   92.15%
+    Req/Sec     8.13k     1.08k   12.13k    80.43%
+  645881 requests in 20.09s, 391.17MB read
+  Non-2xx or 3xx responses: 637690
+Requests/sec:  32156.39
+Transfer/sec:     19.48MB
+Linux 7.0.0-43-generic (web) 	11/21/26 	_aarch64_	(2 CPU)
+
+23:45:00      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:45:01        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+23:45:01       33      3128   15.00   14.00    0.00   21.00   29.00     0  gunicorn
+23:45:01       33      3156   14.00    7.00    0.00   16.00   21.00     1  gunicorn
+23:45:01        0     30775    1.00    0.00    0.00    0.00    1.00     0  fail2ban-server
+23:45:01       33     33176   14.00   26.00    0.00   29.00   40.00     0  nginx
+23:45:01       33     33178   26.00   36.00    0.00   16.00   62.00     1  nginx
+23:45:01     1000     33231    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+23:45:01      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:45:02        0        14    0.00    1.00    0.00    1.00    1.00     0  ksoftirqd/0
+23:45:02        0        53    0.00    2.00    0.00    1.00    2.00     0  kswapd0
+23:45:02       33      3128   15.00   23.00    0.00   27.00   38.00     0  gunicorn
+23:45:02       33      3156   14.00    7.00    0.00   15.00   21.00     1  gunicorn
+23:45:02       33     33176   13.00   29.00    0.00   41.00   42.00     0  nginx
+23:45:02       33     33178   32.00   46.00    0.00   19.00   78.00     1  nginx
+23:45:02     1000     33231    0.00    1.00    0.00    2.00    1.00     0  pidstat
+
+23:45:02      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:45:03        0        14    0.00    0.99    0.00    0.00    0.99     0  ksoftirqd/0
+23:45:03       33      3128   14.85   21.78    0.00   25.74   36.63     0  gunicorn
+23:45:03       33      3156   13.86    8.91    0.00   15.84   22.77     1  gunicorn
+23:45:03        0     30775    0.00    0.99    0.00    0.00    0.99     0  fail2ban-server
+23:45:03       33     33176   14.85   34.65    0.00   40.59   49.50     0  nginx
+23:45:03       33     33178   27.72   49.50    0.00   18.81   77.23     1  nginx
+23:45:03     1000     33231    0.99    0.99    0.00    0.00    1.98     0  pidstat
+
+23:45:03      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:45:04        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+23:45:04        0        15    0.00    1.00    0.00    3.00    1.00     1  rcu_preempt
+23:45:04       33      3128   16.00   21.00    0.00   32.00   37.00     0  gunicorn
+23:45:04       33      3156   14.00   10.00    0.00   22.00   24.00     1  gunicorn
+23:45:04       33     33176   14.00   34.00    0.00   46.00   48.00     0  nginx
+23:45:04       33     33178   30.00   51.00    0.00   18.00   81.00     1  nginx
+23:45:04     1000     33231    0.00    1.00    0.00    1.00    1.00     0  pidstat
+
+23:45:04      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+23:45:05       33      3128   14.00   21.00    0.00   29.00   35.00     0  gunicorn
+23:45:05       33      3156   14.00   10.00    0.00   20.00   24.00     1  gunicorn
+23:45:05        0     25557    0.00    1.00    0.00    1.00    1.00     0  kworker/u8:1-writeback
+23:45:05        0     32447    0.00    1.00    0.00    1.00    1.00     0  kworker/u8:5-flush-8:0
+23:45:05       33     33176   13.00   34.00    0.00   42.00   47.00     0  nginx
+23:45:05       33     33178   31.00   49.00    0.00   17.00   80.00     1  nginx
+23:45:05     1000     33231    0.00    1.00    0.00    1.00    1.00     0  pidstat
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    0.80    0.00    0.20    0.80     -  ksoftirqd/0
+Average:        0        15    0.00    0.20    0.00    3.59    0.20     -  rcu_preempt
+Average:        0        53    0.00    0.40    0.00    0.20    0.40     -  kswapd0
+Average:       33      3128   14.97   20.16    0.00   26.95   35.13     -  gunicorn
+Average:       33      3156   13.97    8.58    0.00   17.76   22.55     -  gunicorn
+Average:        0     25557    0.00    0.20    0.00    0.20    0.20     -  kworker/u8:1-writeback
+Average:        0     30775    0.20    0.20    0.00    0.00    0.40     -  fail2ban-server
+Average:        0     32447    0.00    0.20    0.00    0.20    0.20     -  kworker/u8:5-flush-8:0
+Average:       33     33176   13.77   31.54    0.00   39.72   45.31     -  nginx
+Average:       33     33178   29.34   46.31    0.00   17.76   75.65     -  nginx
+Average:     1000     33231    0.20    1.00    0.00    0.80    1.20     -  pidstat
+--- status code mix (sampled requests, limit_req disabled) ---
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+503
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+--- restoring limit_req ---

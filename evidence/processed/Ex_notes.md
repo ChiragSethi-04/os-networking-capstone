@@ -123,3 +123,14 @@ Status for the jail: nginx-http-auth
    `- Banned IP list:
 ```
 
+## E6: rate limiting
+
+Parsed from `E6_20261121T234428.txt`.
+
+- with_limit_req: 12x200, 0x429, 48x503
+- without_limit_req: 20x200, 0x429, 40x503
+
+## E7: encryption proof
+
+HTTP readable: False. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the full tshark excerpts.
+

@@ -1,0 +1,51 @@
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c rm -f /tmp/http.pcap; nohup tcpdump -i any -w /tmp/http.pcap port 80 > /tmp/tcpdump_http.log 2>&1 & echo $! > /tmp/tcpdump_http.pid
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c rm -f /tmp/http.pcap; nohup tcpdump -i any -w /tmp/http.pcap port 80 > /tmp/tcpdump_http.log 2>&1 & echo $! > /tmp/tcpdump_http.pid
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c rm -f /tmp/http.pcap; nohup tcpdump -i any -w /tmp/http.pcap port 80 > /tmp/tcpdump_http.log 2>&1 & echo $! > /tmp/tcpdump_http.pid
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c kill $(cat /tmp/tcpdump_http.pid) 2>/dev/null; sleep 1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c kill $(cat /tmp/tcpdump_http.pid) 2>/dev/null; sleep 1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c kill $(cat /tmp/tcpdump_http.pid) 2>/dev/null; sleep 1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c rm -f /tmp/https.pcap; nohup tcpdump -i any -w /tmp/https.pcap port 443 > /tmp/tcpdump_https.log 2>&1 & echo $! > /tmp/tcpdump_https.pid
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c rm -f /tmp/https.pcap; nohup tcpdump -i any -w /tmp/https.pcap port 443 > /tmp/tcpdump_https.log 2>&1 & echo $! > /tmp/tcpdump_https.pid
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c rm -f /tmp/https.pcap; nohup tcpdump -i any -w /tmp/https.pcap port 443 > /tmp/tcpdump_https.log 2>&1 & echo $! > /tmp/tcpdump_https.pid
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c kill $(cat /tmp/tcpdump_https.pid) 2>/dev/null; sleep 1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c kill $(cat /tmp/tcpdump_https.pid) 2>/dev/null; sleep 1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c kill $(cat /tmp/tcpdump_https.pid) 2>/dev/null; sleep 1
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass transfer web:/tmp/http.pcap evidence/raw/http.pcap
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass transfer web:/tmp/http.pcap evidence/raw/http.pcap
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass transfer web:/tmp/http.pcap evidence/raw/http.pcap
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass transfer web:/tmp/https.pcap evidence/raw/https.pcap
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass transfer web:/tmp/https.pcap evidence/raw/https.pcap
+ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass transfer web:/tmp/https.pcap evidence/raw/https.pcap
+E7 raw output: evidence/raw/E7_20261121T234523.txt (pcaps saved to evidence/raw/http.pcap, https.pcap, gitignored)

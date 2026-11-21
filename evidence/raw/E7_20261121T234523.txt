@@ -1,0 +1,66 @@
+=== E7 raw output ===
+date_utc=2026-11-21T12:45:23Z
+repeats=5 quick=0
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- capturing HTTP traffic ---
+<html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+--- capturing HTTPS traffic ---
+{"status":"received"}
+--- tshark: HTTP request URI + visible payload ---
+--- tshark: HTTPS is opaque application data (no http dissection possible) ---
+22
+22,20
+
+20
+
+
+
+
+
+
+
+
+
+22
+22,20
+20
+
+
+
+
+
+
+
+
+
+22
+22,20
+20
+
+
+
+
+
+
+
+
+
+22
+22,20
+20
+
+
+
+
+
+tshark: The file "evidence/raw/https.pcap" appears to have been cut short in the middle of a packet.

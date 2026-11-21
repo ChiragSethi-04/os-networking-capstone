@@ -1,0 +1,3 @@
+scenario,requests_per_sec,http_200,http_429,http_503,other_codes
+with_limit_req,38522.8,12,0,48,0
+without_limit_req,32156.39,20,0,40,0

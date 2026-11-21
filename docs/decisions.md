@@ -503,3 +503,23 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   it happened to be correct only because Ubuntu's own default already
   matched it. Worth a line in the report's Discussion: the hardening was
   never actually *tested* for that one directive until this bug surfaced.
+
+## Phase 6 (E6's "without limit_req" scenario was not actually unlimited)
+
+- The first real E6 run showed 503s in BOTH the "with" and "without
+  limit_req" scenarios, and zero 429s in either - not the expected
+  "mostly 429 with limiting, mostly 200 without" contrast. Cause: the
+  `/api/` location has two independent rate-control directives,
+  `limit_req` (requests/sec, returns 429 when exceeded) and `limit_conn`
+  (concurrent connections per source IP, returns 503 when exceeded).
+  `run_E6.sh` only toggled `limit_req`; `limit_conn conn_zone 20` stayed
+  active throughout, and `wrk -t4 -c200` opens 200 concurrent connections
+  from the single attacker IP - comfortably over that cap regardless of
+  `limit_req`'s state, so both runs hit the same `limit_conn` ceiling and
+  the comparison never actually reached an unlimited baseline.
+- Fixed by having `run_E6.sh` disable and restore `limit_conn` alongside
+  `limit_req` for the "without" scenario, so that run is genuinely
+  unthrottled and the contrast with "with" (both directives active, the
+  real hardened state) is the one the report should discuss. Needs a
+  clean re-run once E7-E9 finish (not restarted mid-stream, to avoid
+  racing the background experiment run already using the old script).
