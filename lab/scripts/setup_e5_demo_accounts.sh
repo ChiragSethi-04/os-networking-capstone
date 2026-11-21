@@ -18,12 +18,28 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 source lab/.secrets/secrets.env
 
+# See docs/decisions.md: a multipass exec/transfer call can occasionally
+# hit a short, self-clearing "ssh connection failed: Connection refused"
+# window under host memory pressure, not a broken VM.
+mp_retry() {
+  local attempt=1 max=15
+  until "$@"; do
+    if (( attempt >= max )); then
+      echo "mp_retry: giving up after $max attempts: $*" >&2
+      return 1
+    fi
+    echo "mp_retry: attempt $attempt failed, retrying in 10s: $*" >&2
+    attempt=$(( attempt + 1 ))
+    sleep 10
+  done
+}
+
 echo "--- creating bftest SSH user on web (password auth, demo only) ---"
-multipass exec web -- sudo bash -c "
+mp_retry multipass exec web -- sudo bash -c "
   id -u bftest >/dev/null 2>&1 || useradd -m -s /bin/bash bftest
   echo 'bftest:${DEMO_WEAK_PASSWORD}' | chpasswd
 "
-multipass exec web -- sudo bash -c '
+mp_retry multipass exec web -- sudo bash -c '
   sed -i "s/^AllowUsers ubuntu$/AllowUsers ubuntu bftest/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
   sed -i "s/^PasswordAuthentication no$/PasswordAuthentication yes/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
   sshd -t
@@ -31,10 +47,10 @@ multipass exec web -- sudo bash -c '
 '
 
 echo "--- creating /admin-demo/ Nginx path with weak htpasswd (demo only) ---"
-multipass exec web -- sudo mkdir -p /var/www/html/admin-demo
-multipass exec web -- bash -c "echo '<h1>demo</h1>' | sudo tee /var/www/html/admin-demo/index.html >/dev/null"
-multipass exec web -- bash -c "echo '${DEMO_WEAK_PASSWORD}' | sudo tee /tmp/demopw >/dev/null"
-multipass exec web -- sudo bash -c '
+mp_retry multipass exec web -- sudo mkdir -p /var/www/html/admin-demo
+mp_retry multipass exec web -- bash -c "echo '<h1>demo</h1>' | sudo tee /var/www/html/admin-demo/index.html >/dev/null"
+mp_retry multipass exec web -- bash -c "echo '${DEMO_WEAK_PASSWORD}' | sudo tee /tmp/demopw >/dev/null"
+mp_retry multipass exec web -- sudo bash -c '
   htpasswd -b -c /etc/nginx/.htpasswd-demo admin "$(cat /tmp/demopw)"
   rm -f /tmp/demopw
 '
@@ -42,7 +58,7 @@ multipass exec web -- sudo bash -c '
 # (not a second server block on the same listen/server_name - nginx would
 # only ever route requests to the first-defined block in that case, so a
 # second block's location would silently never be reached).
-multipass exec web -- sudo python3 - <<'PYEOF'
+mp_retry multipass exec web -- sudo python3 - <<'PYEOF'
 path = "/etc/nginx/sites-available/meridian.conf"
 marker = "# --- E5 demo path, added by setup_e5_demo_accounts.sh, removed by teardown ---"
 block = f"""
@@ -58,6 +74,6 @@ idx = text.rstrip().rfind("}")
 text = text[:idx] + block + text[idx:]
 open(path, "w").write(text)
 PYEOF
-multipass exec web -- sudo bash -c 'nginx -t && systemctl reload nginx'
+mp_retry multipass exec web -- sudo bash -c 'nginx -t && systemctl reload nginx'
 
 echo "E5 demo accounts ready. Run experiments/run_E5.sh next, then teardown_e5_demo_accounts.sh."

@@ -33,3 +33,10 @@ Parsed 16 runs from `E1_20261121T222135.txt`.
 
 Note: `latency_p90_ms` is wrk's 90th percentile bucket, used as a p95 proxy (wrk's default histogram does not expose p95 directly).
 
+## E4: attack surface
+
+- web before: 3 open ports (22;80;443)
+- web after: 3 open ports (22;80;443)
+- db before: 0 open ports ()
+- db after: 0 open ports ()
+

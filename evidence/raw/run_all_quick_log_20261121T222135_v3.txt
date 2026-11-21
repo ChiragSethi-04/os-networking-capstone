@@ -176,3 +176,9 @@ Wrote /Users/chiragsethi/Downloads/OS/evidence/processed/E3.csv (4 rows)
 ==================================================================
 Running E4
 ==================================================================
+E4 raw output: evidence/raw/E4_20261121T224427.txt
+(before-hardening nmap files: evidence/raw/nmap_web_before.txt, nmap_db_before.txt)
+Wrote /Users/chiragsethi/Downloads/OS/evidence/processed/E4_ports.csv (4 rows)
+--- creating bftest SSH user on web (password auth, demo only) ---
+--- creating /admin-demo/ Nginx path with weak htpasswd (demo only) ---
+exec failed: ssh connection failed: 'Connection refused'

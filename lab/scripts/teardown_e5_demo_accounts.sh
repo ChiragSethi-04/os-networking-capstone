@@ -8,8 +8,24 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
+# See docs/decisions.md: a multipass exec/transfer call can occasionally
+# hit a short, self-clearing "ssh connection failed: Connection refused"
+# window under host memory pressure, not a broken VM.
+mp_retry() {
+  local attempt=1 max=15
+  until "$@"; do
+    if (( attempt >= max )); then
+      echo "mp_retry: giving up after $max attempts: $*" >&2
+      return 1
+    fi
+    echo "mp_retry: attempt $attempt failed, retrying in 10s: $*" >&2
+    attempt=$(( attempt + 1 ))
+    sleep 10
+  done
+}
+
 echo "--- removing bftest user, restoring sshd hardening ---"
-multipass exec web -- sudo bash -c '
+mp_retry multipass exec web -- sudo bash -c '
   userdel -r bftest 2>/dev/null || true
   sed -i "s/^AllowUsers ubuntu bftest$/AllowUsers ubuntu/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
   sed -i "s/^PasswordAuthentication yes$/PasswordAuthentication no/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
@@ -18,7 +34,7 @@ multipass exec web -- sudo bash -c '
 '
 
 echo "--- removing /admin-demo/ path ---"
-multipass exec web -- sudo python3 - <<'PYEOF'
+mp_retry multipass exec web -- sudo python3 - <<'PYEOF'
 import re
 path = "/etc/nginx/sites-available/meridian.conf"
 text = open(path).read()
@@ -33,7 +49,7 @@ text = re.sub(
 )
 open(path, "w").write(text)
 PYEOF
-multipass exec web -- sudo bash -c '
+mp_retry multipass exec web -- sudo bash -c '
   rm -f /etc/nginx/.htpasswd-demo
   rm -rf /var/www/html/admin-demo
   nginx -t && systemctl reload nginx
@@ -41,7 +57,7 @@ multipass exec web -- sudo bash -c '
 
 echo "--- verifying key-only SSH login still works ---"
 source lab/.env
-ssh -i lab/.secrets/capstone_id_ed25519 -o StrictHostKeyChecking=accept-new \
+mp_retry ssh -i lab/.secrets/capstone_id_ed25519 -o StrictHostKeyChecking=accept-new \
   -o ConnectTimeout=5 "ubuntu@${WEB_IP}" "echo key login still ok"
 
 echo "E5 demo accounts removed, hardened state restored."
