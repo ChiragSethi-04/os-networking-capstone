@@ -231,3 +231,83 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   retaken once Phase 4 is finalised so the demo-reset path also starts
   from the patched state, and this is tracked as a to-do rather than
   silently assumed.
+
+## Phase 1/3/4 (recurring: `multipass stop` + `start` sometimes wedges a VM at the hypervisor level, not just the guest)
+
+- Beyond the sshd-specific wedge above, `web` and later `db` each hit a
+  second, different failure: after a `multipass stop`/`start` cycle (the
+  one `clean-baseline` snapshotting itself requires - `multipass snapshot
+  --help` confirms it only works on a stopped instance, so this cannot be
+  avoided by snapshotting live), the instance stayed in `multipass list`
+  state `Unknown` indefinitely. Checked whether this was "just a slow
+  boot" by watching the instance's own `qemu-system-aarch64` process's
+  accumulated CPU time across several minutes: it stayed essentially flat
+  (around 15 seconds of CPU total, unchanged over 3+ minutes of wall
+  clock), which is not consistent with an actual Linux boot in progress
+  (that consumes CPU continuously for at least the first 30-60 seconds) -
+  this is a genuine hypervisor-level stall, not a slow or hung guest OS.
+- `multipass restart` does not help (same class of failure as the
+  SSH-dependent commands above). The only recovery found: `multipass
+  delete <name> --purge` followed by a fresh `multipass launch` (via
+  `lab/scripts/provision.sh`, which already skips VMs that still exist and
+  launches only the missing one). This loses that VM's disk state, so
+  Phase 2 (site/app/db) and Phase 3/4 (TLS/hardening) have to be redone
+  for a VM rebuilt this way - costly, but faster than continuing to wait
+  on a wedge that polling alone does not resolve.
+- `lab/scripts/provision.sh`'s snapshot step was hardened in response:
+  it now skips re-snapshotting an instance that already has a
+  `clean-baseline` snapshot (`multipass info` reports it; re-running
+  `multipass snapshot` on top of the Unknown-state churn this bug causes
+  was itself making things worse), uses the same poll-based
+  `wait_for_running` helper as `launch_vm` instead of trusting `multipass
+  start`'s own wait, and pipes every `multipass stop`/`snapshot`/`start`
+  call through `cat >/dev/null` rather than discarding output directly
+  (the already-documented /dev/null-hang rule, applied here too since
+  these commands were not originally thought to be at risk).
+- This is recorded honestly as a genuine limitation of the lab platform on
+  this host (report Section 5.3, Challenges and Edge Cases) rather than
+  hidden: Multipass's QEMU driver on this Apple Silicon Mac is not fully
+  reliable across repeated stop/start cycles, independent of anything
+  this project configured inside the guests.
+- Separately, a real scripting bug compounded this: `provision.sh`'s
+  polling loop read `state=$(multipass info "$name" ...)` with no `||
+  true` guard; a single transient nonzero exit from `multipass info`
+  while an instance's state was still changing silently killed the whole
+  script under `set -e`, with no error message (observed: the script
+  printed "[web] launching..." and then simply exited 0). Fixed by adding
+  `|| true` to that assignment - the loop already checks the resulting
+  `$state` string directly afterward, so a transient empty read just
+  means one more polling iteration, not a crash.
+
+## Phase 1 (`pipefail` masked a successful grep match behind an unrelated nonzero exit code)
+
+- `provision.sh`'s cloud-init-terminal-state loop was observed to always
+  burn its full 300-second wait, on every VM, every time, even though
+  `multipass exec "$name" -- cloud-init status` was confirmed (checked
+  directly) to print `status: done` well within a few seconds. Root
+  cause: `cloud-init status` itself exits with status 2 for "degraded
+  done" (its own documented behaviour, not a bug), and this image's
+  cloud-init always ends up "degraded" because of the harmless NIC-rename
+  race already documented above. The loop was written as `if multipass
+  exec ... | grep -qE "status: (done|error)"; then break; fi` - under
+  `pipefail` (set at the top of this script), a pipeline's reported exit
+  status is "the last command to exit non-zero," which is `multipass
+  exec`'s 2, not `grep`'s 0, even when `grep` genuinely matched. So the
+  `if` was always false regardless of the real cloud-init state, and the
+  loop only ever exited via its own 300s timeout, not via detecting
+  success.
+- The identical shape of bug was found by inspection in
+  `lab/scripts/test_phase3.sh`'s two `openssl s_client | grep -q` checks:
+  `openssl s_client` exits non-zero on a rejected handshake, which is the
+  EXPECTED, correct outcome for the TLS 1.1 check, so the same
+  pipefail-vs-grep masking would have made that check report FAIL even
+  when TLS 1.1 was correctly rejected.
+- Fixed both by capturing the command's output into a variable first
+  (`output=$(cmd || true)`) and then running `grep` against the variable
+  as a separate statement, so `grep`'s own exit status is what the `if`
+  sees, completely decoupled from the inner command's unrelated exit
+  code. General rule added alongside the existing "never redirect
+  multipass output straight to /dev/null" one: never pipe a `multipass`
+  (or any command whose own exit code is not a reliable proxy for "did
+  grep find what we wanted") call directly into `grep -q` under
+  `pipefail` - capture to a variable first.

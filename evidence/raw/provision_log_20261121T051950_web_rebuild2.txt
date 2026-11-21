@@ -1,0 +1,32 @@
+[web] already exists, skipping launch
+[db] already exists, skipping launch
+[attacker] already exists, skipping launch
+Waiting for cloud-init to finish on all VMs...
+...................................................................................................................status: done
+status: done
+status: done
+Recorded IPs in lab/.env:
+WEB_IP=192.168.252.12
+DB_IP=192.168.252.10
+ATT_IP=192.168.252.11
+[web] deploying the hosts-entry systemd unit
+Created symlink '/etc/systemd/system/multi-user.target.wants/capstone-hosts.service' → '/etc/systemd/system/capstone-hosts.service'.
+[db] deploying the hosts-entry systemd unit
+[attacker] deploying the hosts-entry systemd unit
+[web] verifying SSH key login as ubuntu
+[web] ubuntu authorized_keys OK
+[db] verifying SSH key login as ubuntu
+[db] ubuntu authorized_keys OK
+[attacker] verifying SSH key login as ubuntu
+[attacker] ubuntu authorized_keys OK
+Disabling unattended-upgrades (it rebooted the web VM mid-Phase-4 once without warning; see docs/decisions.md)...
+Installing wrk on web and attacker (not always in Ubuntu apt, build from source if missing)...
+wrk installed via apt
+wrk already present
+Ensuring testssl.sh is present on attacker (cloud-init's runcmd clone can race the network at first boot)...
+testssl.sh already present
+Taking clean-baseline snapshots...
+[2K[0A[0EStopping web  /-\|/-\|/-\|/ [2K[0A[0E[2K[0A[0ETaking snapshot  / [2K[0A[0ESnapshot taken: web.clean-baseline
+[2K[0A[0EStarting web  /-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/ [2K[0A[0E[2K[0A[0EStopping db  /-\|/-\|/-\|/-\| [2K[0A[0E[2K[0A[0ETaking snapshot  / [2K[0A[0Esnapshot failed: Snapshot already exists: db.clean-baseline
+[2K[0A[0EStarting db  /-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/ [2K[0A[0Estart failed: The following errors occurred:
+db: timed out waiting for response

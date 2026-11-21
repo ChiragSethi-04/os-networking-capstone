@@ -14,10 +14,10 @@ OUT="evidence/raw/E4_$(date +%Y%m%dT%H%M%S).txt"
 {
   echo "=== E4 raw output ==="
   echo "date_utc=$(date -u +%FT%TZ)"
-  echo "--- nmap -sV -p- web (after hardening) ---"
-  multipass exec attacker -- nmap -sV -p- "${WEB_IP}"
-  echo "--- nmap -sV -p- db (after hardening) ---"
-  multipass exec attacker -- nmap -sV -p- "${DB_IP}"
+  echo "--- nmap -sV -T4 -p- web (after hardening) ---"
+  multipass exec attacker -- nmap -sV -T4 -p- "${WEB_IP}"
+  echo "--- nmap -sV -T4 -p- db (after hardening) ---"
+  multipass exec attacker -- nmap -sV -T4 -p- "${DB_IP}"
   echo "--- nikto -h https://web -ssl ---"
   multipass exec attacker -- bash -c "nikto -h https://${WEB_IP} -ssl" || true
 } > "$OUT" 2>&1

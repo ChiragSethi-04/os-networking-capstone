@@ -107,9 +107,9 @@ echo "--- TLS protocol checks ---"
 echo "=== Phase 4: firewall, SSH, Fail2Ban, MariaDB hardening ==="
 
 echo "nmap BEFORE hardening (web)"
-multipass exec attacker -- nmap -sV -p- "${WEB_IP}" > evidence/raw/nmap_web_before.txt || true
+multipass exec attacker -- nmap -sV -T4 -p- "${WEB_IP}" > evidence/raw/nmap_web_before.txt || true
 echo "nmap BEFORE hardening (db)"
-multipass exec attacker -- nmap -sV -p- "${DB_IP}" > evidence/raw/nmap_db_before.txt || true
+multipass exec attacker -- nmap -sV -T4 -p- "${DB_IP}" > evidence/raw/nmap_db_before.txt || true
 
 echo "--- ufw on web ---"
 multipass transfer lab/configs/ufw/web_rules.sh web:/tmp/web_rules.sh
@@ -117,6 +117,7 @@ multipass exec web -- bash /tmp/web_rules.sh
 
 MAC_IP=$(multipass exec web -- bash -c "ip route | awk '/default/ {print \$3; exit}'")
 echo "Detected Mac/gateway IP on the Multipass network: ${MAC_IP}"
+sed -i '' '/^MAC_IP=/d' lab/.env 2>/dev/null || sed -i '/^MAC_IP=/d' lab/.env
 echo "MAC_IP=${MAC_IP}" >> lab/.env
 
 echo "--- ufw on db ---"
@@ -196,9 +197,9 @@ multipass exec web -- sudo mkdir -p /var/www/html/no-index
 } > evidence/raw/directory_listing_check.txt
 
 echo "nmap AFTER hardening (web)"
-multipass exec attacker -- nmap -sV -p- "${WEB_IP}" > evidence/raw/nmap_web_after.txt || true
+multipass exec attacker -- nmap -sV -T4 -p- "${WEB_IP}" > evidence/raw/nmap_web_after.txt || true
 echo "nmap AFTER hardening (db)"
-multipass exec attacker -- nmap -sV -p- "${DB_IP}" > evidence/raw/nmap_db_after.txt || true
+multipass exec attacker -- nmap -sV -T4 -p- "${DB_IP}" > evidence/raw/nmap_db_after.txt || true
 
 echo "--- nikto scan ---"
 multipass exec attacker -- bash -c "nikto -h https://${WEB_IP} -ssl 2>&1" > evidence/raw/nikto_web.txt || true

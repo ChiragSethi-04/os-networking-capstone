@@ -3,7 +3,7 @@
 
 [1mTesting all IPv4 addresses (port 443): [m192.168.252.9
 -----------------------------------------------------
-[7m Start 2026-11-21 02:27:52 (UTC offset: +1100)        -->> 192.168.252.9:443 (192.168.252.9) <<--[m
+[7m Start 2026-11-21 02:37:38 (UTC offset: +1100)        -->> 192.168.252.9:443 (192.168.252.9) <<--[m
 
 [1m rDNS [m(192.168.252.9):   web.
 [1m DNS HTTPS RR[m (expt.):   --
@@ -86,15 +86,15 @@ Hexcode  Cipher Suite Name (OpenSSL)       KeyExch.   Encryption  Bits     Ciphe
 [1m Server key size              [mEC [0;32m256[m bits (curve P-256)
 [1m Server key usage             [m--
 [1m Server extended key usage    [m--
-[1m Serial                       [m6A3971A50252216C619D6B757551AC3726299986 (OK: length 20)
-[1m Fingerprints                 [mSHA1 848254C0FF9D9C4021C850FC2DB840CAD39210FA
-                              SHA256 857251C21E666526E503A64A64738AF3A897CA157D34879C8D513AD20B9C2CC3
+[1m Serial                       [m6A3971A50252216C619D6B757551AC3726299987 (OK: length 20)
+[1m Fingerprints                 [mSHA1 F1CE3F529D13B989FA851B3A89FA4F05596B5160
+                              SHA256 24382A3FBB568A738B4AAFCF2B12246F57C5C23EA8892CA3665F51877DDBB19D
 [1m Common Name (CN)             [m[3mweb [m
 [1m subjectAltName (SAN)         [m[3mweb localhost 192.168.252.9 [m
 [1m Trust (hostname)             [m[0;32mOk via SAN[m
 [1m Chain of trust[m               [1;31mNOT ok[m (chain incomplete)
 [1m EV cert[m (experimental)       no 
-[1m Certificate Validity (UTC)   [m[0;32m365 >= 60 days[m (2026-11-20 15:36 --> 2027-11-20 15:36)
+[1m Certificate Validity (UTC)   [m[0;32m365 >= 60 days[m (2026-11-20 16:55 --> 2027-11-20 16:55)
 [1m ETS/"eTLS"[m, visibility info  not present
 [1m Certificate Revocation List  [m--
 [1m OCSP URI                     [m--
@@ -111,7 +111,7 @@ Hexcode  Cipher Suite Name (OpenSSL)       KeyExch.   Encryption  Bits     Ciphe
 [1m[4m Testing HTTP header response @ "/" [m
 
 [1m HTTP Status Code           [m  200 OK
-[1m HTTP clock skew              [m+496 sec from localtime
+[1m HTTP clock skew              [m+2679 sec from localtime
 [1m Strict Transport Security    [m[0;32m730 days[m=63072000 s[0;32m, includeSubDomains[m
 [1m Public Key Pinning           [m--
 [1m Server banner                [mnginx
@@ -202,7 +202,7 @@ Hexcode  Cipher Suite Name (OpenSSL)       KeyExch.   Encryption  Bits     Ciphe
 [1m Grade cap reasons            [mGrade capped to B. Issues with chain of trust
                                 (chain incomplete)
 
-[7m Done 2026-11-21 02:29:00 (UTC offset: +1100) [  69s] -->> 192.168.252.9:443 (192.168.252.9) <<--[m
+[7m Done 2026-11-21 02:38:45 (UTC offset: +1100) [  69s] -->> 192.168.252.9:443 (192.168.252.9) <<--[m
 
 -----------------------------------------------------
 [1mDone testing now all IP addresses (on port 443): [m192.168.252.9

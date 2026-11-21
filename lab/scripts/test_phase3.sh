@@ -21,8 +21,16 @@ code=$(curl -s --cacert lab/.secrets/ca/ca.crt --resolve "web:443:${WEB_IP}" \
 echo "code=$code"
 [[ "$code" == "200" ]] || { echo "FAIL: expected 200 with trusted CA"; fail=1; }
 
+# Output captured into a variable first, not `multipass exec ... | grep -q`
+# directly: `openssl s_client` exits nonzero on a failed/rejected
+# handshake (the TLS 1.1 case below is EXPECTED to fail), and under
+# `pipefail` that nonzero code propagates as the whole pipeline's result
+# regardless of whether grep matched - the same masking bug found in
+# provision.sh's cloud-init status check (see docs/decisions.md).
+
 echo "--- openssl s_client -tls1_1 from attacker (expect fail) ---"
-if multipass exec attacker -- bash -c "echo | openssl s_client -connect ${WEB_IP}:443 -tls1_1" 2>&1 | grep -qi "handshake failure\|wrong version\|no protocols available\|alert"; then
+tls11_output=$(multipass exec attacker -- bash -c "echo | openssl s_client -connect ${WEB_IP}:443 -tls1_1" 2>&1 || true)
+if echo "$tls11_output" | grep -qi "handshake failure\|wrong version\|no protocols available\|alert"; then
   echo "OK: TLS 1.1 rejected"
 else
   echo "FAIL: TLS 1.1 was not rejected"
@@ -30,7 +38,8 @@ else
 fi
 
 echo "--- openssl s_client -tls1_3 from attacker (expect success) ---"
-if multipass exec attacker -- bash -c "echo | openssl s_client -connect ${WEB_IP}:443 -tls1_3" 2>&1 | grep -q "Verify return code"; then
+tls13_output=$(multipass exec attacker -- bash -c "echo | openssl s_client -connect ${WEB_IP}:443 -tls1_3" 2>&1 || true)
+if echo "$tls13_output" | grep -q "Verify return code"; then
   echo "OK: TLS 1.3 handshake succeeded"
 else
   echo "FAIL: TLS 1.3 handshake did not complete"

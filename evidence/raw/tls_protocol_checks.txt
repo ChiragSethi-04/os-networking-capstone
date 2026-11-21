@@ -1,6 +1,6 @@
 openssl s_client -tls1_1 (expect failure):
 Connecting to 192.168.252.9
-E09CADAC60E30000:error:0A0000BF:SSL routines:tls_setup_handshake:no protocols available:../ssl/statem/statem_lib.c:155:
+E07C9A47FDE30000:error:0A0000BF:SSL routines:tls_setup_handshake:no protocols available:../ssl/statem/statem_lib.c:155:
 CONNECTED(00000003)
 ---
 no peer certificate available
@@ -32,10 +32,10 @@ verify error:num=21:unable to verify the first certificate
 verify return:1
 depth=0 C=IN, O=Meridian Logistics, CN=web
 verify error:num=9:certificate is not yet valid
-notBefore=Nov 20 15:36:08 2026 GMT
+notBefore=Nov 20 16:55:32 2026 GMT
 verify return:1
 depth=0 C=IN, O=Meridian Logistics, CN=web
-notBefore=Nov 20 15:36:08 2026 GMT
+notBefore=Nov 20 16:55:32 2026 GMT
 verify return:1
 CONNECTED(00000003)
 ---
@@ -43,21 +43,21 @@ Certificate chain
  0 s:C=IN, O=Meridian Logistics, CN=web
    i:C=IN, O=Capstone Group 6, CN=Capstone Lab Root CA
    a:PKEY: EC, (prime256v1); sigalg: ecdsa-with-SHA256
-   v:NotBefore: Nov 20 15:36:08 2026 GMT; NotAfter: Nov 20 15:36:08 2027 GMT
+   v:NotBefore: Nov 20 16:55:32 2026 GMT; NotAfter: Nov 20 16:55:32 2027 GMT
 ---
 Server certificate
 -----BEGIN CERTIFICATE-----
-MIIB5DCCAYqgAwIBAgIUajlxpQJSIWxhnWt1dVGsNyYpmYYwCgYIKoZIzj0EAwIw
+MIIB5DCCAYqgAwIBAgIUajlxpQJSIWxhnWt1dVGsNyYpmYcwCgYIKoZIzj0EAwIw
 RzELMAkGA1UEBhMCSU4xGTAXBgNVBAoMEENhcHN0b25lIEdyb3VwIDYxHTAbBgNV
-BAMMFENhcHN0b25lIExhYiBSb290IENBMB4XDTI2MTEyMDE1MzYwOFoXDTI3MTEy
-MDE1MzYwOFowODELMAkGA1UEBhMCSU4xGzAZBgNVBAoMEk1lcmlkaWFuIExvZ2lz
-dGljczEMMAoGA1UEAwwDd2ViMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdcsb
-NtzVqa+7Vu9kH2DAe6R44O7pr7CpxiIM5d4GQtS2OoqOxNuNfkpJ3liOFJobubfZ
-H/ZhsDBo3NKcw0yKp6NjMGEwHwYDVR0RBBgwFoIDd2Vigglsb2NhbGhvc3SHBMCo
-/AkwHQYDVR0OBBYEFGFh6fUumYwVK2WDd7Z9YvonhT+WMB8GA1UdIwQYMBaAFDkF
-wA23dmIAqIbrVS4EeKGRvs3lMAoGCCqGSM49BAMCA0gAMEUCIHL+jW4uxP7nF8u9
-SExXtiwVLgJ1zQp+vPUdpaRLv4UDAiEA/rtQjoqsaIB1XqzIEH0Y/AyY13DTGJoH
-zPfwb+vNpUc=
+BAMMFENhcHN0b25lIExhYiBSb290IENBMB4XDTI2MTEyMDE2NTUzMloXDTI3MTEy
+MDE2NTUzMlowODELMAkGA1UEBhMCSU4xGzAZBgNVBAoMEk1lcmlkaWFuIExvZ2lz
+dGljczEMMAoGA1UEAwwDd2ViMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEtOn5
+EW39oTRXBkmlR6VmmoJTN4Vc7jjj1ntm+BVhgCzKatsCb4tqd8xcRGSOIsZc2Hin
+iwTYxV+2xx/KApSGUaNjMGEwHwYDVR0RBBgwFoIDd2Vigglsb2NhbGhvc3SHBMCo
+/AkwHQYDVR0OBBYEFJPF9nDlZ7ExiM7uliqRD3pCTkcPMB8GA1UdIwQYMBaAFDkF
+wA23dmIAqIbrVS4EeKGRvs3lMAoGCCqGSM49BAMCA0gAMEUCIBMZeA1HKIYsJAkw
+c4jiqyGHAVvmJHwUe4E8d/JhDGOFAiEA+vFP3Stj74P3/XbEp7+A4OlEgekcSdoF
+JIJPEbmvWxo=
 -----END CERTIFICATE-----
 subject=C=IN, O=Meridian Logistics, CN=web
 issuer=C=IN, O=Capstone Group 6, CN=Capstone Lab Root CA

@@ -37,7 +37,13 @@ launch_vm() {
 
   local waited=0 state=""
   while (( waited < 600 )); do
-    state=$(multipass info "$name" --format csv 2>/dev/null | tail -1 | cut -d',' -f2)
+    # `|| true`: `multipass info` can transiently return nonzero while the
+    # instance is still being created, and without this guard that single
+    # failed poll silently kills the whole script under `set -e` (observed:
+    # provision.sh exited right after printing "launching...", no error
+    # message, because the failure is inside a bare `var=$(...)` with no
+    # explicit handling). See docs/decisions.md.
+    state=$(multipass info "$name" --format csv 2>/dev/null | tail -1 | cut -d',' -f2) || true
     [[ "$state" == "Running" ]] && break
     sleep 5
     waited=$(( waited + 5 ))
@@ -50,7 +56,16 @@ launch_vm() {
 
   waited=0
   while (( waited < 300 )); do
-    if multipass exec "$name" -- cloud-init status 2>/dev/null | grep -qE "status: (done|error)"; then
+    # Captured into a variable first, not `multipass exec ... | grep -q`
+    # directly: cloud-init on this image always reports "degraded done"
+    # (the harmless NIC-rename race - see docs/decisions.md), so
+    # `multipass exec`'s own exit code is always 2 even when it genuinely
+    # printed "status: done". Under `pipefail`, that nonzero code was
+    # still surfacing as the whole `if` pipeline's result regardless of
+    # whether grep matched, so this check was ALWAYS false and the loop
+    # silently burned the full 300s on every single run.
+    status_output=$(multipass exec "$name" -- cloud-init status 2>/dev/null || true)
+    if echo "$status_output" | grep -qE "status: (done|error)"; then
       break
     fi
     sleep 5
@@ -171,11 +186,32 @@ multipass exec attacker -- bash -c '
   fi
 '
 
+# `multipass start`'s own wait is as unreliable here as `multipass
+# launch`'s (see the comment in launch_vm above) - it can report "timed
+# out waiting for response" and leave the instance in "Unknown" even
+# though the VM boots fine moments later. Poll `multipass list` instead of
+# trusting the command's exit status, same as launch_vm does.
+wait_for_running() {
+  local name="$1" waited=0
+  while (( waited < 120 )); do
+    multipass list 2>/dev/null | grep "^$name " | grep -q Running && return 0
+    sleep 5
+    waited=$(( waited + 5 ))
+  done
+  echo "[$name] WARNING: did not confirm Running within ${waited}s after start" >&2
+  return 1
+}
+
 echo "Taking clean-baseline snapshots..."
 for name in web db attacker; do
-  multipass stop "$name"
-  multipass snapshot "$name" --name clean-baseline --comment "Post phase-1 provisioning" || true
-  multipass start "$name"
+  if multipass info "$name" 2>&1 | grep -q "clean-baseline"; then
+    echo "[$name] clean-baseline snapshot already exists, skipping"
+    continue
+  fi
+  multipass stop "$name" 2>&1 | cat >/dev/null || true
+  multipass snapshot "$name" --name clean-baseline --comment "Post phase-1 provisioning" 2>&1 | cat >/dev/null || true
+  multipass start "$name" 2>&1 | cat >/dev/null || true
+  wait_for_running "$name" || true
 done
 
 OUT="evidence/raw/lab_inventory.txt"
