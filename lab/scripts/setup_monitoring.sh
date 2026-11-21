@@ -8,11 +8,28 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
+# See docs/decisions.md: a multipass exec/transfer call can occasionally
+# hit a short (10-30s), self-clearing "ssh connection failed: Connection
+# refused" window, most often shortly after another phase's heavy VM
+# activity. Retrying beats aborting the whole script under `set -e`.
+mp_retry() {
+  local attempt=1 max=6
+  until "$@"; do
+    if (( attempt >= max )); then
+      echo "mp_retry: giving up after $max attempts: $*" >&2
+      return 1
+    fi
+    echo "mp_retry: attempt $attempt failed, retrying in 10s: $*" >&2
+    attempt=$(( attempt + 1 ))
+    sleep 10
+  done
+}
+
 echo "--- monitor script + timer on web ---"
-multipass transfer lab/configs/systemd/monitor_on_web.sh web:/tmp/web_status_monitor.sh
-multipass transfer lab/configs/systemd/capstone-monitor.service web:/tmp/capstone-monitor.service
-multipass transfer lab/configs/systemd/capstone-monitor.timer web:/tmp/capstone-monitor.timer
-multipass exec web -- sudo bash -c '
+mp_retry multipass transfer lab/configs/systemd/monitor_on_web.sh web:/tmp/web_status_monitor.sh
+mp_retry multipass transfer lab/configs/systemd/capstone-monitor.service web:/tmp/capstone-monitor.service
+mp_retry multipass transfer lab/configs/systemd/capstone-monitor.timer web:/tmp/capstone-monitor.timer
+mp_retry multipass exec web -- sudo bash -c '
   set -e
   mv /tmp/web_status_monitor.sh /usr/local/bin/web_status_monitor.sh
   chmod +x /usr/local/bin/web_status_monitor.sh
