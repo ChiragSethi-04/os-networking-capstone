@@ -10,6 +10,26 @@ cd "$ROOT_DIR"
 source lab/.env
 mkdir -p evidence/raw lab/.secrets/ca
 
+# A firewall-reloading step (ufw, Fail2Ban enabling its jails) was
+# observed to make a VM's SSH port briefly refuse connections - a few
+# seconds, not the permanent hypervisor-level wedge documented elsewhere
+# in docs/decisions.md (confirmed by polling port 22 with `nc` every 10s:
+# it cleared on its own well within a minute, no VM restart needed).
+# Wraps a multipass command with a short retry instead of letting one bad
+# timing window abort the whole script under `set -e`.
+mp_retry() {
+  local attempt=1 max=6
+  until "$@"; do
+    if (( attempt >= max )); then
+      echo "mp_retry: giving up after $max attempts: $*" >&2
+      return 1
+    fi
+    echo "mp_retry: attempt $attempt failed, retrying in 10s: $*" >&2
+    attempt=$(( attempt + 1 ))
+    sleep 10
+  done
+}
+
 #######################################
 # Phase 3: local CA + server certificate, TLS
 #######################################
@@ -177,9 +197,9 @@ for name in web db attacker; do
 done
 
 echo "--- Fail2Ban on web ---"
-multipass transfer lab/configs/fail2ban/jail.local web:/tmp/jail.local
-multipass transfer lab/configs/fail2ban/filter-nginx-limit-req.conf web:/tmp/filter-nginx-limit-req.conf
-multipass exec web -- sudo bash -c '
+mp_retry multipass transfer lab/configs/fail2ban/jail.local web:/tmp/jail.local
+mp_retry multipass transfer lab/configs/fail2ban/filter-nginx-limit-req.conf web:/tmp/filter-nginx-limit-req.conf
+mp_retry multipass exec web -- sudo bash -c '
   mv /tmp/jail.local /etc/fail2ban/jail.local
   mv /tmp/filter-nginx-limit-req.conf /etc/fail2ban/filter.d/nginx-limit-req.conf
   systemctl enable fail2ban
@@ -188,7 +208,7 @@ multipass exec web -- sudo bash -c '
 
 echo "--- directory listing proof (expect 403/404) ---"
 mkdir -p /tmp/no_index_test
-multipass exec web -- sudo mkdir -p /var/www/html/no-index
+mp_retry multipass exec web -- sudo mkdir -p /var/www/html/no-index
 {
   echo "HTTP (port 80):"
   curl -s -o /dev/null -w "HTTP %{http_code}\n" "http://${WEB_IP}/no-index/"

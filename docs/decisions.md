@@ -311,3 +311,25 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   (or any command whose own exit code is not a reliable proxy for "did
   grep find what we wanted") call directly into `grep -q` under
   `pipefail` - capture to a variable first.
+
+## Phase 3/4 (the recurring Fail2Ban-step wedge is a short, self-clearing blip, not another hypervisor stall)
+
+- After fixing unattended-upgrades, the exact same "ssh connection failed:
+  Connection refused" still recurred at the exact same point - right at
+  the Fail2Ban deployment step - on a second full run. This time, instead
+  of assuming another permanent wedge, polled raw TCP port 22 directly
+  with `nc` every 10 seconds (bypassing Multipass entirely) while leaving
+  the VM alone: it recovered on its own within about 10 seconds, with the
+  VM's own `qemu-system-aarch64` process's CPU time still climbing
+  normally throughout (unlike the earlier genuine hypervisor stalls, where
+  CPU time stayed flat for many minutes). So this is a short, self-healing
+  disruption - most likely a brief window around a firewall-reloading
+  step (`ufw` right before it, `fail2ban` enabling/reloading its own
+  jails) where sshd or the port briefly stops accepting new connections -
+  not the same failure mode as the stop/start hypervisor wedge documented
+  above, and does not need a VM rebuild.
+- Fixed with a short retry instead of a VM restart: `harden.sh` now has an
+  `mp_retry()` helper (up to 6 attempts, 10s apart) wrapping the
+  Fail2Ban-deployment `multipass transfer`/`exec` calls and the
+  directory-listing-proof step right after, so a single bad-timing window
+  no longer aborts the whole script under `set -e`.
