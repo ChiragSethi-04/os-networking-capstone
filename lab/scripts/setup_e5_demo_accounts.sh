@@ -40,8 +40,8 @@ mp_retry multipass exec web -- sudo bash -c "
   echo 'bftest:${DEMO_WEAK_PASSWORD}' | chpasswd
 "
 mp_retry multipass exec web -- sudo bash -c '
-  sed -i "s/^AllowUsers ubuntu$/AllowUsers ubuntu bftest/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
-  sed -i "s/^PasswordAuthentication no$/PasswordAuthentication yes/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
+  sed -i "s/^AllowUsers ubuntu$/AllowUsers ubuntu bftest/" /etc/ssh/sshd_config.d/10-capstone-hardening.conf
+  sed -i "s/^PasswordAuthentication no$/PasswordAuthentication yes/" /etc/ssh/sshd_config.d/10-capstone-hardening.conf
   sshd -t
   systemctl restart ssh
 '

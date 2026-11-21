@@ -465,3 +465,41 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   `evidence/raw/E1_*.txt` with `python3 experiments/parse_E1.py` (no need
   to re-run the real wrk/pidstat experiment itself) and confirmed
   `cpu_pct` now sits in the sane 0-100 range.
+
+## Phase 6 (E5's SSH brute-force never actually ran: a drop-in filename ordering conflict)
+
+- E5's SSH hydra run failed identically on every one of `mp_retry`'s 15
+  attempts with `[ERROR] target ssh://<web>:22/ does not support password
+  authentication (method reply 4)` - a real, consistent server-side
+  refusal, not a connectivity blip, so `mp_retry` just burned its whole
+  budget re-running hydra from scratch 15 times against a server that was
+  never going to accept a password login. This is the exact
+  failure-mode-to-watch-for noted when `mp_retry` was added: it treats
+  "the command returned nonzero" as retriable, but cannot tell a genuine,
+  repeatable logic bug apart from a transient one - only a human (or very
+  specific error-matching) can.
+- Root cause: `setup_e5_demo_accounts.sh` edits
+  `/etc/ssh/sshd_config.d/99-capstone-hardening.conf` to flip
+  `PasswordAuthentication no` to `yes` for the demo, but
+  `sshd -T` showed the effective value was still `no`. Ubuntu's own
+  `/etc/ssh/sshd_config.d/60-cloudimg-settings.conf` (shipped by the
+  cloud image, not by us) already sets `PasswordAuthentication no`, and
+  OpenSSH applies the FIRST occurrence of a directive across
+  `Include`-d files in glob order - `60-...` sorts before `99-...`, so
+  our file's setting was silently never applied at all, for either the
+  real hardened "no" (harmless, since both files agreed there) or the
+  demo's "yes" (not harmless - this is what broke E5).
+- Fixed by renaming our drop-in from `99-capstone-hardening.conf` to
+  `10-capstone-hardening.conf` (sorts before `60-...`), so OUR file's
+  directives are always the ones OpenSSH honours, for every value we set
+  there, not just the ones that happened to agree with Ubuntu's default.
+  Applied live (moved the file, `sshd -t`, `systemctl restart ssh`,
+  confirmed `sshd -T` now reports `passwordauthentication yes` during the
+  demo window) and updated `lab/scripts/harden.sh`,
+  `setup_e5_demo_accounts.sh`, and `teardown_e5_demo_accounts.sh`'s
+  filename references for future runs.
+- This also means every earlier Phase 4 "SSH hardening" run technically
+  never exercised our own `PasswordAuthentication no` setting at all -
+  it happened to be correct only because Ubuntu's own default already
+  matched it. Worth a line in the report's Discussion: the hardening was
+  never actually *tested* for that one directive until this bug surfaced.

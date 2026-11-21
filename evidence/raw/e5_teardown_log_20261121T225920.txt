@@ -1,0 +1,7 @@
+--- removing bftest user, restoring sshd hardening ---
+--- removing /admin-demo/ path ---
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+--- verifying key-only SSH login still works ---
+key login still ok
+E5 demo accounts removed, hardened state restored.

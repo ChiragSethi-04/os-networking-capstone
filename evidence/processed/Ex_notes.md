@@ -40,3 +40,27 @@ Note: `latency_p90_ms` is wrk's 90th percentile bucket, used as a p95 proxy (wrk
 - db before: 0 open ports ()
 - db after: 0 open ports ()
 
+## E5: brute-force defence
+
+Parsed from `E5_20261121T224952.txt`.
+
+- ssh_unprotected: 146s, credential_found=no
+- nginx_unprotected: 1s, credential_found=no
+- ssh_protected: 146s, credential_found=no
+- nginx_protected: 2s, credential_found=no
+
+sshd jail status after attack:
+```
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	0
+|  |- Total failed:	0
+|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
+`- Actions
+   |- Currently banned:	0
+   |- Total banned:	0
+   `- Banned IP list:	
+--- hydra vs Nginx basic-auth demo path, protected: expect ban partway through ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+```
+

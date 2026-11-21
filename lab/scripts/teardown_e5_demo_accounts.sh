@@ -27,8 +27,8 @@ mp_retry() {
 echo "--- removing bftest user, restoring sshd hardening ---"
 mp_retry multipass exec web -- sudo bash -c '
   userdel -r bftest 2>/dev/null || true
-  sed -i "s/^AllowUsers ubuntu bftest$/AllowUsers ubuntu/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
-  sed -i "s/^PasswordAuthentication yes$/PasswordAuthentication no/" /etc/ssh/sshd_config.d/99-capstone-hardening.conf
+  sed -i "s/^AllowUsers ubuntu bftest$/AllowUsers ubuntu/" /etc/ssh/sshd_config.d/10-capstone-hardening.conf
+  sed -i "s/^PasswordAuthentication yes$/PasswordAuthentication no/" /etc/ssh/sshd_config.d/10-capstone-hardening.conf
   sshd -t
   systemctl restart ssh
 '

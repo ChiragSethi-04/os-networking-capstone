@@ -148,9 +148,9 @@ multipass exec db -- bash /tmp/db_rules.sh
 
 echo "--- SSH hardening (web, db, attacker) ---"
 for name in web db attacker; do
-  multipass transfer lab/configs/sshd/99-capstone-hardening.conf "$name:/tmp/99-capstone-hardening.conf"
+  multipass transfer lab/configs/sshd/10-capstone-hardening.conf "$name:/tmp/10-capstone-hardening.conf"
   multipass exec "$name" -- sudo bash -c '
-    mv /tmp/99-capstone-hardening.conf /etc/ssh/sshd_config.d/99-capstone-hardening.conf
+    mv /tmp/10-capstone-hardening.conf /etc/ssh/sshd_config.d/10-capstone-hardening.conf
     sshd -t
     systemctl restart ssh
   '
