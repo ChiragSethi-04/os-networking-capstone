@@ -14,7 +14,7 @@ raw_header "E8" > "$OUT"
 
 echo "--- killing nginx ---" >> "$OUT"
 echo "kill_time_utc=$(date -u +%FT%TZ)" >> "$OUT"
-multipass exec web -- sudo systemctl kill -s SIGKILL nginx
+mp_retry multipass exec web -- sudo systemctl kill -s SIGKILL nginx
 
 for i in $(seq 1 14); do
   sleep 5
@@ -24,13 +24,13 @@ for i in $(seq 1 14); do
   fi
 done
 
-multipass exec web -- tail -n 15 /var/log/web_status.log >> "$OUT"
+mp_retry multipass exec web -- tail -n 15 /var/log/web_status.log >> "$OUT"
 
 echo "--- logrotate -d (dry run) ---" >> "$OUT"
-multipass exec web -- sudo logrotate -d /etc/logrotate.d/capstone >> "$OUT" 2>&1
+mp_retry multipass exec web -- sudo logrotate -d /etc/logrotate.d/capstone >> "$OUT" 2>&1
 
 echo "--- logrotate -f (forced run) ---" >> "$OUT"
-multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone >> "$OUT" 2>&1
-multipass exec web -- bash -c "ls -la /var/log/web_status.log* /var/log/nginx/*.gz 2>/dev/null" >> "$OUT"
+mp_retry multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone >> "$OUT" 2>&1
+mp_retry multipass exec web -- bash -c "ls -la /var/log/web_status.log* /var/log/nginx/*.gz 2>/dev/null" >> "$OUT"
 
 echo "E8 raw output: $OUT"

@@ -29,10 +29,10 @@ raw_header() {
   echo "=== $1 raw output ==="
   echo "date_utc=$(date -u +%FT%TZ)"
   echo "repeats=${REPEATS:-5} quick=${QUICK:-0}"
-  multipass exec web -- bash -c 'echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")'
-  multipass exec attacker -- bash -c 'wrk --version 2>&1 | head -1' | sed 's/^/attacker_/'
-  multipass exec web -- bash -c 'nginx -v 2>&1' | sed 's/^/web_/'
-  multipass exec web -- bash -c 'apache2 -v 2>&1 | head -1' | sed 's/^/web_/'
+  mp_retry multipass exec web -- bash -c 'echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")'
+  mp_retry multipass exec attacker -- bash -c 'wrk --version 2>&1 | head -1' | sed 's/^/attacker_/'
+  mp_retry multipass exec web -- bash -c 'nginx -v 2>&1' | sed 's/^/web_/'
+  mp_retry multipass exec web -- bash -c 'apache2 -v 2>&1 | head -1' | sed 's/^/web_/'
 }
 
 enable_apache() { bash lab/scripts/enable_apache_baseline.sh on; sleep 1; }

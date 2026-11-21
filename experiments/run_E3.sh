@@ -14,10 +14,10 @@ raw_header "E3" > "$OUT"
 
 for run in $(seq 1 "$REPEATS"); do
   echo "--- run=$run path=static(/) ---" >> "$OUT"
-  multipass exec attacker -- bash -c "wrk -t2 -c50 -d15s --latency https://${WEB_IP}/" >> "$OUT" 2>&1
+  mp_retry multipass exec attacker -- bash -c "wrk -t2 -c50 -d15s --latency https://${WEB_IP}/" >> "$OUT" 2>&1
 
   echo "--- run=$run path=proxied(/api/health) ---" >> "$OUT"
-  multipass exec attacker -- bash -c "wrk -t2 -c50 -d15s --latency https://${WEB_IP}/api/health" >> "$OUT" 2>&1
+  mp_retry multipass exec attacker -- bash -c "wrk -t2 -c50 -d15s --latency https://${WEB_IP}/api/health" >> "$OUT" 2>&1
 done
 
 echo "E3 raw output: $OUT"
