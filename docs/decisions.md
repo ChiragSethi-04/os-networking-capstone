@@ -376,3 +376,34 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   current one. Redeployed live to all three VMs (confirmed clean,
   one line per hostname) and the template fix applies to future rebuilds
   automatically via `provision.sh`.
+- Found a third real bug while verifying `logrotate -f` actually produced
+  rotated files (it had not - `test_phase5.sh`'s check for `*.gz` was
+  simply never finding anything): `logrotate -vf` reported `error:
+  Ignoring /etc/logrotate.d/capstone because the file owner is wrong
+  (should be root or user with uid 0)`. `multipass transfer` always
+  writes as the `ubuntu` user; `setup_monitoring.sh` then did `sudo mv`
+  into `/etc/logrotate.d/`, which moves the file but does not change its
+  ownership, so our config sat there owned by `ubuntu` and logrotate
+  silently refused to load it at all. Fixed by adding `chown root:root`
+  after the `mv`.
+- With ownership fixed, nginx's logs rotated but `web_status.log`
+  specifically still did not, with a second, different logrotate error:
+  `skipping "/var/log/web_status.log" because parent directory has
+  insecure permissions (It's world writable or writable by group which is
+  not "root")`. `/var/log` itself is `drwxrwxr-x root:syslog` (normal
+  Ubuntu default); nginx's logs live under the separate `/var/log/nginx/`
+  subdirectory so this never applies to them, but `web_status.log` sits
+  directly in `/var/log`, and logrotate's security hardening refuses to
+  rotate a file there unless the config explicitly states which
+  user/group it trusts. Fixed by adding `su root root` to that one
+  stanza in `lab/configs/logrotate/capstone`, exactly as logrotate's own
+  error message suggests.
+- Also note for anyone re-reading this later: a single `logrotate -f` run
+  produces `name.1` (or `name.1.gz` only without `delaycompress`), never
+  `name.1.gz` on the FIRST forced rotation when `delaycompress` is set
+  (ours is, deliberately, per the Phase 5 design) - compression is
+  deferred to the NEXT rotation cycle by definition. `test_phase5.sh`'s
+  evidence-gathering `ls` was originally written expecting `*.gz` and
+  would show nothing from one forced run regardless of whether rotation
+  actually worked; it now also lists `*.log.1*` so a passing rotation is
+  visible immediately without waiting for a second cycle.

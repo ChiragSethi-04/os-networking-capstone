@@ -55,6 +55,7 @@ echo "--- logrotate ---"
 mp_retry multipass transfer lab/configs/logrotate/capstone web:/tmp/capstone
 mp_retry multipass exec web -- sudo bash -c '
   mv /tmp/capstone /etc/logrotate.d/capstone
+  chown root:root /etc/logrotate.d/capstone
   chmod 644 /etc/logrotate.d/capstone
 '
 

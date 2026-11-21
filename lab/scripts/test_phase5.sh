@@ -54,7 +54,11 @@ fi
 
 echo "--- logrotate -f ---"
 mp_retry multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone > evidence/raw/logrotate_force_run.txt 2>&1 || true
-mp_retry multipass exec web -- bash -c "ls -la /var/log/web_status.log* /var/log/nginx/*.gz 2>/dev/null" >> evidence/raw/logrotate_force_run.txt
+# Not wrapped in mp_retry: an empty/non-matching glob makes `ls` exit
+# nonzero too, which isn't a connectivity problem retrying would fix (see
+# docs/decisions.md on why a single forced rotation is `*.log.1`, not
+# `*.gz`, under `delaycompress`).
+multipass exec web -- bash -c "ls -la /var/log/web_status.log* /var/log/nginx/*.log.1* 2>/dev/null" >> evidence/raw/logrotate_force_run.txt || true
 cat evidence/raw/logrotate_force_run.txt
 
 if [[ $fail -eq 0 ]]; then

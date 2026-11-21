@@ -1,2 +1,29 @@
 error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
--rw-r--r-- 1 root root 2199 Nov 21 21:52 /var/log/web_status.log
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: attempt 9 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+error: Ignoring /etc/logrotate.d/capstone because the file owner is wrong (should be root or user with uid 0).
+mp_retry: giving up after 10 attempts: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+-rw-r--r-- 1 root root 4645 Nov 21 21:56 /var/log/web_status.log
+-rw-r--r-- 1 root root 4645 Nov 21 21:56 /var/log/web_status.log
+-rw-r--r-- 1 root root 4645 Nov 21 21:56 /var/log/web_status.log
+-rw-r--r-- 1 root root 4848 Nov 21 21:57 /var/log/web_status.log
+-rw-r--r-- 1 root root 4886 Nov 21 21:57 /var/log/web_status.log
+-rw-r--r-- 1 root root 4886 Nov 21 21:57 /var/log/web_status.log
+-rw-r--r-- 1 root root 5048 Nov 21 21:58 /var/log/web_status.log
+-rw-r--r-- 1 root root 5127 Nov 21 21:58 /var/log/web_status.log
+-rw-r--r-- 1 root root 5127 Nov 21 21:58 /var/log/web_status.log
