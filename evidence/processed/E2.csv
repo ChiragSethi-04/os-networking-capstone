@@ -1,0 +1,5 @@
+run,mode,requests_per_sec,latency_mean_ms
+1,http,47333.28,1.28
+1,https,22699.01,1.96
+2,http,48110.54,1.03
+2,https,22143.32,2.37

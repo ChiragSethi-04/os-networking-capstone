@@ -20,7 +20,19 @@ def main():
     for i in range(1, len(parts), 5):
         server, port, conc, run, body = parts[i : i + 5]
         wrk = parse_wrk_block(body)
-        cpu_vals = re.findall(r"^\s*\d+:\d+:\d+\s+\S+\s+\d+\s+([\d.]+)\s+[\d.]+\s+[\d.]+", body, re.M)
+        # Must match exactly the `-u` table's columns (time uid pid %usr
+        # %system %guest %wait %CPU CPUid Command) and end in the process
+        # name: the original pattern only required 3 trailing decimals,
+        # which also matched the `-r` table's `minflt/s majflt/s VSZ RSS`
+        # row for the same PID, averaging page-fault/memory numbers in the
+        # thousands together with real 0-100 %CPU values (see
+        # docs/decisions.md - this is what produced impossible >1000%
+        # "cpu_pct" values in the first real run).
+        cpu_vals = re.findall(
+            r"^\s*\d+:\d+:\d+\s+\S+\s+\d+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+([\d.]+)\s+\d+\s+(?:apache2|nginx)\s*$",
+            body,
+            re.M,
+        )
         rows.append(
             {
                 "server": server,

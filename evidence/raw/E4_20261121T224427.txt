@@ -1,0 +1,4 @@
+=== E4 raw output ===
+date_utc=2026-11-21T11:44:27Z
+--- nmap -sV -T4 -p- web (after hardening) ---
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-11-21 22:44 +1100

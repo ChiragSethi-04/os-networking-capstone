@@ -445,3 +445,23 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   the same strict `mp_retry` as everything else would have burned its
   whole retry budget (~2.5 minutes) on an expected no-op, not a real
   connectivity failure; it runs once, un-retried, with `|| true` instead.
+
+## Phase 6 (E1's cpu_pct column showed impossible values over 1000%)
+
+- The first real E1 run produced `cpu_pct` values like 1903.9 and 1541.8
+  in `evidence/processed/E1.csv` - impossible on a 2-core VM (max 200%
+  summed). `parse_E1.py`'s regex for the `pidstat -u -r` output only
+  required 3 trailing decimal fields after the captured number before
+  accepting a match, which is enough to match the `-u` table's row
+  (`time uid pid %usr %system %guest %wait %CPU CPUid Command`, capturing
+  %usr instead of %CPU) but *also* the completely different `-r` memory
+  table's row for the same PID (`time uid pid minflt/s majflt/s VSZ RSS
+  %MEM Command`), whose `minflt/s` (page faults/sec, routinely in the
+  thousands) got averaged in alongside real 0-100 %CPU numbers.
+- Fixed by requiring the exact column count of the `-u` table (4 skipped
+  decimals, the captured %CPU as the 5th, then the integer CPU-core-id,
+  then the literal process name anchored to end of line), which the `-r`
+  table's row shape can never satisfy. Re-parsed the already-captured
+  `evidence/raw/E1_*.txt` with `python3 experiments/parse_E1.py` (no need
+  to re-run the real wrk/pidstat experiment itself) and confirmed
+  `cpu_pct` now sits in the sane 0-100 range.
