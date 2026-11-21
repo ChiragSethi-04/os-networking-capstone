@@ -7,6 +7,24 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 source lab/.env
 
+# See docs/decisions.md: a multipass exec/transfer call can occasionally
+# hit a short, self-clearing "ssh connection failed: Connection refused"
+# window under host memory pressure, not a broken VM. Available to every
+# experiment script via this shared file; retry rather than abort a run
+# that may already be hours into repeated benchmark passes.
+mp_retry() {
+  local attempt=1 max=15
+  until "$@"; do
+    if (( attempt >= max )); then
+      echo "mp_retry: giving up after $max attempts: $*" >&2
+      return 1
+    fi
+    echo "mp_retry: attempt $attempt failed, retrying in 10s: $*" >&2
+    attempt=$(( attempt + 1 ))
+    sleep 10
+  done
+}
+
 raw_header() {
   echo "=== $1 raw output ==="
   echo "date_utc=$(date -u +%FT%TZ)"
