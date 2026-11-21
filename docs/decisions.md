@@ -407,3 +407,41 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   would show nothing from one forced run regardless of whether rotation
   actually worked; it now also lists `*.log.1*` so a passing rotation is
   visible immediately without waiting for a second cycle.
+
+## Phase 6 (E1 could never reach the Apache baseline: ufw never opened 8080)
+
+- E1's Apache runs all failed with `wrk`'s own "Connection timed out"
+  against `http://<web>:8080/` - which looks identical to a hung
+  connection and took a full TCP-connect-timeout per attempt, so wrapped
+  in `mp_retry` it looked like the host-memory-pressure blip (stuck for
+  15+ minutes on what should be a 15-second test) rather than a fast,
+  clear failure. Checked directly: Apache was running and answered fine
+  from `web`'s own loopback (`curl http://127.0.0.1:8080/` worked), so
+  the problem was never Apache - it was `ufw`, which (correctly, by
+  design) only allows 22/80/443 and silently drops everything else by
+  default, including 8080 from the attacker VM. A dropped (not rejected)
+  packet is exactly what produces a client-side connect timeout instead
+  of an instant refusal, which is why this looked like the unrelated SSH
+  blip at first glance.
+- This was always going to happen the first time E1 actually ran:
+  Phase 4 commits to exactly 3 open ports as the *hardened* state (and
+  `test_phase4.sh` asserts exactly that), so 8080 was never going to be
+  open permanently - the benchmark design in CLAUDE.md section 6 needs
+  Apache reachable from `attacker` for E1/E2/E3, and nothing in Phase 4
+  or the experiment scripts had ever actually opened a path for that
+  traffic.
+- Fixed in `lab/scripts/enable_apache_baseline.sh`, which already toggles
+  the `apache2` service on/off around each benchmark run: it now also adds
+  (`on`) / removes (`off`) a `ufw allow from <attacker IP> to any port
+  8080 proto tcp` rule scoped to just the attacker VM, so the permanent,
+  audited state is still exactly 3 ports whenever Apache is stopped (which
+  is most of the time - only open during an active benchmark window) and
+  nmap run after Phase 4 or after the full experiment suite both still
+  see only 22/80/443, matching the design objective.
+- One scripting trap avoided while fixing this: `enable_apache_baseline.sh
+  off` is called once in `run_E1.sh` *before* `on` has ever run (a
+  clean-state reset), so the `ufw delete` in that path will legitimately
+  find nothing to delete the first time. Wrapping that specific call in
+  the same strict `mp_retry` as everything else would have burned its
+  whole retry budget (~2.5 minutes) on an expected no-op, not a real
+  connectivity failure; it runs once, un-retried, with `|| true` instead.

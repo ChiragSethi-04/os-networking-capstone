@@ -1,0 +1,6 @@
+
+==================================================================
+Running E1
+==================================================================
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_1.txt 2>&1 &
