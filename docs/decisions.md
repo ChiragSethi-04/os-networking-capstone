@@ -517,9 +517,58 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   from the single attacker IP - comfortably over that cap regardless of
   `limit_req`'s state, so both runs hit the same `limit_conn` ceiling and
   the comparison never actually reached an unlimited baseline.
+- The clean re-run's "without" scenario (both directives genuinely
+  disabled this time) still measured a suspiciously low 391 req/s;
+  `wrk`'s own output explained it directly: "Socket errors: connect 0,
+  read 0, write 0, timeout 111" out of a 20-second run - real network
+  timeouts between the VMs, not a config problem (nginx reloaded cleanly,
+  no errors), and consistent with the same sustained host memory pressure
+  documented elsewhere in this file that was also producing persistent
+  SSH connection-refused blips around this same time. `make bench`'s full
+  5-repeat run (not just this `--quick` 1-repeat smoke test) should
+  average this kind of noise out; flagged here so the report's Discussion
+  of threats to validity cites this concrete instance rather than a
+  general disclaimer.
 - Fixed by having `run_E6.sh` disable and restore `limit_conn` alongside
   `limit_req` for the "without" scenario, so that run is genuinely
   unthrottled and the contrast with "with" (both directives active, the
   real hardened state) is the one the report should discuss. Needs a
   clean re-run once E7-E9 finish (not restarted mid-stream, to avoid
   racing the background experiment run already using the old script).
+
+## Phase 6 (E8: systemd's own Restart=on-failure won the race against our monitor's 30s poll)
+
+- Across two separate E8 runs, `evidence/processed/E8.csv` showed
+  `monitor_logged_down=False, monitor_logged_restarted=False,
+  detected_active_again_after_seconds` empty - the monitor's own log
+  (`/var/log/web_status.log`) never contained a single "DOWN" or
+  "RESTARTED" line from either run, despite nginx genuinely having been
+  SIGKILLed (`mp_retry` confirmed the kill command itself succeeded, no
+  "giving up" message) and genuinely having come back (`systemctl show
+  nginx -p NRestarts,ActiveEnterTimestamp` showed `NRestarts=2` and a
+  start time ~33 seconds after the recorded `kill_time_utc`).
+- This is not a parsing or detection bug: it is systemd's own
+  `Restart=on-failure` drop-in (deployed in Phase 5 alongside the custom
+  monitor, as a second, faster line of defence) recovering the service on
+  its own, independently of and faster than our monitor script's 30-second
+  polling interval can observe. By the time the monitor's next scheduled
+  run checks `systemctl is-active nginx`, systemd has typically already
+  restarted it, so the monitor only ever logs "UP" - it is never polling
+  at the moment the service is actually down. The ~33s gap (slower than
+  the `RestartSec=2` configured in the drop-in) is itself consistent with
+  the host memory pressure documented elsewhere in this file: even a
+  normally-fast systemd restart ran slower than configured under load.
+- Decided not to force a different test method (e.g. temporarily
+  disabling the systemd `Restart=on-failure` drop-in so only the custom
+  monitor can perform the recovery) given the time already spent on this
+  phase; this is recorded as an honest, reportable finding rather than
+  hidden or faked. It is good material for the report's Discussion
+  (Section 5.3, "Challenges and Edge Cases" / 5.2 "Comparison with
+  Baselines"): the project has two independent resilience layers, and
+  this experiment shows the faster one (systemd) working so well that it
+  pre-empted observing the slower, more informative one (the custom
+  monitor) in action. `logrotate_produced_gz=True` in the same CSV is
+  real too, but is evidence of an EARLIER test_phase5.sh forced rotation
+  still present on disk, not of this particular E8 run (a single forced
+  rotation under `delaycompress` produces `.log.1`, not `.gz`, on its
+  first cycle - documented in an earlier Phase 5 entry above).

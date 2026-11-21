@@ -165,3 +165,11 @@ HTTP readable: False. HTTPS opaque: True. See `evidence/processed/E7_summary.md`
 
 HTTP readable: True. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the decoded plaintext and full tshark excerpts.
 
+## E8: resilience
+
+Parsed from `E8_20261122T000358.txt`.
+
+- Recovery detected after: s
+- Monitor logged DOWN: False, RESTARTED: False
+- logrotate produced a compressed rotated file: True
+
