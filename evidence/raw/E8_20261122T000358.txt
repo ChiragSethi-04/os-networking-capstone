@@ -1,0 +1,10 @@
+=== E8 raw output ===
+date_utc=2026-11-21T13:03:58Z
+repeats=5 quick=0
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- killing nginx ---
+kill_time_utc=2026-11-21T13:05:30Z

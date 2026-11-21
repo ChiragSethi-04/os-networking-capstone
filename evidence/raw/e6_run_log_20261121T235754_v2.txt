@@ -1,0 +1,7 @@
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c sed -i 's/limit_req zone=api_zone burst=10 nodelay;/# limit_req DISABLED for E6 comparison/; s/limit_conn conn_zone 20;/# limit_conn DISABLED for E6 comparison/' /etc/nginx/sites-available/meridian.conf && nginx -t && systemctl reload nginx
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+E6 raw output: evidence/raw/E6_20261121T235754.txt

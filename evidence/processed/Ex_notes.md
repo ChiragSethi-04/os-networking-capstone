@@ -150,3 +150,18 @@ Before grade: N/A_no_TLS_listener. After grade: [m[0;33mB[m. See `evidence/pr
 
 Before grade: N/A_no_TLS_listener. After grade: B. See `evidence/processed/E9_summary.md`.
 
+## E6: rate limiting
+
+Parsed from `E6_20261121T235754.txt`.
+
+- with_limit_req: 3x200, 0x429, 57x503
+- without_limit_req: 60x200, 0x429, 0x503
+
+## E7: encryption proof
+
+HTTP readable: False. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the full tshark excerpts.
+
+## E7: encryption proof
+
+HTTP readable: True. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the decoded plaintext and full tshark excerpts.
+
