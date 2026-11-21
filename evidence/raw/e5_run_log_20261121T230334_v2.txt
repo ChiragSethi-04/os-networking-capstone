@@ -23,3 +23,12 @@ exec failed: ssh connection failed: 'Connection refused'
 mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo systemctl stop fail2ban
 exec failed: ssh connection failed: 'Connection refused'
 mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo systemctl stop fail2ban
+--- AFTER: restarting fail2ban on web (protected) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo systemctl start fail2ban
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo systemctl start fail2ban
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo systemctl start fail2ban
+E5 raw output: evidence/raw/E5_20261121T230334.txt
+Remember to run lab/scripts/teardown_e5_demo_accounts.sh now.

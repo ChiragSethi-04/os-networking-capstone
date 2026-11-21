@@ -64,3 +64,62 @@ Status for the jail: sshd
 Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 ```
 
+## E5: brute-force defence
+
+Parsed from `E5_20261121T230334.txt`.
+
+- ssh_unprotected: 5s, credential_found=no
+- nginx_unprotected: 1s, credential_found=no
+- ssh_protected: 145s, credential_found=no
+- nginx_protected: 1s, credential_found=no
+
+sshd jail status after attack:
+```
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	7
+|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	192.168.252.11
+--- hydra vs Nginx basic-auth demo path, protected: expect ban partway through ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+```
+
+## E5: brute-force defence
+
+Parsed from `E5_20261121T230334.txt`.
+
+- ssh_unprotected: 5s, credential_found=Summer2026!
+- nginx_unprotected: 1s, credential_found=Summer2026!
+- ssh_protected: 145s, credential_found=no
+- nginx_protected: 1s, credential_found=Summer2026!
+
+sshd jail status after attack:
+```
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	7
+|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	192.168.252.11
+```
+
+nginx-http-auth jail status after attack:
+```
+Status for the jail: nginx-http-auth
+|- Filter
+|  |- Currently failed:	0
+|  |- Total failed:	0
+|  `- Journal matches:	_SYSTEMD_UNIT=nginx.service + _COMM=nginx
+`- Actions
+   |- Currently banned:	0
+   |- Total banned:	0
+   `- Banned IP list:
+```
+

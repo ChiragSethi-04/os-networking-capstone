@@ -12,11 +12,22 @@ OUT_CSV = PROCESSED_DIR / "E5.csv"
 
 
 def count_attempts(body):
-    return len(re.findall(r"\[ATTEMPT\]|login try", body))
+    # Hydra was run with default verbosity (no -v/-V), so it never prints
+    # a per-attempt line - there is nothing like "[ATTEMPT]" to count in
+    # its output, honestly 0 against this raw log. Fail2Ban's own
+    # "Total failed" count (captured separately, see ban_sshd/ban_nginx
+    # below) is the real per-scenario attempt count for the *_protected
+    # rows; it is folded into those two rows directly in main(), not here.
+    return 0
 
 
 def found_login(body):
-    m = re.search(r"\[\d+\]\[\S+\] host: \S+\s+login: (\S+)\s+password: (\S+)", body)
+    # Real hydra output has an extra "misc: ..." field between host and
+    # login for both the ssh and http-get modules (e.g. "host: <ip>
+    # misc: (null)   login: bftest   password: Summer2026!"), which the
+    # original pattern did not account for, so it never matched at all
+    # despite hydra genuinely finding and printing the credential.
+    m = re.search(r"\[\d+\]\[\S+\] host: \S+(?:\s+misc: \S+)?\s+login: (\S+)\s+password: (\S+)", body)
     return m.group(2) if m else None
 
 
@@ -31,21 +42,36 @@ def main():
         "nginx_protected": r"--- hydra vs Nginx basic-auth demo path, protected.*?---\n(.*?)elapsed_seconds=(\d+)",
     }
 
+    # Terminated by the next "--- ...  ---" section marker (or end of
+    # file), not a blank line: hydra's own banner output contains blank
+    # lines, so a "\n\n" terminator matched far past the intended block
+    # and swallowed unrelated later sections into the captured text.
+    ban_sshd = re.search(r"fail2ban sshd status after attack ---\n(.*?)(?=\n--- |\Z)", text, re.S)
+    ban_nginx = re.search(r"fail2ban nginx-http-auth status after attack ---\n(.*?)(?=\n--- |\Z)", text, re.S)
+
+    def total_failed(ban_match):
+        if not ban_match:
+            return None
+        m = re.search(r"Total failed:\s+(\d+)", ban_match.group(1))
+        return int(m.group(1)) if m else None
+
     rows = []
     for label, pattern in sections.items():
         m = re.search(pattern, text, re.S)
         if not m:
             continue
         body, elapsed = m.group(1), int(m.group(2))
+        attempts = count_attempts(body)
+        if label == "ssh_protected":
+            attempts = total_failed(ban_sshd) or attempts
+        elif label == "nginx_protected":
+            attempts = total_failed(ban_nginx) or attempts
         rows.append({
             "scenario": label,
             "elapsed_seconds": elapsed,
-            "attempts_logged": count_attempts(body),
+            "attempts_logged": attempts,
             "credential_found": found_login(body) or "",
         })
-
-    ban_sshd = re.search(r"fail2ban sshd status after attack ---\n(.*?)\n\n", text, re.S)
-    ban_nginx = re.search(r"fail2ban nginx-http-auth status after attack ---\n(.*?)\n\n", text, re.S)
 
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     with OUT_CSV.open("w", newline="") as f:

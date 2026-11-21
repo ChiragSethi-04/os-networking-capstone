@@ -7,3 +7,195 @@ attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
 web_nginx version: nginx/1.28.3 (Ubuntu)
 web_Server version: Apache/2.4.66 (Ubuntu)
 --- BEFORE: stopping fail2ban on web (baseline, unprotected) ---
+--- hydra vs SSH (bftest), unprotected ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:05:39
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 15 login tries (l:1/p:15), ~4 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[22][ssh] host: 192.168.252.12   misc: (null)   login: bftest   password: Summer2026!
+[STATUS] attack finished for 192.168.252.12 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-21 23:05:44
+elapsed_seconds=5
+--- hydra vs Nginx basic-auth demo path, unprotected ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:05:45
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 15 login tries (l:1/p:15), ~4 tries per task
+[DATA] attacking http-gets://192.168.252.12:443/admin-demo/
+[443][http-get] host: 192.168.252.12   misc: /admin-demo/   login: admin   password: Summer2026!
+[STATUS] attack finished for 192.168.252.12 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-21 23:05:45
+elapsed_seconds=1
+--- AFTER: restarting fail2ban on web (protected) ---
+--- hydra vs SSH (bftest), protected: expect ban partway through ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:07:20
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:07:30
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:07:40
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:07:50
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:08:01
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:08:11
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:08:22
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:08:32
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:08:42
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 9 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:08:53
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 10 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:09:03
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 11 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:09:13
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 12 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:09:24
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 13 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:09:34
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: attempt 14 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:09:44
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.12:22/
+[ERROR] could not connect to ssh://192.168.252.12:22 - Connection refused
+mp_retry: giving up after 15 attempts: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.12
+elapsed_seconds=145
+--- fail2ban sshd status after attack ---
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	7
+|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	192.168.252.11
+--- hydra vs Nginx basic-auth demo path, protected: expect ban partway through ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-21 23:09:45
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.12:443/admin-demo/
+[443][http-get] host: 192.168.252.12   misc: /admin-demo/   login: admin   password: Summer2026!
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-21 23:09:46
+elapsed_seconds=1
+--- fail2ban nginx-http-auth status after attack ---
+Status for the jail: nginx-http-auth
+|- Filter
+|  |- Currently failed:	0
+|  |- Total failed:	0
+|  `- Journal matches:	_SYSTEMD_UNIT=nginx.service + _COMM=nginx
+`- Actions
+   |- Currently banned:	0
+   |- Total banned:	0
+   `- Banned IP list:	
+--- post-ban behaviour: attacker tries once more, expect refused/timeout ---
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 9 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 10 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 11 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 12 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 13 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: attempt 14 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+ssh: connect to host 192.168.252.12 port 22: Connection refused
+mp_retry: giving up after 15 attempts: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.12 echo should_not_connect
+(expected: connection refused/timed out)

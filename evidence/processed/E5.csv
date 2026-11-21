@@ -1,0 +1,5 @@
+scenario,elapsed_seconds,attempts_logged,credential_found
+ssh_unprotected,5,0,Summer2026!
+nginx_unprotected,1,0,Summer2026!
+ssh_protected,145,7,
+nginx_protected,1,0,Summer2026!
