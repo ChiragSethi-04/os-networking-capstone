@@ -1,0 +1,282 @@
+
+==================================================================
+Running E1
+==================================================================
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Rule added
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c cat /tmp/pidstat_apache_10_1.txt 2>/dev/null || true
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_200_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_200_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_200_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_200_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_200_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_200_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_200_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_200_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_200_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_200_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_200_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_200_2.txt 2>&1 &
+E1 raw output: evidence/raw/E1_20261123T125404.txt
+Wrote /Users/chiragsethi/Downloads/OS/evidence/processed/E1.csv (16 rows)
+
+==================================================================
+Running E2
+==================================================================
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+E2 raw output: evidence/raw/E2_20261123T133831.txt
+Wrote /Users/chiragsethi/Downloads/OS/evidence/processed/E2.csv and E2_handshake.csv (4 + 4 rows)
+
+==================================================================
+Running E3
+==================================================================
+E3 raw output: evidence/raw/E3_20261123T134136.txt
+Wrote /Users/chiragsethi/Downloads/OS/evidence/processed/E3.csv (4 rows)
+
+==================================================================
+Running E4
+==================================================================
+E4 raw output: evidence/raw/E4_20261123T134233.txt
+(before-hardening nmap files: evidence/raw/nmap_web_before.txt, nmap_db_before.txt)
+Wrote /Users/chiragsethi/Downloads/OS/evidence/processed/E4_ports.csv (4 rows)
+--- creating bftest SSH user on web (password auth, demo only) ---
+--- creating /admin-demo/ Nginx path with weak htpasswd (demo only) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  htpasswd -b -c /etc/nginx/.htpasswd-demo admin "$(cat /tmp/demopw)"
+  rm -f /tmp/demopw
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  htpasswd -b -c /etc/nginx/.htpasswd-demo admin "$(cat /tmp/demopw)"
+  rm -f /tmp/demopw
+
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c 
+  htpasswd -b -c /etc/nginx/.htpasswd-demo admin "$(cat /tmp/demopw)"
+  rm -f /tmp/demopw
+
+Adding password for user admin
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo python3 -
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo python3 -
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo python3 -
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c nginx -t && systemctl reload nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo bash -c nginx -t && systemctl reload nginx
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo bash -c nginx -t && systemctl reload nginx
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+E5 demo accounts ready. Run experiments/run_E5.sh next, then teardown_e5_demo_accounts.sh.
+
+==================================================================
+Running E5
+==================================================================
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c echo web_cpus=$(nproc); echo web_mem=$(free -h | awk "/Mem/{print \$2}")
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+--- BEFORE: stopping fail2ban on web (baseline, unprotected) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo systemctl stop fail2ban
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo systemctl stop fail2ban
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo systemctl stop fail2ban
+--- AFTER: restarting fail2ban on web (protected) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo systemctl start fail2ban
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo systemctl start fail2ban
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo systemctl start fail2ban
+E5 raw output: evidence/raw/E5_20261123T134908.txt
+Remember to run lab/scripts/teardown_e5_demo_accounts.sh now.
+Wrote /Users/chiragsethi/Downloads/OS/evidence/processed/E5.csv (4 rows)
+--- removing bftest user, restoring sshd hardening ---
+--- removing /admin-demo/ path ---
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+--- verifying key-only SSH login still works ---
+key login still ok
+E5 demo accounts removed, hardened state restored.
+
+==================================================================
+Running E6
+==================================================================
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nginx -v 2>&1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c apache2 -v 2>&1 | head -1
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u 1 5 > /tmp/pidstat_e6_with.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u 1 5 > /tmp/pidstat_e6_with.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u 1 5 > /tmp/pidstat_e6_with.txt 2>&1 &
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+E6 raw output: evidence/raw/E6_20261123T135746.txt
+Wrote /Users/chiragsethi/Downloads/OS/evidence/processed/E6.csv (2 rows)
+
+==================================================================
+Running E7
+==================================================================
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo bash -c cp /etc/nginx/sites-available/meridian.conf /tmp/meridian.conf.e7-backup && mv /tmp/meridian-e7-plaintext.conf /etc/nginx/sites-available/meridian.conf && nginx -t && systemctl reload nginx

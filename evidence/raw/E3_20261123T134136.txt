@@ -1,0 +1,66 @@
+=== E3 raw output ===
+date_utc=2026-11-23T02:41:36Z
+repeats=2 quick=1
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- run=1 path=static(/) ---
+Running 15s test @ https://192.168.252.12/
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.95ms    1.01ms  21.82ms   78.89%
+    Req/Sec    11.24k   766.18    12.84k    82.67%
+  Latency Distribution
+     50%    1.69ms
+     75%    2.36ms
+     90%    3.25ms
+     99%    5.44ms
+  336297 requests in 15.04s, 747.27MB read
+Requests/sec:  22366.28
+Transfer/sec:     49.70MB
+--- run=1 path=proxied(/api/health) ---
+Running 15s test @ https://192.168.252.12/api/health
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.61ms    2.51ms  68.44ms   97.62%
+    Req/Sec    15.95k     2.28k   18.65k    90.00%
+  Latency Distribution
+     50%    1.18ms
+     75%    1.68ms
+     90%    2.35ms
+     99%   11.48ms
+  476863 requests in 15.04s, 289.68MB read
+  Non-2xx or 3xx responses: 476777
+Requests/sec:  31713.64
+Transfer/sec:     19.26MB
+--- run=2 path=static(/) ---
+Running 15s test @ https://192.168.252.12/
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.05ms    1.32ms  48.25ms   87.81%
+    Req/Sec    10.92k     1.13k   12.61k    81.33%
+  Latency Distribution
+     50%    1.76ms
+     75%    2.45ms
+     90%    3.38ms
+     99%    6.03ms
+  326454 requests in 15.03s, 725.40MB read
+Requests/sec:  21719.01
+Transfer/sec:     48.26MB
+--- run=2 path=proxied(/api/health) ---
+Running 15s test @ https://192.168.252.12/api/health
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.39ms    1.05ms  40.20ms   92.71%
+    Req/Sec    16.29k     1.51k   19.02k    77.33%
+  Latency Distribution
+     50%    1.17ms
+     75%    1.63ms
+     90%    2.23ms
+     99%    4.00ms
+  486656 requests in 15.02s, 295.62MB read
+  Non-2xx or 3xx responses: 486570
+Requests/sec:  32394.74
+Transfer/sec:     19.68MB

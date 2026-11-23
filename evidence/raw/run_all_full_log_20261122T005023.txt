@@ -1,0 +1,190 @@
+
+==================================================================
+Running E1
+==================================================================
+exec failed: ssh connection failed: 'Connection refused'
+Rule added
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c cat /tmp/pidstat_apache_10_1.txt 2>/dev/null || true
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c cat /tmp/pidstat_apache_10_1.txt 2>/dev/null || true
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_10_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_10_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_3.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_4.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_50_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_50_5.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_nginx_100_1.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+Skipping adding existing rule
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c nohup pidstat -u -r 1 5 > /tmp/pidstat_apache_100_2.txt 2>&1 &
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'
+exec failed: ssh connection failed: 'Connection refused'

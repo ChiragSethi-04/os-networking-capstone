@@ -1,2 +1,2 @@
 detected_active_again_after_seconds,monitor_logged_down,monitor_logged_restarted,logrotate_produced_gz
-,False,False,True
+3,False,False,True

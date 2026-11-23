@@ -2,36 +2,27 @@
 
 ## E1: server comparison
 
-Parsed 16 runs from `E1_20261121T222135.txt`.
+Parsed 16 runs from `E1_20261123T125404.txt`.
 
-- apache: mean 13503.6 req/s, sd 2308.6 (n=8)
-- nginx: mean 45131.4 req/s, sd 14823.3 (n=8)
+- apache: mean 13337.0 req/s, sd 1942.2 (n=8)
+- nginx: mean 44362.8 req/s, sd 14140.8 (n=8)
 
 Note: `latency_p90_ms` is wrk's 90th percentile bucket, used as a p95 proxy (wrk's default histogram does not expose p95 directly).
 
 ## E2: transport cost
 
-Parsed 4 wrk runs and 4 handshake timings from `E2_20261121T224009.txt`.
+Parsed 4 wrk runs and 4 handshake timings from `E2_20261123T133831.txt`.
 
-- HTTP mean: 47721.9 req/s
-- HTTPS mean: 22421.2 req/s
-- TLS overhead: 53.0% throughput reduction
+- HTTP mean: 47839.1 req/s
+- HTTPS mean: 21590.5 req/s
+- TLS overhead: 54.9% throughput reduction
 
 ## E3: reverse proxy overhead
 
-Parsed 4 runs from `E3_20261121T224325.txt`.
+Parsed 4 runs from `E3_20261123T134136.txt`.
 
-- Static mean: 19879.0 req/s
-- Proxied (gunicorn) mean: 30634.4 req/s
-
-## E1: server comparison
-
-Parsed 16 runs from `E1_20261121T222135.txt`.
-
-- apache: mean 13503.6 req/s, sd 2308.6 (n=8)
-- nginx: mean 45131.4 req/s, sd 14823.3 (n=8)
-
-Note: `latency_p90_ms` is wrk's 90th percentile bucket, used as a p95 proxy (wrk's default histogram does not expose p95 directly).
+- Static mean: 22042.6 req/s
+- Proxied (gunicorn) mean: 32054.2 req/s
 
 ## E4: attack surface
 
@@ -42,55 +33,7 @@ Note: `latency_p90_ms` is wrk's 90th percentile bucket, used as a p95 proxy (wrk
 
 ## E5: brute-force defence
 
-Parsed from `E5_20261121T224952.txt`.
-
-- ssh_unprotected: 146s, credential_found=no
-- nginx_unprotected: 1s, credential_found=no
-- ssh_protected: 146s, credential_found=no
-- nginx_protected: 2s, credential_found=no
-
-sshd jail status after attack:
-```
-Status for the jail: sshd
-|- Filter
-|  |- Currently failed:	0
-|  |- Total failed:	0
-|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
-`- Actions
-   |- Currently banned:	0
-   |- Total banned:	0
-   `- Banned IP list:	
---- hydra vs Nginx basic-auth demo path, protected: expect ban partway through ---
-Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
-```
-
-## E5: brute-force defence
-
-Parsed from `E5_20261121T230334.txt`.
-
-- ssh_unprotected: 5s, credential_found=no
-- nginx_unprotected: 1s, credential_found=no
-- ssh_protected: 145s, credential_found=no
-- nginx_protected: 1s, credential_found=no
-
-sshd jail status after attack:
-```
-Status for the jail: sshd
-|- Filter
-|  |- Currently failed:	1
-|  |- Total failed:	7
-|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
-`- Actions
-   |- Currently banned:	1
-   |- Total banned:	1
-   `- Banned IP list:	192.168.252.11
---- hydra vs Nginx basic-auth demo path, protected: expect ban partway through ---
-Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
-```
-
-## E5: brute-force defence
-
-Parsed from `E5_20261121T230334.txt`.
+Parsed from `E5_20261123T134908.txt`.
 
 - ssh_unprotected: 5s, credential_found=Summer2026!
 - nginx_unprotected: 1s, credential_found=Summer2026!
@@ -101,8 +44,8 @@ sshd jail status after attack:
 ```
 Status for the jail: sshd
 |- Filter
-|  |- Currently failed:	1
-|  |- Total failed:	7
+|  |- Currently failed:	0
+|  |- Total failed:	9
 |  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
 `- Actions
    |- Currently banned:	1
@@ -125,51 +68,63 @@ Status for the jail: nginx-http-auth
 
 ## E6: rate limiting
 
-Parsed from `E6_20261121T234428.txt`.
+Parsed from `E6_20261123T135746.txt`.
 
-- with_limit_req: 12x200, 0x429, 48x503
-- without_limit_req: 20x200, 0x429, 40x503
-
-## E7: encryption proof
-
-HTTP readable: False. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the full tshark excerpts.
+- with_limit_req: 7x200, 0x429, 53x503
+- without_limit_req: 0x200, 0x429, 0x503
 
 ## E8: resilience
 
-Parsed from `E8_20261121T234945.txt`.
+Parsed from `E8_20261123T140507.txt`.
 
 - Recovery detected after: s
 - Monitor logged DOWN: False, RESTARTED: False
-- logrotate produced a compressed rotated file: True
-
-## E9: TLS quality
-
-Before grade: N/A_no_TLS_listener. After grade: [m[0;33mB[m. See `evidence/processed/E9_summary.md`.
+- logrotate produced a compressed rotated file: False
 
 ## E9: TLS quality
 
 Before grade: N/A_no_TLS_listener. After grade: B. See `evidence/processed/E9_summary.md`.
 
-## E6: rate limiting
+## E8: resilience
 
-Parsed from `E6_20261121T235754.txt`.
+Parsed from `E8_20261123T142040.txt`.
 
-- with_limit_req: 3x200, 0x429, 57x503
-- without_limit_req: 60x200, 0x429, 0x503
+- Recovery detected after: s
+- Monitor logged DOWN: False, RESTARTED: False
+- logrotate produced a compressed rotated file: False
 
-## E7: encryption proof
+## E8: resilience (corrected, manual measurement)
 
-HTTP readable: False. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the full tshark excerpts.
+The automated `run_E8.sh` detection loop and the `capstone-monitor` systemd
+timer were both repeatedly defeated by a VM clock bug found during this
+regeneration (see `docs/decisions.md`): the web VM's clock intermittently
+freezes/reverts, which stalls `capstone-monitor.timer`'s next-elapse
+calculation and coincides with extended `ssh: Connection refused` windows on
+that VM specifically (attacker/db unaffected). Two independent fixes
+(`hwclock --hctosys`, `systemctl restart capstone-monitor.timer`) each held
+only briefly before the clock reverted again, meeting this project's "ask
+after two fixes" threshold - logged as a known limitation rather than
+further chased.
+
+To still answer the actual question E8 asks, nginx's recovery was measured
+directly with host-side timestamps (immune to the guest clock): `sudo
+systemctl kill -s SIGKILL nginx` issued at host epoch, then
+`systemctl is-active nginx` polled every 3s from the host.
+
+- Recovery detected after: 3s (systemd's `Restart=on-failure` on nginx.service)
+- Monitor logged DOWN/RESTARTED: not verified this run (capstone-monitor.timer
+  stall during the test window - not evidence that the monitor doesn't work,
+  just that this run couldn't capture it)
+- logrotate produced a compressed rotated file: True - manually forced
+  (`sudo logrotate -f /etc/logrotate.d/capstone`) and confirmed a fresh
+  `web_status.log.2.gz` on disk. Note: `run_E8.sh`'s own final `ls` glob
+  (`*.log.1*`) can never match a `.2.gz` file, so the automated script could
+  never have shown this as True even on a clean connectivity run - a latent
+  bug in the evidence-capture step, not in logrotate's actual behavior.
+
+`evidence/processed/E8.csv` reflects this corrected, manually-verified row.
 
 ## E7: encryption proof
 
 HTTP readable: True. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the decoded plaintext and full tshark excerpts.
-
-## E8: resilience
-
-Parsed from `E8_20261122T000358.txt`.
-
-- Recovery detected after: s
-- Monitor logged DOWN: False, RESTARTED: False
-- logrotate produced a compressed rotated file: True
 

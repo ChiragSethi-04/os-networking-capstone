@@ -1,0 +1,99 @@
+=== E8 raw output ===
+date_utc=2026-11-23T03:05:07Z
+repeats=5 quick=0
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- killing nginx ---
+kill_time_utc=2026-11-23T03:06:40Z
+2026-11-21T14:37:18Z disk_used=61% load=0.13 0.15 0.97
+2026-11-21T14:37:18Z api_health_http=200
+2026-11-21T14:37:18Z db_reachable=yes
+2026-11-21T14:37:53Z nginx UP
+2026-11-21T14:37:53Z meridian-app UP
+2026-11-21T14:37:53Z cert_days_left=364
+2026-11-21T14:37:53Z disk_used=61% load=0.44 0.23 0.96
+2026-11-21T14:37:53Z api_health_http=200
+2026-11-21T14:37:53Z db_reachable=yes
+2026-11-21T14:38:28Z nginx UP
+2026-11-21T14:38:28Z meridian-app UP
+2026-11-21T14:38:28Z cert_days_left=364
+2026-11-21T14:38:28Z disk_used=61% load=0.24 0.20 0.93
+2026-11-21T14:38:28Z api_health_http=200
+2026-11-21T14:38:28Z db_reachable=yes
+--- logrotate -d (dry run) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo logrotate -d /etc/logrotate.d/capstone
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo logrotate -d /etc/logrotate.d/capstone
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo logrotate -d /etc/logrotate.d/capstone
+warning: logrotate in debug mode does nothing except printing debug messages!  Consider using verbose mode (-v) instead if this is not what you want.
+
+reading config file /etc/logrotate.d/capstone
+Reading state from file: /var/lib/logrotate/status
+Allocating hash table for state file, size 64 entries
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+Creating new state
+
+Handling 3 logs
+
+rotating pattern: /var/log/web_status.log weekly empty log files are not rotated, (8 rotations), old logs are removed
+considering log /var/log/web_status.log
+  Now: 2026-11-22 01:39
+  Last rotated at 2026-11-22 00:10
+  log does not need rotating (log has been rotated at 2026-11-22 00:10, which is less than a week ago)
+
+rotating pattern: /var/log/nginx/*.log weekly empty log files are not rotated, (8 rotations), old logs are removed
+considering log /var/log/nginx/access.log
+  Now: 2026-11-22 01:39
+  Last rotated at 2026-11-22 00:10
+  log does not need rotating (log has been rotated at 2026-11-22 00:10, which is less than a week ago)
+considering log /var/log/nginx/error.log
+  Now: 2026-11-22 01:39
+  Last rotated at 2026-11-22 00:10
+  log does not need rotating (log has been rotated at 2026-11-22 00:10, which is less than a week ago)
+not running postrotate script, since no logs were rotated
+
+rotating pattern: /var/log/meridian-app/*.log weekly empty log files are not rotated, (8 rotations), old logs are removed
+considering log /var/log/meridian-app/*.log
+--- logrotate -f (forced run) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo logrotate -f /etc/logrotate.d/capstone

@@ -1,5 +1,5 @@
 run,path,requests_per_sec,latency_mean_ms
-1,static,20438.88,2.72
-1,proxied,31477.46,1.96
-2,static,19319.14,4.29
-2,proxied,29791.42,2.04
+1,static,22366.28,1.95
+1,proxied,31713.64,1.61
+2,static,21719.01,2.05
+2,proxied,32394.74,1.39

@@ -572,3 +572,69 @@ Autonomous decisions made while building this project, per CLAUDE.md section 9
   still present on disk, not of this particular E8 run (a single forced
   rotation under `delaycompress` produces `.log.1`, not `.gz`, on its
   first cycle - documented in an earlier Phase 5 entry above).
+
+## Phase 6 (final quick-mode regeneration: web VM clock freeze, oversized
+leftover logs, and a manual, clock-independent re-measurement of E8)
+
+- While regenerating the final quick-mode E1-E9 dataset, the web VM (and,
+  it turned out, attacker and db too) came back from a multi-day gap
+  between sessions with its system clock frozen ~36 hours behind real
+  time (`timedatectl` showed `System clock synchronized: no`; the VM's
+  own `date -u` read `2026-11-21T14:45Z` while the host read
+  `2026-11-23T03:17Z`). All three VMs froze at essentially the same
+  instant, consistent with the host Mac sleeping between sessions and
+  the guests never getting an NTP step on resume (these VMs have no
+  internet egress, so `systemd-timesyncd` reports `NTP service: active`
+  but can never actually reach a server to correct it).
+- This explains why E8's detection loop (and `capstone-monitor.timer`'s
+  own logging) produced an empty/useless result on the first regeneration
+  run that day: `tail -n 15 /var/log/web_status.log` kept returning
+  stale Nov-21 content, and the 70s polling window saw nothing new.
+- Fixed by running `sudo hwclock --hctosys` on all three VMs (the
+  hardware clock, backed by the host, was correct throughout - only the
+  guest's running system clock had frozen). This is a one-line fix but
+  does NOT itself notify already-running systemd timers of the jump:
+  `capstone-monitor.timer` kept its pre-jump "next elapse" calculation
+  and was observed stuck mid-countdown (`Trigger: ...; 28s left` while
+  real time was already 16 minutes past that point). A
+  `systemctl restart capstone-monitor.timer` fixed it only briefly before
+  it froze again a few minutes later on a second, independent occasion -
+  i.e. two different fixes were tried and neither held, which is this
+  project's own threshold (CLAUDE.md section 9) for stopping to ask
+  rather than continuing to chase it live. Asked the user; decision was
+  to accept a manual, clock-independent measurement for E8 rather than
+  keep re-running the automated script against unreliable guest-clock
+  state. Logged here as a known limitation of this lab environment
+  (airgapped VMs + long inter-session gaps can desync the guest clock in
+  a way that a single `hwclock` sync does not durably fix), not as a bug
+  in the hardening or monitoring design itself.
+- Separately, the same session found ~1.7GB of leftover, uncompressed
+  `access.log.1` / `error.log.1` files on web (dated from the earlier,
+  user-aborted full 5-repeat benchmark run that spiked host load to
+  210 - see the quick-mode-vs-full-run decision elsewhere in this log).
+  These were pure disk bloat from an already-abandoned run, not
+  meaningful evidence; deleted them, which dropped web's disk usage from
+  59% to 39% and measurably reduced subsequent SSH flakiness, suggesting
+  disk I/O pressure from that oversized log was itself a contributing
+  factor to the VM's general unresponsiveness that day (on top of the
+  clock issue).
+- `evidence/processed/E8.csv` for the final dataset is therefore NOT the
+  output of `parse_E8.py` run against an automated `run_E8.sh` pass (both
+  attempts that day were defeated by the clock/connectivity issue).
+  Instead it was measured directly: `sudo systemctl kill -s SIGKILL
+  nginx` issued with a host-side timestamp, then `systemctl is-active
+  nginx` polled from the host every 3 seconds - a method immune to the
+  guest clock being wrong, since it never reads a VM-side timestamp.
+  Result: nginx recovered in 3 seconds (systemd's `Restart=on-failure`,
+  consistent with the sub-minute recovery already established in the
+  entry above). A forced `logrotate -f` was likewise run and manually
+  confirmed to produce a fresh `web_status.log.2.gz` - which also
+  surfaced a real, separate bug in `run_E8.sh`: its own final evidence
+  `ls` glob is `*.log.1*`, which can never match a `.2.gz` file, so the
+  automated script could never have shown `logrotate_produced_gz=True`
+  even on a perfectly clean run. `monitor_logged_down`/
+  `monitor_logged_restarted` are honestly recorded as unverified this
+  run (not as False-meaning-broken) since `capstone-monitor.timer`'s
+  stall during the test window prevented capturing it either way -
+  `evidence/processed/Ex_notes.md` carries the full explanation for the
+  report.
