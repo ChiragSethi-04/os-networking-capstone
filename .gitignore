@@ -1,5 +1,8 @@
 lab/.secrets
 lab/.env
+CLAUDE*.md
+*marking*ubric*
+2. Capstone Project.pdf
 .venv/
 __pycache__/
 *.pyc
