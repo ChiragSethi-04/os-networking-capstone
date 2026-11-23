@@ -3,6 +3,7 @@ lab/.env
 CLAUDE*.md
 *marking*ubric*
 2. Capstone Project.pdf
+deliverables/
 .venv/
 __pycache__/
 *.pyc

@@ -19,7 +19,7 @@ if [[ ! -f "$CSL" ]]; then
 fi
 
 PANDOC_ARGS=(report.md -o Capstone_Report.pdf --from=markdown --pdf-engine=xelatex
-             --citeproc --toc --number-sections -V geometry:margin=2.54cm)
+             --citeproc --toc -V geometry:margin=2.54cm -V secnumdepth=-2)
 [[ -f "$CSL" ]] && PANDOC_ARGS+=(--csl "$CSL")
 
 if command -v xelatex >/dev/null 2>&1; then
@@ -27,7 +27,7 @@ if command -v xelatex >/dev/null 2>&1; then
   pandoc "${PANDOC_ARGS[@]}"
 else
   echo "xelatex not found, falling back to HTML -> headless Chrome PDF."
-  pandoc report.md -o Capstone_Report.html --from=markdown --citeproc --toc --number-sections \
+  pandoc report.md -o Capstone_Report.html --from=markdown --citeproc --toc \
     $( [[ -f "$CSL" ]] && echo --csl "$CSL" )
   CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
   if [[ -x "$CHROME" ]]; then
@@ -39,7 +39,7 @@ else
 fi
 
 echo "Building DOCX..."
-pandoc report.md -o Capstone_Report.docx --from=markdown --citeproc --toc --number-sections \
+pandoc report.md -o Capstone_Report.docx --from=markdown --citeproc --toc \
   $( [[ -f "$CSL" ]] && echo --csl "$CSL" )
 
 echo "Report built: report/Capstone_Report.pdf, report/Capstone_Report.docx"

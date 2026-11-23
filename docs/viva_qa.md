@@ -11,7 +11,10 @@ benchmark chart out loud.
 1. **Why Nginx over Apache, Lighttpd, or IIS?**
    Nginx's event-driven worker model handles many concurrent connections
    in one process without a thread/process per connection, which our own
-   E1 benchmark shows as [FILL: req/s and CPU numbers at c=200]. Lighttpd
+   E1 benchmark shows directly: at c=200, Nginx sustained 57,990 req/s with
+   zero failed requests, while Apache fell to 10,860 req/s with over
+   70,500 failed requests per run, at similar mean CPU usage (47.2% vs
+   45.1%) - the same CPU doing far more useful work. Lighttpd
    uses a similar model but has a smaller ecosystem; IIS is Windows-only
    and our VMs run Ubuntu.
 
@@ -61,7 +64,9 @@ benchmark chart out loud.
 9. **Why TLS 1.3 over 1.2?**
    Removes legacy ciphers and static RSA key exchange, mandates forward
    secrecy, and completes a full handshake in one round trip instead of
-   two, which our E2 handshake-timing numbers show as [FILL].
+   two, which our E2 handshake-timing numbers show directly: a mean 4.50ms
+   total connect+handshake time for TLS 1.3 vs 8.04ms for TLS 1.2 - 1.79x
+   faster.
 
 10. **Why not allow TLS 1.0/1.1?**
     Both have known cryptographic weaknesses (e.g. BEAST, weak hash
@@ -87,7 +92,10 @@ benchmark chart out loud.
     oversight.
 
 14. **What TLS grade did testssl.sh give before vs after hardening?**
-    [FILL from E9/Figure F14].
+    Before: no grade - there was no TLS listener on port 443 yet. After:
+    B, with SSLv2/v3/TLS1.0/1.1 all "not offered", POODLE and LOGJAM both
+    "not vulnerable". Capped at B rather than A because the cert chain
+    comes from a local, not publicly-trusted, CA (Section 1.4).
 
 ## Firewall and attack surface
 
@@ -103,7 +111,11 @@ benchmark chart out loud.
     expose the database (defence in depth).
 
 17. **What did `nmap -p-` show before vs after hardening?**
-    [FILL exact port counts/lists from E4/Figure F9].
+    Exactly the same both times: 3 open ports on web (22/ssh, 80/http,
+    443/ssl-http), 0 on db. Hardening in this project doesn't close a port
+    that was already closed - it changes what you can do once connected
+    (auth strength, TLS protocol/ciphers, rate limiting), which is why
+    Section 4.4 reads this result alongside the TLS grade, not alone.
 
 18. **Why also run `nikto`, if `nmap` already shows open ports?**
     `nmap` finds open ports and services; `nikto` probes the web
@@ -148,11 +160,22 @@ benchmark chart out loud.
 
 24. **What happened to the status code mix with vs without `limit_req`
     under flood (E6)?**
-    [FILL from E6/Figure F11: 200 vs 429/503 counts].
+    With `limit_req` active: 7x HTTP 200, 53x HTTP 503 in a 60-request
+    sample, at 28,882 req/s sustained. With it disabled: all 60 sampled
+    responses were 504 Gateway Timeout, at only 395 req/s - 73x lower, not
+    higher. Removing the limiter didn't help; it let the flood hit the
+    2-worker gunicorn backend directly until it saturated and every
+    request queued until Nginx's own upstream timeout fired. The limiter
+    is protective here, not just a throughput cost.
 
 25. **Why did you pick those specific `limit_req` rates?**
-    [FILL: state the rate chosen for `/api/` and `/admin/` and the
-    reasoning, e.g. expected legitimate client request rate with headroom].
+    `/api/` is capped at 5 requests/sec per source IP (`burst=10,
+    nodelay`), `/admin/` at 2 requests/sec (`burst=5, nodelay`), each with
+    its own `limit_req_zone`, plus a shared `limit_conn` of 20 concurrent
+    connections per IP. `/api/` is rate-limited more generously because it
+    serves normal site traffic (the contact form, health checks);
+    `/admin/` is tighter because it is never expected to see bursty
+    legitimate traffic, only occasional admin logins.
 
 ## Monitoring and resilience
 
@@ -171,7 +194,13 @@ benchmark chart out loud.
 
 28. **How long did it take to detect and restart nginx after a SIGKILL
     (E8)?**
-    [FILL from E8/Figure F13].
+    3 seconds, measured directly with host-side timestamps
+    (`systemctl kill -SIGKILL` then poll `systemctl is-active` every 3s) -
+    well inside the 60-second target. That speed is systemd's own
+    `Restart=on-failure` drop-in, not the custom monitor script, which
+    polls only every 30 seconds and in an earlier full-mode run was seen
+    to log the restart around 33 seconds later - after systemd had
+    already done the work.
 
 29. **Why `logrotate` at all?**
     Unbounded log growth can eventually fill the disk; `logrotate`
@@ -189,7 +218,15 @@ benchmark chart out loud.
 31. **Why run each experiment at least 5 times?**
     A single run can be skewed by transient host noise; repeats let us
     report a mean, standard deviation, and 95% confidence interval instead
-    of one possibly-unrepresentative number.
+    of one possibly-unrepresentative number. The final submitted dataset
+    actually uses 2 repeats ("quick mode"), not 5: a full 5-repeat run
+    across all nine experiments drove the host Mac's load average to over
+    200 (heavy memory/disk thrashing from running three VMs plus the
+    benchmark load simultaneously), which was judged a bigger risk to data
+    integrity than fewer repeats, so quick mode was used for the final
+    numbers. This is a real, acknowledged trade-off (Section 5.3/1.4), not
+    a hidden shortcut - wider confidence intervals are the honest cost of
+    it, visible directly in Figure F4's error bars.
 
 32. **Why alternate Apache/Nginx run order instead of running all of one
     then all of the other?**
