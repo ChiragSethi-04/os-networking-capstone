@@ -372,19 +372,26 @@ def f11_e6():
         return
     fig, ax = plt.subplots(figsize=(6, 4.2))
     scenarios = [r["scenario"] for r in rows]
-    codes = ["http_200", "http_429", "http_503"]
-    code_colors = {"http_200": BLUE, "http_429": ORANGE, "http_503": "#e34948"}
+    codes = ["http_200", "http_429", "http_503", "other_codes"]
+    code_colors = {"http_200": BLUE, "http_429": ORANGE, "http_503": "#e34948",
+                   "other_codes": MUTED}
+    code_labels = {"http_200": "HTTP 200", "http_429": "HTTP 429", "http_503": "HTTP 503",
+                   "other_codes": "Other (504 etc.)"}
     bottoms = [0] * len(scenarios)
     for code in codes:
-        vals = [int(r[code]) for r in rows]
-        ax.bar(scenarios, vals, bottom=bottoms, color=code_colors[code],
-               label=code.replace("http_", "HTTP "))
+        vals = [int(r.get(code, 0) or 0) for r in rows]
+        if not any(vals):
+            continue
+        ax.bar(scenarios, vals, bottom=bottoms, color=code_colors[code], label=code_labels[code])
         bottoms = [b + v for b, v in zip(bottoms, vals)]
     ax.set_ylabel("Request count (sample)")
     ax.set_xticklabels(["With limit_req", "Without limit_req"])
     ax.legend()
     add_caption("F11", "E6 status code distribution for a burst of sampled requests to "
-                        "/api/health, with vs without Nginx limit_req active.")
+                        "/api/health, with vs without Nginx limit_req active. Without the "
+                        "limiter, requests are not rejected outright but queue against the "
+                        "gunicorn backend and mostly time out (504), at far lower throughput "
+                        "than the limiter's quick, cheap 503 rejections - see Discussion 5.3.")
     savefig(fig, "F11", "F11_e6_status_codes.png")
 
 
@@ -402,9 +409,10 @@ def f13_e8():
     ax.text(float(detected), 1.15, "detected + restarted", color=INK, fontsize=9, ha="right")
     ax.set_xlabel("Seconds since kill")
     ax.set_yticks([])
-    add_caption("F13", "E8 resilience timeline: seconds between killing Nginx and the "
-                        "monitor script detecting and restarting it (service then responds "
-                        "again).")
+    add_caption("F13", "E8 resilience timeline: seconds between killing Nginx and systemd's "
+                        "Restart=on-failure bringing it back up (measured with host-side "
+                        "timestamps; see Discussion 5.3 for why the custom monitor script "
+                        "could not independently confirm the same event this run).")
     savefig(fig, "F13", "F13_e8_resilience_timeline.png")
 
 
