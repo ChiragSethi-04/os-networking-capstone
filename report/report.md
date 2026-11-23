@@ -700,15 +700,25 @@ batch snapshot carrying the same information is used in its place):
 
 ![`tail /var/log/web_status.log` - the monitoring service's output.](../screenshots/monitor_log.png)
 
-**Browser evidence - not captured.** The project brief also calls for
-browser screenshots (HTTPS padlock and certificate details, a browser's
-self-signed-certificate warning, a directory listing returning 403, and a
-429 rate-limit response). No browser-automation tool was available in the
-session that produced this evidence pass, and this report's standing rule
-is to never fabricate a screenshot - so these four are left for a group
-member to capture directly from a browser against the live `web` VM
-(`https://192.168.252.12/`, importing `lab/.secrets`'s CA for the trusted
-view and not importing it for the warning view) before final submission.
+**Browser evidence.** The project brief also calls for browser screenshots
+of the HTTPS padlock/certificate and the browser's own self-signed warning,
+captured directly against the live `web` VM (`https://192.168.252.12/`).
+
+![Certificate Viewer, General tab: issued to `web`/Meridian Logistics, issued by the project's own "Capstone Lab Root CA" after the CA was imported as trusted.](../screenshots/cert_trusted_general.png)
+
+![Certificate Viewer, Details tab: certificate hierarchy and fields.](../screenshots/cert_trusted_details_hierarchy.png)
+
+![Certificate Viewer, Details tab: Subject Alternative Name extension, covering `web`, `localhost`, and 192.168.252.12.](../screenshots/cert_trusted_details_san.png)
+
+![Browser's own "connection is not secure" warning on the live site, without the CA imported.](../screenshots/cert_warning_dropdown.png)
+
+![A second browser's full-page certificate warning (`NET::ERR_CERT_AUTHORITY_INVALID`) for the same site, without the CA imported.](../screenshots/cert_warning_fullpage.png)
+
+A directory listing returning 403 (e.g. `/css/`, which exists but has no
+index file; `/assets/` was tried first and correctly 404s instead, since
+that path does not exist on the site) and a captured 429 rate-limit
+response are still outstanding and left for a group member to capture
+before final submission.
 
 ## Appendix C: Contribution Statement and Work Breakdown
 
