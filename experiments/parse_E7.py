@@ -36,10 +36,20 @@ def main():
     https_section = text.split("--- tshark: HTTPS")[-1]
 
     http_decoded = decode_hex_tokens(http_section)
-    https_decoded = decode_hex_tokens(https_section)
 
     http_readable = any("e7@example.com" in line for line in http_decoded)
-    https_opaque = not any("e7@example.com" in line for line in https_decoded)
+    # HTTPS side: tshark's own default packet summary (not a raw field
+    # extraction - see run_E7.sh for why: Wireshark's TLS 1.3 dissector
+    # doesn't reliably populate `tls.record.content_type` as a per-record
+    # field once a stream is fully encrypted, even though it labels those
+    # same frames "Application Data" in its summary). Presence of that
+    # label proves encrypted application data was actually exchanged, not
+    # just a handshake; absence of the plaintext marker (impossible for it
+    # to appear in a summary line regardless, but checked anyway) confirms
+    # nothing leaked into a dissectable field.
+    app_data_frames = https_section.count("Application Data")
+    https_has_app_data = app_data_frames > 0
+    https_opaque = "e7@example.com" not in https_section
 
     decoded_block = "\n".join(http_decoded) if http_decoded else "(no decodable payload found)"
 
@@ -49,15 +59,18 @@ def main():
         f"# E7 encryption proof\n\n"
         f"Source: `{raw_path.name}`\n\n"
         f"- HTTP payload readable in capture: {'YES' if http_readable else 'NO (check capture)'}\n"
+        f"- HTTPS capture contains real encrypted application data (not just handshake): "
+        f"{'YES' if https_has_app_data else 'NO (check capture)'} ({app_data_frames} frame(s) labelled Application Data)\n"
         f"- HTTPS payload opaque (no plaintext contact-form data visible): "
         f"{'YES' if https_opaque else 'NO (check capture, may indicate a leak)'}\n\n"
         f"## HTTP plaintext payload, decoded from tshark's hex field output\n```\n{decoded_block}\n```\n\n"
         f"## HTTP (tshark http.file_data, raw fields output)\n```\n{http_section.strip()[:1500]}\n```\n\n"
-        f"## HTTPS (tshark tls.record.content_type - opaque application data, type 23)\n```\n{https_section.strip()[:1500]}\n```\n"
+        f"## HTTPS (tshark default packet summary - TLSv1.3 handshake then Application Data)\n```\n{https_section.strip()[:1500]}\n```\n"
     )
 
     append_note(
-        f"## E7: encryption proof\n\nHTTP readable: {http_readable}. HTTPS opaque: {https_opaque}. "
+        f"## E7: encryption proof\n\nHTTP readable: {http_readable}. HTTPS has real application "
+        f"data ({app_data_frames} frames): {https_has_app_data}. HTTPS opaque: {https_opaque}. "
         f"See `evidence/processed/E7_summary.md` for the decoded plaintext and full tshark excerpts.\n\n"
     )
     print(f"Wrote {summary}")

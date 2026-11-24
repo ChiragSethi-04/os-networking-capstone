@@ -1,24 +1,20 @@
 - Nikto v2.1.5
 ---------------------------------------------------------------------------
-+ Target IP:          192.168.252.12
++ Target IP:          192.168.252.17
 + Target Hostname:    web
 + Target Port:        443
 ---------------------------------------------------------------------------
 + SSL Info:        Subject: /C=IN/O=Meridian Logistics/CN=web
                    Ciphers: TLS_AES_256_GCM_SHA384
                    Issuer:  /C=IN/O=Capstone Group 6/CN=Capstone Lab Root CA
-+ Start Time:         2026-11-21 21:38:49 (GMT11)
++ Start Time:         2026-11-24 03:16:35 (GMT11)
 ---------------------------------------------------------------------------
 + Server: nginx
-+ Server leaks inodes via ETags, header found with file /, fields: 0x6b01721d 0x71d 
-+ Uncommon header 'strict-transport-security' found, with contents: max-age=63072000; includeSubDomains
++ Server leaks inodes via ETags, header found with file /, fields: 0x6b04657f 0x71d 
 + Uncommon header 'referrer-policy' found, with contents: strict-origin-when-cross-origin
-+ Uncommon header 'x-content-type-options' found, with contents: nosniff
-+ Uncommon header 'permissions-policy' found, with contents: geolocation=(), microphone=(), camera=()
-+ Uncommon header 'content-security-policy' found, with contents: default-src 'self'
 + Uncommon header 'x-frame-options' found, with contents: DENY
++ Uncommon header 'permissions-policy' found, with contents: geolocation=(), microphone=(), camera=()
++ Uncommon header 'x-content-type-options' found, with contents: nosniff
++ Uncommon header 'strict-transport-security' found, with contents: max-age=63072000; includeSubDomains
++ Uncommon header 'content-security-policy' found, with contents: default-src 'self'
 + No CGI Directories found (use '-C all' to force check all possible dirs)
-+ 6544 items checked: 0 error(s) and 7 item(s) reported on remote host
-+ End Time:           2026-11-21 21:39:09 (GMT11) (20 seconds)
----------------------------------------------------------------------------
-+ 1 host(s) tested

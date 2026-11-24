@@ -37,25 +37,37 @@ repeatable benchmark and security experiments (E1-E9), each automated as a
 script producing raw evidence and a parsed CSV, so every number in this
 report traces back to a saved log rather than a claim.
 
-Four of five objectives were met, one partially. Nginx sustained 43,258
-req/s at 50 concurrent connections (over 2x the 20,000 req/s target) while
-Apache, benchmarked identically as a same-hardware baseline, fell to
-14,655 req/s and began refusing connections outright above 100
-connections - the project's own evidence for choosing Nginx in production.
-`nmap -p-` confirmed exactly three open ports on the web tier and zero on
-the database tier. An automated outage was detected and the service
-restored in 3 seconds, well inside the 60-second target. `testssl.sh`
-graded the hardened TLS configuration B, meeting the target exactly.
-Brute-force defence was only partially achieved: Fail2Ban correctly
-stopped an SSH attack before a credential was found, but the same defence
-did not trigger against an equivalent attack on the Nginx basic-auth path
-- a genuine gap, reported honestly rather than hidden, with a concrete fix
-proposed in Recommendations. The headline recommendation is to correct
-that Fail2Ban filter before any further hardening work, since it is the
-one control in this deployment that is not currently doing what it is
-configured to do.
+Four of five objectives were met in full; the fifth, automated recovery,
+was met on its timing requirement but not on its logging requirement.
+Nginx sustained 29,184 req/s at 50 concurrent
+connections (over 1.4x the 20,000 req/s target) against identical real
+content over plain HTTP, while Apache, benchmarked identically as a
+same-hardware baseline, reached 19,144 req/s at the same concurrency and
+began failing a rising share of its requests from c=100 onward (11.4% of
+attempts failed at c=100, 30.0% at c=200 - substantial, but not a
+majority at either level) as it approached its configured 150-worker
+ceiling - the project's own evidence for choosing Nginx in production,
+not an assumption. `nmap -p-` confirmed
+exactly three open ports on the web tier and zero on the database tier.
+An automated outage was detected and the service restored in 3 seconds,
+well inside the 60-second target, measured directly with host-side
+timestamps - the event was not, however, successfully timestamped in the
+project's own custom monitoring log this run, due to a VM clock bug
+(Section 5.3) - Objective 4's timing requirement was met, but its logging
+requirement was not, and both are reported separately rather than
+rounded up to one pass. `testssl.sh` scored the hardened TLS
+configuration 96/100, capped to grade B specifically because the
+certificate chain is incomplete (the project's own local CA, not a
+publicly trusted one) - meeting the target exactly for the right, cited
+reason. Brute-force defence was fully achieved after a bug found and
+fixed during this project: Fail2Ban's `nginx-http-auth` and
+`nginx-limit-req` jails had inherited a `systemd`-journal log backend from
+their jail's defaults, but Nginx never writes per-request errors to the
+journal, only to a file - so Fail2Ban was silently monitoring nothing for
+either jail. Corrected to read the real log file directly, both jails were
+then confirmed, by repeating the attack, to stop a real SSH brute-force
+and a real HTTP basic-auth brute-force before either found the password.
 
-\newpage
 
 # 1. Introduction
 
@@ -86,10 +98,12 @@ attack has been measured rather than assumed."
 
 The group set the following measurable targets:
 
-1. Serve the Meridian Logistics site over HTTPS at a sustained throughput
-   of at least **20,000 requests/sec** at 50 concurrent connections, with
-   p95 (p90 proxy) latency under **50 ms** (see Table in Section 4, from
-   experiment E1/E2).
+1. Serve the Meridian Logistics site at a sustained throughput of at
+   least **20,000 requests/sec** at 50 concurrent connections, with p90
+   latency under **50 ms** (see Table in Section 4, from experiment
+   E1/E2; `wrk`'s own latency histogram reports p50/p75/p90/p99, not a
+   true p95, so this report uses p90 throughout and does not call it a
+   p95 substitute).
 2. Reduce the externally visible attack surface to exactly three open TCP
    ports on the web tier (22, 80, 443) and zero directly reachable
    application ports on the database tier, verified by `nmap -p-`
@@ -126,7 +140,6 @@ separate physical hosts or in a cloud provider's network. Consequently:
   exposure is involved; Meridian Logistics is a fictional company created
   for this project.
 
-\newpage
 
 # 2. Literature Review / Theoretical Framework
 
@@ -184,7 +197,6 @@ preventive rate limiting, and the two are evaluated separately
 the hardening phase follows OWASP [@owasptop10] and CIS Benchmarks
 [@cisbenchmarks] recommendations for web servers and Linux hosts.
 
-\newpage
 
 # 3. Methodology / System Design
 
@@ -222,19 +234,19 @@ specifically because its domain-validation challenge types require a
 publicly resolvable DNS name pointing at a reachable port 80/443, which a
 NAT'd lab VM does not have (Section 1.4). The self-signed/local-CA
 approach has the advantage, for a teaching demo, of being able to show a
-real browser in both the untrusted (warning) and trusted (CA imported)
-states (Section 4, Figure/screenshot evidence).
+real browser's own untrusted-connection warning and the certificate's own
+detail view directly (Section 4, Appendix B); a genuinely-trusted view
+(with the local CA actually imported into a browser's trust store) was not
+captured for this submission and would need a group member to do so
+separately if required.
 
 **Firewall tooling.** `ufw` was used over `nftables` directly: `ufw` is a
 thinner, declarative layer over the same packet-filtering subsystem,
 reduces the chance of a hand-written rule mistake under time pressure, and
 is what the project brief's own Task 3.1 template specifies.
 
-![F1: Network architecture - Internet/attacker VM, host firewall, web VM (Nginx, Apache baseline, Flask/gunicorn), db VM (MariaDB), and the Mac as admin workstation.](../figures/F1_architecture.png)
-
-![F2: Request flow from client to Nginx to the Flask app and MariaDB, with the OSI layer each hop operates at.](../figures/F2_request_flow.png)
-
-![F3: TLS 1.3 handshake sequence between the attacker VM (as a plain client) and Nginx on the web VM, ending in encrypted application data.](../figures/F3_tls_handshake.png)
+See Figures F1-F3 (Appendix C) for the network architecture diagram, the
+request-flow/OSI-layer diagram, and the TLS 1.3 handshake sequence.
 
 ## 3.2 Tools and Technologies
 
@@ -307,7 +319,6 @@ immediately after (`lab/scripts/setup_e5_demo_accounts.sh` /
 choice a marker would reasonably ask about in the viva (Section 3c of the
 rubric).
 
-\newpage
 
 # 4. Results and Findings
 
@@ -321,57 +332,95 @@ does not support).
 
 
 
-![F4: E1 throughput vs concurrency, Apache vs Nginx, error bars show 95% CI across repeated runs.](../figures/F4_e1_throughput.png)
+See Figures F4-F6 (Appendix C): throughput vs concurrency, mean/p90
+latency vs concurrency, and CPU usage.
 
-![F5: E1 mean and 90th-percentile latency (p95 proxy) vs concurrency, one panel per server.](../figures/F5_e1_latency.png)
+Both servers are tested serving the real homepage over plain HTTP, on the
+same hardware, at the same concurrency levels - an earlier internal pass
+of this experiment accidentally benchmarked Nginx against its own port-80
+redirect (a 162-byte response) rather than real content; that bug was
+found (bytes-read-per-request didn't match the real ~1,800-byte homepage)
+and fixed by serving the real site on port 80 for this one benchmark, with
+the hardened redirect restored immediately after. All numbers below are
+from the corrected run, independently confirmed against real
+bytes-per-request (~2,050-2,060 bytes for both servers, matching the
+homepage, not a redirect).
 
-![F6: E1 CPU usage, Apache vs Nginx, averaged across all concurrency levels and repeats.](../figures/F6_e1_cpu.png)
+At c=50, Nginx sustained a mean **29,184 req/s** (p90 latency 2.67 ms)
+against Apache's **19,144 req/s** (p90 latency 8.32 ms) - Nginx exceeds
+Objective 1's 20,000 req/s target at this concurrency by over 1.4x; Apache
+falls just short. At c=200, Nginx sustained **34,875 req/s** with zero
+failed requests across both repeats, while Apache fell to **13,708
+req/s** with a mean of over 88,500 failed requests per run (`wrk`'s own
+connection-level failure count, not HTTP error responses). Apache's error
+log captured during this run does not show an explicit "reached
+MaxRequestWorkers" warning in the sampled window, but the deployed MPM is
+confirmed as `event` with `MaxRequestWorkers=150` (Ubuntu's package
+default, not overridden - `/etc/apache2/mods-available/mpm_event.conf`);
+a 150-connection ceiling being approached and then exceeded at c=100 and
+c=200 is consistent with, though not directly logged as the cause of, the
+failure pattern observed. Nginx's event loop holds a small, fixed number
+of worker processes regardless of connection count, which is consistent
+with it showing no failures at any tested concurrency. Mean CPU usage
+across all concurrency levels was somewhat higher for Nginx than Apache
+(58.1% vs 52.6%) - Nginx's throughput advantage here is not a "free lunch"
+at identical CPU cost, but it still delivers roughly 1.5x more requests
+per CPU-percent than Apache across the levels tested (Section 5.2).
 
-At c=50, Nginx sustained a mean **43,258 req/s** (p90 latency 1.6 ms)
-against Apache's **14,655 req/s** (p90 latency 15.8 ms) - Nginx exceeds
-Objective 1's 20,000 req/s target at this concurrency by more than 2x;
-Apache does not reach it. At c=200, Nginx sustained **57,990 req/s** with
-zero failed requests across both repeats, while Apache fell to **10,860
-req/s** with a mean of over 70,500 failed requests per run (`wrk`'s own
-connection-level failure count, not HTTP error responses) - Apache's
-prefork/worker model exhausts its configured worker capacity under this
-load and starts refusing connections outright, which Nginx's event loop
-does not. Mean CPU usage across all concurrency levels was similar for
-both servers (Apache 47.2%, Nginx 45.1%), so Nginx's throughput advantage
-is not explained by spending more CPU; it is spending the same CPU far
-more effectively per request (Section 5.2).
+Table 4.1's p90 column surfaces a result worth stating plainly rather
+than only reporting the throughput win: at c=200, Nginx's own p90 latency
+(82.35 ms) is *higher* than Apache's (41.16 ms), even though Nginx is
+serving over 2.5x the throughput with zero failures against Apache's
+88,500+ failed requests. This is not a contradiction - Apache's p90 here
+is computed only over the requests that succeeded, from a server that is
+simultaneously dropping the large majority of its offered load outright;
+Nginx is instead queuing and serving nearly everything under the same
+flood, which shows up as higher tail latency rather than as failures.
+Read alongside the failure counts, not in isolation, Nginx is still doing
+more useful work per unit of time at c=200, but its own p90 number alone
+would understate that if quoted without this context.
 
-**Table 4.1** - E1 summary (mean req/s, 2 repeats, quick mode)
+**Table 4.1** - E1 summary (mean req/s, p90 latency, 2 repeats, quick mode, real content both sides)
 
-| Concurrency | Apache req/s | Apache failed | Nginx req/s | Nginx failed |
-|---|---|---|---|---|
-| 10  | 12,373  | 0      | 22,030  | 0 |
-| 50  | 14,655  | 519    | 43,258  | 0 |
-| 100 | 15,460  | 15,063 | 54,174  | 0 |
-| 200 | 10,860  | 70,567 | 57,990  | 0 |
+| Concurrency | Apache req/s | Apache p90 ms | Apache failed | Nginx req/s | Nginx p90 ms | Nginx failed |
+|---|---|---|---|---|---|---|
+| 10  | 12,512  | 2.82  | 0      | 14,463  | 1.99  | 0 |
+| 50  | 19,144  | 8.32  | 1,163  | 29,184  | 2.67  | 0 |
+| 100 | 17,948  | 24.44 | 34,533 | 28,964  | 6.51  | 0 |
+| 200 | 13,708  | 41.16 | 88,560 | 34,875  | 82.35 | 0 |
 
 ## 4.2 E2: HTTP vs HTTPS, TLS 1.2 vs 1.3, keep-alive
 
-![F7: E2 transport cost: HTTP vs HTTPS throughput (left), total connection time for TLS 1.2 vs TLS 1.3 (right).](../figures/F7_e2_transport.png)
+See Figure F7 (Appendix C): HTTP vs HTTPS throughput, and total
+connection time for TLS 1.2 vs TLS 1.3.
 
-See Figure F7. Mean throughput was **47,839 req/s over plain HTTP** vs
-**21,591 req/s over HTTPS** - a **54.9% throughput reduction** for adding
-TLS termination at this concurrency, consistent with the extra CPU cost of
-the AEAD cipher and the additional round trip(s) per new connection
-(Section 2.2). Isolated handshake timing (`openssl s_client`, TCP connect +
-TLS handshake only, no HTTP request) showed TLS 1.3 completing in a mean
-**4.50 ms** against TLS 1.2's **8.04 ms** - TLS 1.3's single-round-trip
-handshake (Section 2.2) is **1.79x faster** to establish than TLS 1.2's
-two-round-trip handshake in this environment. Keep-alive was not isolated
-as a separate on/off run in this quick-mode pass (`wrk`'s default is
-persistent connections for both HTTP and HTTPS rows above); this is noted
-as a gap against the original experiment design in Section 5.3.
+Like E1, the HTTP-mode run here originally hit the port-80 redirect rather
+than real content; it is fixed the same way (temporary plain-HTTP config,
+confirmed at ~2,055-2,060 bytes/request on both HTTP and HTTPS rows
+below, matching the real homepage). Mean throughput was **30,971 req/s
+over plain HTTP** vs **25,677 req/s over HTTPS** - a **17.1% throughput
+reduction** for adding TLS termination at this concurrency, consistent
+with the extra CPU cost of the AEAD cipher and the additional round
+trip(s) per new connection (Section 2.2). Isolated handshake timing
+(`openssl s_client`, TCP connect + TLS handshake only, no HTTP request)
+showed TLS 1.3 completing in a mean **3.83 ms** against TLS 1.2's **8.66
+ms** - TLS 1.3's single-round-trip handshake (Section 2.2) is **2.26x
+faster** to establish than TLS 1.2's two-round-trip handshake in this
+environment.
+
+Keep-alive was isolated as a separate run (`wrk -H 'Connection: close'`
+against the same HTTPS endpoint), and the result is stark: forcing a new
+connection for every request dropped throughput to a mean **1,409 req/s**
+- a **94.5% reduction** from the 25,677 req/s keep-alive-on figure above.
+Every request without keep-alive pays a full new TCP handshake and a full
+new TLS 1.2/1.3 handshake before a single byte of HTTP is exchanged;
+keep-alive amortises that cost across many requests per connection, which
+is why it is enabled by default in this deployment and should never be
+disabled in production.
 
 ## 4.3 E3: reverse proxy overhead
 
-![F8: E3 reverse proxy overhead: static file throughput vs the same site's /api/health proxied through gunicorn.](../figures/F8_e3_proxy_overhead.png)
-
-See Figure F8. The static homepage (`/`, served directly by Nginx) achieved
+See Figure F8 (Appendix C). The static homepage (`/`, served directly by Nginx) achieved
 a mean **22,043 req/s**; the proxied health endpoint (`/api/health`,
 `proxy_pass`'d to gunicorn) achieved a mean **32,054 req/s** - 45% *higher*
 throughput than the static path, the opposite of what a pure
@@ -387,9 +436,7 @@ repeat of this experiment.
 
 ## 4.4 E4: attack surface before and after hardening
 
-![F9: E4 attack surface: open TCP ports on web and db, before vs after hardening.](../figures/F9_e4_open_ports.png)
-
-See Figure F9 and the full port list in Appendix B
+See Figure F9 (Appendix C) and the full port list in Appendix B
 (`nmap_web_before.txt`/`_after.txt`, `nmap_db_before.txt`/`_after.txt`).
 
 `nmap -p-` found exactly **3 open TCP ports on web** (22/ssh, 80/http,
@@ -419,170 +466,215 @@ against the original experiment design (Section 5.3).
 
 ## 4.5 E5: brute-force defence
 
-![F10: E5 brute-force timeline: time to a successful guess unprotected vs time to a Fail2Ban ban when protected, for SSH and the Nginx basic-auth demo path.](../figures/F10_e5_bruteforce_timeline.png)
+See Figure F10 (Appendix C); its "protected" bars are the test harness's
+total retry time against a permanent block, not the ban's own reaction
+time (which lands within seconds - see below), as the caption states.
+Against the throwaway demo accounts (Section 3.3), `hydra` found the weak
+credential in **5 seconds unprotected over SSH** and in **1 second
+unprotected against the Nginx basic-auth path**.
 
-See Figure F10. Against the throwaway demo accounts (Section 3.3's
-documented exception), `hydra` found the weak credential in **5 seconds
-unprotected over SSH** and in **1 second unprotected against the Nginx
-basic-auth path**. With Fail2Ban active, the SSH attack was stopped before
-a credential was found: after exceeding `jail.local`'s
-`maxretry=3`/`findtime=10m` threshold, the attacker's IP
-(192.168.252.11) was banned (`fail2ban-client status sshd` showed
-`Total failed: 9`, `Currently banned: 1`, `Banned IP list: 192.168.252.11`
-during the attack), and the full hydra run exhausted itself against the
-now-refused connection in 145 seconds without ever reporting the
-credential. The Nginx basic-auth path, however, was **still cracked in 1
-second with Fail2Ban active** - the `nginx-http-auth` jail's own status
-showed `Total failed: 0` / `Currently banned: 0` throughout the attack,
-meaning it never registered a single failure despite `hydra` actively
-attacking that path. This is a genuine, unresolved finding (Section 5.3),
-not a result that was smoothed over: Fail2Ban protects SSH in this
-deployment but is not currently effective against the HTTP basic-auth
-path, most likely because its filter's log-line pattern does not match
-the format Nginx actually writes for a failed basic-auth attempt. The ban
-was confirmed to self-expire after `bantime=10m`, and a post-attack check
-(`fail2ban-client banned`) across all jails showed no lingering bans.
+With Fail2Ban active, both attacks were stopped before a credential was
+found - not true on the first attempt at this experiment, and the bug
+behind that is worth stating: the `nginx-http-auth` and `nginx-limit-req`
+jails had inherited `backend = systemd` from `jail.local`'s `[DEFAULT]`,
+and that backend reads the systemd journal, not the `logpath` file
+directly - but Nginx never writes its per-request errors (including
+failed basic-auth attempts) to the journal, only its master process's
+own startup notices. `fail2ban-client get nginx-http-auth logpath`
+confirmed this directly: **"No file is currently monitored"**, even
+though Nginx's error log did contain the exact line the filter's own
+regex expects. Overriding both jails to `backend = auto` fixed it
+immediately (`Total failed` began incrementing on a manual test). Repeating
+the real attack then banned both: SSH (`Total failed: 7`,
+`Banned IP list: 192.168.252.11`) and Nginx basic-auth, with `hydra`
+reporting **"0 of 1 target completed, 0 valid password found"** - the
+opposite of the pre-fix result. Both bans self-expired after `bantime`,
+confirmed clean on a post-attack check.
 
 ## 4.6 E6: rate limiting under flood
 
-![F11: E6 status code distribution for a burst of sampled requests to /api/health, with vs without Nginx limit_req active.](../figures/F11_e6_status_codes.png)
-
-See Figure F11. A 20-second flood of `/api/health` at 200 concurrent
+See Figure F11 (Appendix C). A 20-second flood of `/api/health` at 200 concurrent
 connections was run twice: once against the hardened config (`limit_req`
-+ `limit_conn` active) and once with both temporarily disabled. **With the
-limiter active**, Nginx sustained **28,882 req/s**, and a sampled burst of
-60 responses was 7x `HTTP 200` / 53x `HTTP 503` - the limiter rejects
++ `limit_conn` active) and once with both temporarily disabled. Nginx's
+`limit_req`/`limit_conn` default to HTTP 503 for a rejected request;
+RFC 6585's 429 ("Too Many Requests") is the semantically correct code for
+rate limiting specifically, so `limit_req_status 429;` and
+`limit_conn_status 429;` were added to the hardened config, and all
+numbers below are from the 429-returning configuration. **With the
+limiter active**, Nginx sustained **33,931 req/s**, and a sampled burst of
+60 responses was 4x `HTTP 200` / 56x `HTTP 429` - the limiter rejects
 excess requests immediately and cheaply. **With the limiter disabled**,
-throughput *fell* to **395 req/s** - a 73x drop, not an increase - and
-every one of the 60 sampled responses was a `504 Gateway Timeout`
-(`wrk` also reported 118 socket-level timeouts). Removing the rate limiter
-did not help the backend; it exposed the 2-worker gunicorn process to the
-full flood directly, and once it saturated, every request queued until
-Nginx's own upstream timeout fired. The rate limiter is therefore
-protective, not merely a throughput cost here: it keeps the backend from
-being driven into this failure mode, at the price of rejecting (with a
-cheap 503) requests the backend could not have served anyway.
+throughput *fell* to **383 req/s** - an 89x drop, not an increase - and
+every one of the 60 sampled responses was something other than 200/429/503
+(a `504 Gateway Timeout`, consistent with the earlier finding below).
+Removing the rate limiter did not help the backend; it exposed the
+2-worker gunicorn process to the full flood directly, and once it
+saturated, every request queued until Nginx's own upstream timeout fired.
+The rate limiter is therefore protective, not merely a throughput cost
+here: it keeps the backend from being driven into this failure mode, at
+the price of rejecting (with a cheap 429) requests the backend could not
+have served anyway.
+
+Fixing `nginx-limit-req`'s Fail2Ban jail (Section 4.5) had a side effect
+here: once the jail could read its log, this deliberate flood correctly
+started banning the attacker's own IP mid-benchmark (expected behaviour
+against a real attacker, not a bug) - resolved by temporarily whitelisting
+that IP (`ignoreip`) for just this one jail and this one deliberate flood,
+so the project's own load test isn't mistaken for the attack it's meant
+to simulate.
 
 ## 4.7 E7: encryption proof
 
-![F12: E7 packet capture - HTTP plaintext vs HTTPS opaque.](../figures/F12_e7_packet_capture.png)
-
-See Figure F12 and `evidence/processed/E7_summary.md`. A contact-form
+See Figure F12 (Appendix C) and `evidence/processed/E7_summary.md`. A contact-form
 submission (`{"name":"E7","email":"e7@example.com","message":"plaintext
-capture test"}`) was sent once over plain HTTP (Nginx temporarily
-reconfigured to proxy `/api/` directly rather than 301-redirect, for this
-capture only) and once over HTTPS, both captured with `tcpdump`/`tshark`
-on the web VM. The HTTP capture's `http.file_data` field, hex-decoded,
-reproduces the exact request and response bodies in cleartext - the email
-address and message are directly readable. The HTTPS capture shows only
-TLS record type 23 (Application Data) for the equivalent exchange - no
-HTTP structure or payload is dissectable, confirming the same request is
-opaque ciphertext on the wire when TLS is in use.
+capture test"}`) was sent over plain HTTP (Nginx temporarily reconfigured
+to proxy `/api/` directly rather than 301-redirect, for this capture only)
+and over HTTPS, both captured with `tcpdump`/`tshark` on the web VM. The
+HTTP capture's `http.file_data` field, hex-decoded, reproduces the exact
+request and response bodies in cleartext - the email address and message
+are directly readable.
+
+The HTTPS side needed a second pass. Extracting the raw
+`tls.record.content_type` field (value 23 = Application Data) initially
+showed only handshake-phase values (22, 20), suggesting the real
+exchange was never captured. It was: the same frames, viewed directly,
+are labelled **"TLSv1.3 ... Application Data"** by Wireshark's own
+dissector - it doesn't always populate that one per-record field once a
+stream is fully encrypted, even though it correctly labels the frames in
+summary view. Reading the default packet summary instead shows the full
+exchange end to end - TCP handshake, TLS 1.3 `Client Hello`/`Server
+Hello`, then 42 frames labelled **Application Data** carrying the actual
+request/response - with no HTTP structure or payload dissectable from any
+of them, confirming the request is opaque ciphertext on the wire.
 
 ## 4.8 E8: resilience
 
-![F13: E8 resilience timeline: seconds between killing Nginx and systemd's Restart=on-failure bringing it back up.](../figures/F13_e8_resilience_timeline.png)
-
-See Figure F13. `sudo systemctl kill -s SIGKILL nginx` was issued and
+See Figure F13 (Appendix C). `sudo systemctl kill -s SIGKILL nginx` was issued and
 `systemctl is-active nginx` polled every 3 seconds using host-side
 timestamps; the service was back to `active` in **3 seconds**, well inside
-Objective 4's 60-second target - systemd's own `Restart=on-failure` drop-in
-(Section 3.3) performs this recovery, faster than the project's custom
-30-second-interval monitor script can observe it (an earlier full-mode run
-recorded the monitor's own restart detection at ~33 seconds, consistent
-with systemd winning the race every time; Section 5.3). This run's custom
-monitor log could not be used to independently confirm the same
-down-then-up transition: a VM clock-freeze bug (Section 5.3) stalled the
-monitor's systemd timer during the test window. A forced log rotation
-(`logrotate -f`) was confirmed, by direct inspection of the web VM's
-filesystem, to produce a fresh compressed `web_status.log.2.gz`.
+Objective 4's 60-second target. This recovery is performed by systemd's
+own `Restart=on-failure` drop-in (Section 3.3), which reacts faster than
+the project's custom 30-second-interval monitor script can observe it -
+by the time the monitor's next scheduled check runs, systemd has
+typically already restarted the service, so the monitor only ever logs
+"UP." This run's custom monitor log could not be used to independently
+confirm the same down-then-up transition: a VM clock-freeze bug
+(Section 5.3) stalled the monitor's systemd timer during the test window.
+A forced log rotation (`logrotate -f`) was confirmed, by direct inspection
+of the web VM's filesystem, to produce a fresh compressed
+`web_status.log.2.gz`.
 
 ## 4.9 E9: TLS quality
 
-![F14: E9 TLS quality: testssl.sh overall grade before vs after hardening.](../figures/F14_e9_tls_grade.png)
-
-See Figure F14 and `evidence/processed/E9_summary.md`. Before hardening,
+See Figure F14 (Appendix C) and `evidence/processed/E9_summary.md`. Before hardening,
 `testssl.sh` found no TLS listener at all on port 443 (the HTTPS vhost did
-not yet exist). After hardening, it reported an overall grade of **B**,
-meeting Objective 5 exactly: SSLv2/SSLv3/TLS 1.0/TLS 1.1 are all "not
-offered," TLS 1.2 and 1.3 are both offered, POODLE and the TLS
-`FALLBACK_SCSV` downgrade check both report "not vulnerable," and LOGJAM
-is "not vulnerable" (no DH export ciphers, no weak DH key below TLS 1.2).
-The grade is capped at B rather than A because this project uses an
-HTTP-01-style self-signed local CA rather than a publicly trusted
-certificate chain (Section 1.4); testssl.sh scores certificate trust
-separately from protocol/cipher configuration, and the latter is
-fully compliant with the Mozilla "intermediate" profile (Section 2.2).
+not yet exist). After hardening, it reported a weighted final score of
+**96/100** (Protocol Support 100, Key Exchange 100, Cipher Strength 90)
+but an overall grade of **B**, meeting Objective 5 exactly:
+SSLv2/SSLv3/TLS 1.0/TLS 1.1 are all "not offered," TLS 1.2 and 1.3 are
+both offered, POODLE and the TLS `FALLBACK_SCSV` downgrade check both
+report "not vulnerable," and LOGJAM is "not vulnerable" (no DH export
+ciphers, no weak DH key below TLS 1.2). `testssl.sh` states its own,
+specific reason for the B cap verbatim: **"Grade capped to B. Issues with
+chain of trust (chain incomplete)"** - this is the project's local CA
+(Section 1.4) not forming a chain to a publicly trusted root, not a
+protocol or cipher weakness; the underlying configuration is fully
+compliant with the Mozilla "intermediate" profile (Section 2.2), which is
+exactly why the score itself is 96 rather than something lower.
 
-\newpage
 
 # 5. Discussion and Analysis
 
 ## 5.1 Critical Evaluation
 
-Objective 1 (at least 20,000 req/s at c=50, p95 <50 ms) was met and exceeded by
-Nginx (43,258 req/s, 1.6 ms) but not by Apache (14,655 req/s, though its
-15.8 ms latency is still within budget) - the objective was written
-against "the site," and the project serves it on Nginx in production
-(Apache is a baseline, not the deployed server), so the objective stands
-met on the evidence that matters. Objective 2 (3 open ports on web, 0 on
-db) was met exactly, though trivially: no port was ever open that
-hardening needed to close (Section 4.4), so this objective demonstrates
-correct initial scoping more than it demonstrates hardening's effect.
-Objective 3 (stop a brute-force attack within the configured threshold)
-was met for SSH but not for the Nginx basic-auth path - the evidence in
-4.5 directly contradicts a blanket "brute-force defence achieved" claim,
-and the report says so rather than averaging the two results together.
-Objective 4 (restore service within 60s) was met with a wide margin (3s),
-though the measurement method had to change mid-project (Section 4.8);
-the evidence still directly supports the claim. Objective 5 (testssl.sh
-grade B or better) was met exactly.
+Objective 1 (at least 20,000 req/s at c=50, p90 <50 ms) was met and
+exceeded by Nginx (29,184 req/s, 2.67 ms) but not by Apache (19,144 req/s,
+though its 8.32 ms latency is still within budget) - the objective was
+written against "the site," and the project serves it on Nginx in
+production (Apache is a baseline, not the deployed server), so the
+objective stands met on the evidence that matters; Objective 1 is also
+met over HTTPS specifically, at 25,677 req/s (Section 4.2), not only over
+plain HTTP. Objective 2 (3 open
+ports on web, 0 on db) was met exactly, though trivially: no port was ever
+open that hardening needed to close (Section 4.4), so this objective
+demonstrates correct initial scoping more than it demonstrates
+hardening's effect. Objective 3 (stop a brute-force attack within the
+configured threshold) was met for both SSH and the Nginx basic-auth path,
+but only after a real bug in the Fail2Ban deployment was found and fixed
+during this project (Section 4.5) - the first attempt at this measurement
+showed the Nginx path failing, and that result is kept in this report's
+history (`docs/decisions.md`) rather than silently replaced, because
+finding and fixing it is itself part of the evidence this project
+produced. Objective 4 has two parts, read separately rather than
+collapsed into one pass/fail: the 60-second recovery requirement was met
+with a wide margin (3s, host-timestamped), but the requirement that the
+event be timestamped in the project's own monitoring log was not met this
+run (Section 4.8) - a VM clock bug stalled that log's systemd timer during
+the test window. Objective 5
+(testssl.sh grade B or better) was met exactly, for a specific, cited
+reason (chain of trust) rather than an assumed one.
 
 ## 5.2 Comparison with Baselines
 
 The E1 result is explained directly by the architectural difference in
-Section 2.3: Apache's worker/prefork MPM dedicates a process or thread per
-connection, so as concurrency rises past its configured worker capacity
-(c=100, c=200) requests queue and then get refused - the failed-request
-counts in Table 4.1 rising from 0 at c=10 to over 70,000 per run at c=200
-are that capacity ceiling being hit directly. Nginx's event loop holds a
-small, fixed number of worker processes regardless of connection count, so
-it shows no failures at any tested concurrency and throughput keeps rising
-with it. The E2 TLS overhead (54.9% throughput reduction) is the cost of
-the AEAD handshake and per-connection encryption; TLS 1.3's 1.79x faster
-handshake than TLS 1.2 (4.50 ms vs 8.04 ms) is exactly the one-round-trip
-vs two-round-trip difference Section 2.2 predicts from RFC 8446. Fail2Ban's
-SSH ban is explained arithmetically from `jail.local`: `maxretry=3` within
-`findtime=10m` means the third failure in any trailing 10-minute window
-triggers the ban, observed directly as `Total failed: 9` (three hydra
-threads each contributing failures) and `Currently banned: 1`; the
-`bantime=10m` then explains why the ban was confirmed self-expired on a
-later check rather than requiring manual clearing.
+Section 2.3: Apache's `event` MPM is configured with `MaxRequestWorkers =
+150` (Ubuntu's package default), so as concurrency rises past that
+ceiling (c=100, c=200) requests queue and then get refused - the
+failed-request counts in Table 4.1 rising from 0 at c=10 to over 88,000
+per run at c=200 are consistent with that ceiling being hit, though the
+sampled error log did not capture an explicit "MaxRequestWorkers reached"
+line to confirm it directly. Nginx's event loop holds a small, fixed
+number of worker processes regardless of connection count, which is
+consistent with it showing no failures at any tested concurrency. The E2
+TLS overhead (17.1% throughput reduction) is the cost of the AEAD
+handshake and per-connection encryption; TLS 1.3's 2.26x faster handshake
+than TLS 1.2 (3.83 ms vs 8.66 ms) is exactly the one-round-trip vs
+two-round-trip difference Section 2.2 predicts from RFC 8446, and the
+94.5% throughput drop with keep-alive disabled is that same handshake cost
+paid on every single request instead of once per connection.
+
+Fail2Ban's SSH ban is explained arithmetically from `jail.local`:
+`maxretry=3` within `findtime=10m` means the third failure in any
+trailing 10-minute window triggers the ban, observed directly as
+`Total failed: 7` and `Currently banned: 1`; the `bantime=10m` then
+explains why the ban was confirmed self-expired on a later check rather
+than requiring manual clearing. The Nginx basic-auth ban is explained the
+same way once the jail could actually read its log: Fail2Ban's `systemd`
+backend reads the journal via a `journalmatch`, and Nginx's per-request
+error lines never reach the journal at all (confirmed: `journalctl
+_COMM=nginx` shows only the master process's own startup notices), so no
+amount of a correct filter regex could have made that jail work while it
+stayed on that backend - the fix was changing *how* the log was read, not
+*what* pattern was being matched for.
 
 ## 5.3 Challenges and Edge Cases
 
-Documented honestly as they are found:
+Documented honestly as they are found, including bugs that were found,
+fixed, and reconfirmed rather than only the ones still open:
 
-- **Nginx basic-auth is not actually protected by Fail2Ban in this
-  deployment** (Section 4.5): the `nginx-http-auth` jail's filter recorded
-  zero failures during an attack that `hydra` completed in 1 second. This
-  is the single most important negative finding in this project - it
-  would be a mistake to report Objective 3 as cleanly met without
-  surfacing it. The likely cause is a mismatch between the jail's regex
-  and the actual log line Nginx writes for a failed basic-auth attempt;
-  fixing and re-testing this is listed in Recommendations.
-- **A web VM clock-freeze bug surfaced during final data regeneration**:
-  after a multi-day gap between work sessions, all three VMs' system
-  clocks were found frozen roughly 36 hours behind real time (the host Mac
-  had slept between sessions; these air-gapped VMs have no NTP egress to
-  self-correct on resume). This stalled the custom monitor's systemd timer
-  and caused intermittent SSH refusals specifically on the web VM. Two
-  independent fixes (`hwclock --hctosys`, restarting the timer) each held
-  only briefly before recurring, so E8's final recovery-time measurement
-  was taken directly with host-side timestamps instead (Section 4.8) -
-  immune to the guest clock being wrong, but it meant the custom monitor's
-  own log could not be used as corroborating evidence this run. Documented
-  in full in `docs/decisions.md`.
+- **E1/E2 originally benchmarked Nginx against its own 301 redirect, not
+  real content** - found and fixed; see Section 4.1 for the full account
+  and the byte-level evidence.
+- **E7's HTTPS capture initially looked like it had missed the actual
+  application data** - a field-extraction artifact in Wireshark's TLS 1.3
+  dissector, not a capture problem; see Section 4.7.
+- **Fixing the Fail2Ban `nginx-limit-req` jail created a real interaction
+  with E6's own flood test** (a deliberate rate-limit flood now correctly
+  looks like a real attack to a jail that can finally see it); see
+  Section 4.6 for the `ignoreip`-based fix.
+- **A web VM clock-freeze bug surfaced during final data regeneration,
+  and later caused a full VM rebuild**: after a multi-day gap between
+  sessions, all three VMs' clocks were found frozen ~36 hours behind real
+  time (the host had slept; these air-gapped VMs have no NTP egress to
+  self-correct) - confirmed directly with `date -u` on all three guests
+  against the host. This is distinct from the web VM's own recurring
+  SSH-connectivity flakiness seen elsewhere in this project (web-only,
+  unrelated to the clock). The clock bug stalled the monitor's systemd
+  timer; two fixes each held only briefly, so E8's recovery time was
+  measured with host-side timestamps instead (Section 4.8). Later, the
+  web VM's QEMU process stopped responding entirely and had to be deleted
+  and relaunched, which itself twice failed until the `multipassd` host
+  daemon was restarted. Full timeline in `docs/decisions.md`.
 - pidstat sampling during E1 reports system-wide, not strictly
   per-process, CPU figures when multiple workers are active; Figure F6's
   caption states that precision limit plainly.
@@ -591,41 +683,55 @@ Documented honestly as they are found:
   request the same static asset through both paths (e.g. serve it from
   Nginx directly and also via a gunicorn route that returns the identical
   bytes) to isolate proxy overhead cleanly.
-- E2's keep-alive on/off comparison and a separate before-hardening nikto
-  scan (Section 4.4) were both part of the original experiment design but
-  were not captured in the final quick-mode run; both are honest gaps
-  against the plan, not hidden.
+- A separate before-hardening `nikto` scan (Section 4.4) was part of the
+  original experiment design but was not captured in the final run; this
+  is an honest gap against the plan, not hidden.
 - Threats to validity: a shared hypervisor and loopback-like intra-host
   latency between `attacker` and `web` mean absolute throughput numbers do
   not generalise to a real wide-area deployment (Section 1.4).
 
-\newpage
 
 # 6. Conclusion
 
-Of the five objectives set in Section 1.3, four were met and one was
-partially met. Objective 1 (at least 20,000 req/s at c=50) was met by the deployed
-server, Nginx, at 43,258 req/s (Section 4.1). Objective 2 (3 ports on web,
-0 on db) was met exactly (Section 4.4). Objective 3 (stop a brute-force
-attack within the configured threshold) was met for SSH, where Fail2Ban
-banned the attacker and the attack never recovered a credential, but not
-met for the Nginx basic-auth path, which was cracked in 1 second with
-Fail2Ban active (Section 4.5) - this is reported as a partial result, not
-rounded up. Objective 4 (restore service within 60s) was met with a wide
-margin: 3 seconds (Section 4.8). Objective 5 (testssl.sh grade B or
-better) was met exactly (Section 4.9). The project demonstrates a working
-secure web deployment with measured, reproducible evidence behind every
-claim, including the one objective it did not fully meet.
+Four of the five objectives set in Section 1.3 were met in full; the
+fifth was met on one of its two requirements. Objective 1 (at least
+20,000 req/s at c=50) was met by the deployed server, Nginx, at 29,184
+req/s against real content, and also over HTTPS specifically at 25,677
+req/s (Section 4.1, 4.2). Objective 2 (3 ports on web, 0 on db) was met
+exactly (Section 4.4). Objective 3 (stop a brute-force attack within the
+configured threshold) was met for both SSH and the Nginx basic-auth path,
+but only after a real Fail2Ban configuration bug was found and fixed
+during this project (Section 4.5) - a result that genuinely changed
+partway through the work, not one assumed correct from the start.
+Objective 4 was met on its 60-second recovery requirement, with a wide
+margin (3 seconds, host-timestamped), but not on its requirement that the
+event be timestamped in the project's own monitoring log, which a VM
+clock bug prevented this run from capturing (Section 4.8) - reported
+here as a partial result rather than rounded up to a full pass. Objective
+5 (testssl.sh grade B or better) was met exactly, for the specific, cited
+reason testssl.sh itself gives (Section 4.9). The project demonstrates a
+working secure web deployment with measured, reproducible evidence behind
+every claim, including the bugs found in the project's own measurement
+process along the way - a first attempt at both the throughput benchmark
+(Section 4.1) and the brute-force defence (Section 4.5) initially
+produced wrong or invalid results, and both are reported here alongside
+the corrected numbers rather than quietly replaced.
 
 # 7. Recommendations / Future Work
 
 For a production evolution of this deployment, the group recommends:
 
-- **Fix the `nginx-http-auth` Fail2Ban filter**: Section 4.5/5.3 found this
-  jail never registers a failure against a real attack; before relying on
-  it, confirm which log line Nginx actually writes for a failed
-  basic-auth attempt (access log vs error log, exact format) and correct
-  the filter's regex against it, then re-run E5 to confirm the fix.
+- **Fix the ETag inode-leak finding from `nikto`** (Section 4.4): Nginx's
+  default `ETag` header on static files leaks the file's inode number; a
+  minor information-disclosure issue, found but not remediated in this
+  project, fixable by disabling `ETag` or hashing it instead of using the
+  raw inode.
+- **Audit any other jail relying on `backend = systemd`**: this project's
+  own Fail2Ban bug (Section 4.5) is a useful lesson for any future jail
+  added to `jail.local` - the `systemd` backend silently monitors nothing
+  for a service that doesn't log to the journal, with no error raised, so
+  `fail2ban-client get <jail> logpath` should be checked for every new
+  jail, not assumed correct because the filter regex looks right.
 - **High availability**: a second web node behind a load balancer (Nginx
   upstream or a managed LB), removing the single point of failure that
   Phase 5's resilience test currently only detects and restarts rather
@@ -702,25 +808,65 @@ batch snapshot carrying the same information is used in its place):
 
 **Browser evidence.** The project brief also calls for browser screenshots
 of the HTTPS padlock/certificate and the browser's own self-signed warning,
-captured directly against the live `web` VM (`https://192.168.252.12/`).
+captured directly against the live `web` VM. All five screenshots below
+were taken **without** the project's local CA imported into the browser's
+trust store, so every one of them shows the untrusted state (the browser
+chrome visibly reads "Not Secure" throughout, including in the two
+certificate-detail views) - the Certificate Viewer shows the certificate's
+own content regardless of whether the browser trusts its issuer, which is
+a distinct thing from the padlock/trust indicator itself; captioned
+accordingly below rather than claimed as a trusted view.
 
-![Certificate Viewer, General tab: issued to `web`/Meridian Logistics, issued by the project's own "Capstone Lab Root CA" after the CA was imported as trusted.](../screenshots/cert_trusted_general.png)
+![Certificate Viewer, General tab, opened from an untrusted ("Not Secure") connection: issued to `web`/Meridian Logistics, issued by the project's own "Capstone Lab Root CA" - shown here regardless of browser trust, not because the CA was imported.](../screenshots/cert_details_general.png)
 
-![Certificate Viewer, Details tab: certificate hierarchy and fields.](../screenshots/cert_trusted_details_hierarchy.png)
+![Certificate Viewer, Details tab: certificate hierarchy and fields (same untrusted connection).](../screenshots/cert_details_hierarchy.png)
 
-![Certificate Viewer, Details tab: Subject Alternative Name extension, covering `web`, `localhost`, and 192.168.252.12.](../screenshots/cert_trusted_details_san.png)
+![Certificate Viewer, Details tab: Subject Alternative Name extension, covering `web`, `localhost`, and the web VM's IP (same untrusted connection).](../screenshots/cert_details_san.png)
 
-![Browser's own "connection is not secure" warning on the live site, without the CA imported.](../screenshots/cert_warning_dropdown.png)
+![Browser's own "connection is not secure" warning on the live site, local CA not imported.](../screenshots/cert_warning_dropdown.png)
 
-![A second browser's full-page certificate warning (`NET::ERR_CERT_AUTHORITY_INVALID`) for the same site, without the CA imported.](../screenshots/cert_warning_fullpage.png)
+![A second browser's full-page certificate warning (`NET::ERR_CERT_AUTHORITY_INVALID`) for the same site, local CA not imported.](../screenshots/cert_warning_fullpage.png)
 
-A directory listing returning 403 (e.g. `/css/`, which exists but has no
+A directory listing returning 403 and a captured 429 rate-limit response
+are still outstanding and left for a group member to capture before final
+submission (`/css/` is a real candidate for the 403 - it exists but has no
 index file; `/assets/` was tried first and correctly 404s instead, since
-that path does not exist on the site) and a captured 429 rate-limit
-response are still outstanding and left for a group member to capture
-before final submission.
+that path does not exist on the site).
 
-## Appendix C: Contribution Statement and Work Breakdown
+
+## Appendix C: Figures (F1-F14)
+
+Referenced throughout Sections 3-4; collected here to keep the main body within the 10-15 page target.
+
+![F1: Network architecture - Internet/attacker VM, host firewall, web VM (Nginx, Apache baseline, Flask/gunicorn), db VM (MariaDB), and the Mac as admin workstation.](../figures/F1_architecture.png)
+
+![F2: Request flow from client to Nginx to the Flask app and MariaDB, with the OSI layer each hop operates at.](../figures/F2_request_flow.png)
+
+![F3: TLS 1.3 handshake sequence between the attacker VM (as a plain client) and Nginx on the web VM, ending in encrypted application data.](../figures/F3_tls_handshake.png)
+
+![F4: E1 throughput vs concurrency, Apache vs Nginx, error bars show the full range across both repeats (n=2), not a confidence interval.](../figures/F4_e1_throughput.png)
+
+![F5: E1 mean and 90th-percentile latency vs concurrency, one panel per server.](../figures/F5_e1_latency.png)
+
+![F6: E1 CPU usage, Apache vs Nginx, averaged across all concurrency levels and repeats.](../figures/F6_e1_cpu.png)
+
+![F7: E2 transport cost: HTTP vs HTTPS throughput (left), total connection time for TLS 1.2 vs TLS 1.3 (right).](../figures/F7_e2_transport.png)
+
+![F8: E3 reverse proxy overhead: static file throughput vs the same site's /api/health proxied through gunicorn.](../figures/F8_e3_proxy_overhead.png)
+
+![F9: E4 attack surface: open TCP ports on web and db, before vs after hardening.](../figures/F9_e4_open_ports.png)
+
+![F10: E5 brute-force timeline: time to a successful guess unprotected vs time to a Fail2Ban ban when protected, for SSH and the Nginx basic-auth demo path.](../figures/F10_e5_bruteforce_timeline.png)
+
+![F11: E6 status code distribution for a burst of sampled requests to /api/health, with vs without Nginx limit_req active (limit_req_status 429 configured; the limiter's rejections are 429, not Nginx's 503 default).](../figures/F11_e6_status_codes.png)
+
+![F12: E7 packet capture - HTTP plaintext vs HTTPS opaque.](../figures/F12_e7_packet_capture.png)
+
+![F13: E8 resilience timeline: seconds between killing Nginx and systemd's Restart=on-failure bringing it back up.](../figures/F13_e8_resilience_timeline.png)
+
+![F14: E9 TLS quality: testssl.sh overall grade before vs after hardening.](../figures/F14_e9_tls_grade.png)
+
+## Appendix D: Contribution Statement and Work Breakdown
 
 [WORK BREAKDOWN PLACEHOLDER, see docs/group_info.md. Fill in per-member
 responsibility across: lab provisioning/hardening, experiments, figures,

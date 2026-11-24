@@ -1,0 +1,377 @@
+=== E5 raw output ===
+date_utc=2026-11-23T17:15:39Z
+repeats=5 quick=1
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- BEFORE: stopping fail2ban on web (baseline, unprotected) ---
+--- hydra vs SSH (bftest), unprotected ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:12:03
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 15 login tries (l:1/p:15), ~4 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[22][ssh] host: 192.168.252.17   misc: (null)   login: bftest   password: Summer2026!
+[STATUS] attack finished for 192.168.252.17 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:12:08
+elapsed_seconds=5
+--- hydra vs Nginx basic-auth demo path, unprotected ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:12:08
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 15 login tries (l:1/p:15), ~4 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[443][http-get] host: 192.168.252.17   misc: /admin-demo/   login: admin   password: Summer2026!
+[STATUS] attack finished for 192.168.252.17 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:12:09
+elapsed_seconds=1
+--- AFTER: restarting fail2ban on web (protected) ---
+--- hydra vs SSH (bftest), protected: expect ban partway through ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:13:51
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:14:01
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:14:12
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:14:22
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:14:32
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:14:43
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:14:53
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:15:03
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:15:13
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 9 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:15:24
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 10 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:15:34
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 11 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:15:44
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 12 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:15:55
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 13 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:16:05
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: attempt 14 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:16:15
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking ssh://192.168.252.17:22/
+[ERROR] could not connect to ssh://192.168.252.17:22 - Connection refused
+mp_retry: giving up after 15 attempts: multipass exec attacker -- bash -c hydra -l bftest -P /tmp/wordlist.txt -t 1 ssh://192.168.252.17
+elapsed_seconds=144
+--- fail2ban sshd status after attack ---
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	7
+|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	192.168.252.11
+--- hydra vs Nginx basic-auth demo path, protected: expect ban partway through ---
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:16:16
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 17893 terminating, can not connect
+[ERROR] Child with pid 17894 terminating, can not connect
+[ERROR] Child with pid 17895 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:16:26
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:16:37
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 17947 terminating, can not connect
+[ERROR] Child with pid 17948 terminating, can not connect
+[ERROR] Child with pid 17949 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:16:46
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:16:58
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18010 terminating, can not connect
+[ERROR] Child with pid 18015 terminating, can not connect
+[ERROR] Child with pid 18016 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:17:08
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:17:19
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18068 terminating, can not connect
+[ERROR] Child with pid 18069 terminating, can not connect
+[ERROR] Child with pid 18070 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:17:29
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:17:40
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18124 terminating, can not connect
+[ERROR] Child with pid 18125 terminating, can not connect
+[ERROR] Child with pid 18126 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:17:50
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:18:01
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18187 terminating, can not connect
+[ERROR] Child with pid 18188 terminating, can not connect
+[ERROR] Child with pid 18189 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:18:11
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:18:23
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18241 terminating, can not connect
+[ERROR] Child with pid 18242 terminating, can not connect
+[ERROR] Child with pid 18243 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:18:33
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:18:44
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18295 terminating, can not connect
+[ERROR] Child with pid 18296 terminating, can not connect
+[ERROR] Child with pid 18297 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:18:54
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:19:05
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18358 terminating, can not connect
+[ERROR] Child with pid 18359 terminating, can not connect
+[ERROR] Child with pid 18360 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:19:15
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 9 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:19:26
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18412 terminating, can not connect
+[ERROR] Child with pid 18413 terminating, can not connect
+[ERROR] Child with pid 18414 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:19:36
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 10 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:19:47
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18466 terminating, can not connect
+[ERROR] Child with pid 18467 terminating, can not connect
+[ERROR] Child with pid 18468 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:19:57
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 11 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:20:08
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18533 terminating, can not connect
+[ERROR] Child with pid 18534 terminating, can not connect
+[ERROR] Child with pid 18535 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:20:19
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 12 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:20:30
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18588 terminating, can not connect
+[ERROR] Child with pid 18589 terminating, can not connect
+[ERROR] Child with pid 18590 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:20:40
+[ERROR] all children were disabled due too many connection errors
+mp_retry: attempt 13 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:20:51
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18642 terminating, can not connect
+[ERROR] Child with pid 18643 terminating, can not connect
+[ERROR] Child with pid 18644 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+[ERROR] all children were disabled due too many connection errors
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:21:01
+mp_retry: attempt 14 failed, retrying in 10s: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+Hydra v9.6 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2026-11-24 04:21:12
+[DATA] max 1 task per 1 server, overall 1 task, 15 login tries (l:1/p:15), ~15 tries per task
+[DATA] attacking http-gets://192.168.252.17:443/admin-demo/
+[ERROR] Child with pid 18705 terminating, can not connect
+[ERROR] Child with pid 18706 terminating, can not connect
+[ERROR] Child with pid 18707 terminating, can not connect
+0 of 1 target completed, 0 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-11-24 04:21:22
+[ERROR] all children were disabled due too many connection errors
+mp_retry: giving up after 15 attempts: multipass exec attacker -- bash -c hydra -l admin -P /tmp/wordlist.txt -t 1 192.168.252.17 https-get /admin-demo/
+elapsed_seconds=284
+--- fail2ban nginx-http-auth status after attack ---
+Status for the jail: nginx-http-auth
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	7
+|  `- File list:	/var/log/nginx/error.log
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	192.168.252.11
+--- post-ban behaviour: attacker tries once more, expect refused/timeout ---
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+Warning: Permanently added '192.168.252.17' (ED25519) to the list of known hosts.
+Permission denied, please try again.
+Permission denied, please try again.
+Received disconnect from 192.168.252.17 port 22:2: Too many authentication failures
+Disconnected from 192.168.252.17 port 22
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 9 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 10 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 11 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 12 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 13 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: attempt 14 failed, retrying in 10s: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+ssh: connect to host 192.168.252.17 port 22: Connection refused
+mp_retry: giving up after 15 attempts: multipass exec attacker -- bash -c timeout 8 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 bftest@192.168.252.17 echo should_not_connect
+(expected: connection refused/timed out)

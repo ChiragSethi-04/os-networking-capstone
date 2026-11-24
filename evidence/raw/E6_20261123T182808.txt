@@ -1,0 +1,157 @@
+=== E6 raw output ===
+date_utc=2026-11-23T07:28:08Z
+repeats=5 quick=0
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- WITH limit_req (current hardened config) ---
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.67ms    5.38ms 136.99ms   94.45%
+    Req/Sec     8.92k     1.54k   18.72k    80.56%
+  708255 requests in 20.05s, 401.88MB read
+  Non-2xx or 3xx responses: 708144
+Requests/sec:  35317.24
+Transfer/sec:     20.04MB
+Linux 7.0.0-43-generic (web) 	11/23/26 	_aarch64_	(2 CPU)
+
+15:54:27      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:54:28        0         1    1.00    0.00    0.00    0.00    1.00     0  systemd
+15:54:28       33      3156    1.00    0.00    0.00    1.00    1.00     0  gunicorn
+15:54:28       33     45075    1.00    0.00    0.00    1.00    1.00     0  gunicorn
+15:54:28        0     67769   24.00   20.00    0.00    0.00   44.00     1  fail2ban-server
+15:54:28       33     71284   11.00   27.00    0.00   26.00   38.00     0  nginx
+15:54:28       33     71285   26.00   30.00    0.00   14.00   56.00     1  nginx
+
+15:54:28      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:54:29       33      3156    0.00    1.00    0.00    0.00    1.00     0  gunicorn
+15:54:29       33     45075    0.00    1.00    0.00    1.00    1.00     0  gunicorn
+15:54:29        0     67769   37.00   20.00    0.00    0.00   57.00     1  fail2ban-server
+15:54:29       33     71284   15.00   38.00    0.00   32.00   53.00     0  nginx
+15:54:29       33     71285   25.00   41.00    0.00   24.00   66.00     1  nginx
+
+15:54:29      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:54:30       33     45075    1.00    0.00    0.00    0.00    1.00     1  gunicorn
+15:54:30        0     67769   35.00   25.00    0.00    0.00   60.00     1  fail2ban-server
+15:54:30       33     71284   18.00   34.00    0.00   33.00   52.00     0  nginx
+15:54:30       33     71285   25.00   41.00    0.00   23.00   66.00     1  nginx
+
+15:54:30      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:54:31        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+15:54:31       33      3156    1.00    0.00    0.00    0.00    1.00     0  gunicorn
+15:54:31        0     67769   41.00   19.00    0.00    0.00   60.00     1  fail2ban-server
+15:54:31       33     71284   18.00   38.00    0.00   32.00   56.00     0  nginx
+15:54:31       33     71285   23.00   41.00    0.00   27.00   64.00     1  nginx
+15:54:31     1000     72114    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+15:54:31      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:54:32       33      3156    1.00    0.00    0.00    2.00    1.00     1  gunicorn
+15:54:32        0     67769   34.00   26.00    0.00    0.00   60.00     1  fail2ban-server
+15:54:32       33     71284   16.00   28.00    0.00   38.00   44.00     0  nginx
+15:54:32       33     71285   29.00   43.00    0.00   17.00   72.00     1  nginx
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0         1    0.20    0.00    0.00    0.00    0.20     -  systemd
+Average:        0        14    0.00    0.20    0.00    0.00    0.20     -  ksoftirqd/0
+Average:       33      3156    0.60    0.20    0.00    0.80    0.80     -  gunicorn
+Average:       33     45075    0.40    0.20    0.00    0.60    0.60     -  gunicorn
+Average:        0     67769   34.20   22.00    0.00    0.00   56.20     -  fail2ban-server
+Average:       33     71284   15.60   33.00    0.00   32.20   48.60     -  nginx
+Average:       33     71285   25.60   39.20    0.00   21.00   64.80     -  nginx
+Average:     1000     72114    0.00    0.20    0.00    0.00    0.20     -  pidstat
+--- status code mix (sampled requests, limit_req active) ---
+200
+200
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+200
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+--- temporarily disabling limit_req and limit_conn for comparison ---
+--- WITHOUT limit_req ---
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 9 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 10 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 11 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 12 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 13 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 14 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: giving up after 15 attempts: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health

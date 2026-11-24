@@ -1,5 +1,7 @@
 run,mode,requests_per_sec,latency_mean_ms
-1,http,48122.63,0.94
-1,https,21500.11,2.43
-2,http,47555.65,0.96
-2,https,21680.92,2.25
+1,http,30952.52,1.59
+2,http,30989.02,1.66
+1,https,26887.21,1.95
+2,https,24466.62,2.32
+1,https_keepalive_off,1389.49,8.77
+2,https_keepalive_off,1429.36,8.58

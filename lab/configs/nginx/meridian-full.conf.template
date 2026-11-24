@@ -43,6 +43,14 @@ server {
     root /var/www/html;
     index index.html;
 
+    # Nginx's limit_req/limit_conn default is 503 (Service Unavailable);
+    # RFC 6585's 429 (Too Many Requests) is the semantically correct code
+    # for rate/connection limiting specifically, so request it explicitly
+    # rather than leave a 503 that a client/monitoring system can't
+    # distinguish from a real backend outage.
+    limit_req_status 429;
+    limit_conn_status 429;
+
     location / {
         try_files $uri $uri/ =404;
     }

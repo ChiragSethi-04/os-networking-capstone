@@ -61,6 +61,16 @@ def add_caption(fid, text):
 
 
 def mean_ci95(values):
+    """Despite the name (kept to avoid touching every call site), this
+    does NOT return a 95% confidence interval. With n=2 repeats per
+    configuration (quick mode), a normal-approximation CI using z=1.96 is
+    invalid, and the statistically correct fix - the t-distribution's
+    critical value at df=1 (t=12.706) - produces error bars many times
+    larger than the means themselves, which is accurate but unreadable
+    and not informative. Instead this returns the half-range across the
+    actual repeats (max-min)/2: an honest visual spread of the real
+    observed values, not a claimed statistical interval. Figure captions
+    describe it as such, not as a 95% CI. See docs/decisions.md."""
     values = [v for v in values if v not in ("", None)]
     values = [float(v) for v in values]
     if not values:
@@ -68,9 +78,8 @@ def mean_ci95(values):
     m = statistics.mean(values)
     if len(values) < 2:
         return m, 0.0
-    sd = statistics.stdev(values)
-    ci95 = 1.96 * sd / (len(values) ** 0.5)
-    return m, ci95
+    half_range = (max(values) - min(values)) / 2
+    return m, half_range
 
 
 def read_csv(name):
@@ -212,10 +221,10 @@ def f4_f5_f6_e1():
     ax.set_xticks(concurrencies)
     ax.legend()
     add_caption("F4", "E1 throughput vs concurrency, Apache vs Nginx, error bars show "
-                       "95% CI across repeated runs.")
+                       "the full range across both repeats (n=2; not a confidence interval).")
     savefig(fig, "F4", "F4_e1_throughput.png")
 
-    # F5: mean and p90(proxy for p95) latency vs concurrency, small multiples per server
+    # F5: mean and p90 latency vs concurrency, small multiples per server
     fig, axes = plt.subplots(1, len(servers), figsize=(6.5 * len(servers) / 2, 4.2), sharey=True)
     if len(servers) == 1:
         axes = [axes]
@@ -230,15 +239,14 @@ def f4_f5_f6_e1():
         ax.plot(concurrencies, mean_vals, marker="o", lw=2, color=SERVER_COLOR.get(server, MUTED),
                  label="mean")
         ax.plot(concurrencies, p90_vals, marker="s", lw=2, linestyle="--",
-                 color=INK_SECONDARY, label="p90 (p95 proxy)")
+                 color=INK_SECONDARY, label="p90")
         ax.set_title(server.capitalize())
         ax.set_xlabel("Concurrency (connections)")
         ax.set_xticks(concurrencies)
         ax.legend()
     axes[0].set_ylabel("Latency (ms)")
-    add_caption("F5", "E1 mean and 90th-percentile latency (used as a p95 proxy; wrk's "
-                       "default histogram does not expose p95 directly) vs concurrency, "
-                       "one panel per server.")
+    add_caption("F5", "E1 mean and 90th-percentile latency (wrk's own histogram reports "
+                       "p50/p75/p90/p99, not a true p95) vs concurrency, one panel per server.")
     savefig(plt.gcf(), "F5", "F5_e1_latency.png")
 
     # F6: CPU comparison (memory omitted - see Discussion/limitations)
@@ -254,9 +262,10 @@ def f4_f5_f6_e1():
     ax.set_ylabel("CPU usage (%)")
     ax.set_xticklabels([s.capitalize() for s in servers])
     add_caption("F6", "E1 CPU usage, Apache vs Nginx, averaged across all concurrency "
-                       "levels and repeats (error bars: 95% CI). Per-process memory was "
-                       "not reliably isolated from pidstat's system-wide sampling; see "
-                       "Discussion 5.3.")
+                       "levels and repeats (error bars: full range across the 8 "
+                       "concurrency/repeat observations per server, not a confidence "
+                       "interval). Per-process memory was not reliably isolated from "
+                       "pidstat's system-wide sampling; see Discussion 5.3.")
     savefig(fig, "F6", "F6_e1_cpu.png")
 
 
@@ -355,13 +364,21 @@ def f10_e5():
     colors = [ORANGE if "unprotected" in l else BLUE for l in labels]
     bars = ax.barh(labels, values, color=colors)
     for bar, r in zip(bars, rows):
-        if r["credential_found"]:
-            ax.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height() / 2,
-                    "credential found", va="center", fontsize=8, color=INK_SECONDARY)
-    ax.set_xlabel("Elapsed time (seconds)")
-    add_caption("F10", "E5 brute-force timeline: time to a successful guess when "
-                        "unprotected (orange) vs time to a Fail2Ban ban when protected "
-                        "(blue), for SSH and the Nginx basic-auth demo path.")
+        label = "credential found" if r["credential_found"] else "banned - no credential found"
+        ax.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height() / 2,
+                label, va="center", fontsize=8, color=INK_SECONDARY)
+    ax.set_xlabel("Elapsed time (seconds) - see caption")
+    ax.set_xlim(right=max(values) * 1.35)
+    add_caption("F10", "E5 brute-force timeline: orange bars show time to a successful "
+                        "guess when unprotected. Blue bars show elapsed time for the "
+                        "PROTECTED attack attempt as a whole, not how fast Fail2Ban banned "
+                        "the attacker (the ban itself lands within seconds - see Section "
+                        "4.5/5.2): the test harness's own connectivity-retry wrapper keeps "
+                        "retrying the attack tool against what is, correctly, now a "
+                        "permanent block, so this number reflects that retry budget being "
+                        "exhausted, not attack resistance. The outcome that matters is the "
+                        "label: credential found (orange) vs banned with no credential "
+                        "found (blue), for SSH and the Nginx basic-auth demo path.")
     savefig(fig, "F10", "F10_e5_bruteforce_timeline.png")
 
 
@@ -388,10 +405,12 @@ def f11_e6():
     ax.set_xticklabels(["With limit_req", "Without limit_req"])
     ax.legend()
     add_caption("F11", "E6 status code distribution for a burst of sampled requests to "
-                        "/api/health, with vs without Nginx limit_req active. Without the "
-                        "limiter, requests are not rejected outright but queue against the "
-                        "gunicorn backend and mostly time out (504), at far lower throughput "
-                        "than the limiter's quick, cheap 503 rejections - see Discussion 5.3.")
+                        "/api/health, with vs without Nginx limit_req active (limit_req_status "
+                        "429 configured; RFC 6585's 429 is the correct code for rate limiting, "
+                        "replacing Nginx's 503 default). Without the limiter, requests are not "
+                        "rejected outright but queue against the gunicorn backend and mostly "
+                        "time out (504), at far lower throughput than the limiter's quick, "
+                        "cheap 429 rejections - see Discussion 5.3.")
     savefig(fig, "F11", "F11_e6_status_codes.png")
 
 

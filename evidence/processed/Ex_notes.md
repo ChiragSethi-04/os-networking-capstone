@@ -128,3 +128,83 @@ systemctl kill -s SIGKILL nginx` issued at host epoch, then
 
 HTTP readable: True. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the decoded plaintext and full tshark excerpts.
 
+## E6: rate limiting
+
+Parsed from `E6_20261123T181957.txt`.
+
+- with_limit_req: 0x200, 0x429, 0x503
+- without_limit_req: 60x200, 0x429, 0x503
+
+## E6: rate limiting
+
+Parsed from `E6_20261123T182808.txt`.
+
+- with_limit_req: 3x200, 57x429, 0x503
+
+## E6: rate limiting
+
+Parsed from `E6_20261123T184407.txt`.
+
+- with_limit_req: 4x200, 56x429, 0x503
+- without_limit_req: 0x200, 0x429, 0x503
+
+## E1: server comparison
+
+Parsed 16 runs from `E1_20261124T033405.txt`.
+
+- apache: mean 15827.9 req/s, sd 3090.3 (n=8)
+- nginx: mean 26871.6 req/s, sd 7722.9 (n=8)
+
+Note: `latency_p90_ms` is wrk's 90th percentile bucket, used as a p95 proxy (wrk's default histogram does not expose p95 directly).
+
+## E2: transport cost
+
+Parsed 6 wrk runs and 4 handshake timings from `E2_20261124T035720.txt`.
+
+- HTTP mean: 30970.8 req/s
+- HTTPS mean: 25676.9 req/s
+- TLS overhead: 17.1% throughput reduction
+
+- HTTPS keep-alive on (wrk default): 25676.9 req/s
+- HTTPS keep-alive off (`Connection: close`): 1409.4 req/s
+- Keep-alive overhead avoided: 94.5% throughput reduction without it
+
+## E7: encryption proof
+
+HTTP readable: True. HTTPS has real application data (42 frames): True. HTTPS opaque: True. See `evidence/processed/E7_summary.md` for the decoded plaintext and full tshark excerpts.
+
+## E5: brute-force defence
+
+Parsed from `E5_20261124T041539.txt`.
+
+- ssh_unprotected: 5s, credential_found=Summer2026!
+- nginx_unprotected: 1s, credential_found=Summer2026!
+- ssh_protected: 144s, credential_found=no
+- nginx_protected: 284s, credential_found=no
+
+sshd jail status after attack:
+```
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	7
+|  `- Journal matches:	_SYSTEMD_UNIT=ssh.service + _COMM=sshd
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	192.168.252.11
+```
+
+nginx-http-auth jail status after attack:
+```
+Status for the jail: nginx-http-auth
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	7
+|  `- File list:	/var/log/nginx/error.log
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	192.168.252.11
+```
+

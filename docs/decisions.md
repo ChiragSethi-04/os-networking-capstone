@@ -638,3 +638,136 @@ leftover logs, and a manual, clock-independent re-measurement of E8)
   stall during the test window prevented capturing it either way -
   `evidence/processed/Ex_notes.md` carries the full explanation for the
   report.
+
+## Phase 6/8 (external accuracy review: Fail2Ban's real root cause, 429
+status codes, E1/E2's port-80 bug, E7's dissector artifact, a VM rebuild)
+
+- A thorough external review of the drafted report against its own
+  evidence found several real problems, each verified against raw logs
+  before accepting the review's claim and fixing it:
+  - **Fail2Ban's actual root cause was a backend mismatch, not a regex
+    mismatch.** The earlier entry above (Phase 6, E5/nginx-http-auth)
+    guessed "a mismatch between the jail's regex and the actual log
+    line." Direct testing showed otherwise: `jail.local`'s `[DEFAULT]`
+    sets `backend = systemd`, inherited by `nginx-http-auth` and
+    `nginx-limit-req`; that backend reads the *systemd journal* via a
+    `journalmatch`, not the `logpath` file. Nginx never writes
+    per-request errors (including failed basic-auth attempts) to the
+    journal - only its master process's own startup/shutdown notices
+    reach it (confirmed: `journalctl _COMM=nginx` shows only "signal
+    process started"-type lines). `fail2ban-client get nginx-http-auth
+    logpath` reported **"No file is currently monitored"** - direct proof
+    the jail was reading nothing - while the same test confirmed Nginx's
+    `error.log` *did* contain the exact line the filter's regex expects.
+    The regex was never the problem. Fixed by overriding both jails to
+    `backend = auto` (tails the file directly); a manual wrong-password
+    test immediately showed `Total failed` incrementing and a real ban,
+    then the real brute-force attack (E5) was re-run and both jails
+    (SSH and Nginx basic-auth) banned the attacker before a credential
+    was found - the opposite of the original result.
+  - **Nginx's `limit_req`/`limit_conn` default to HTTP 503**; RFC 6585's
+    429 ("Too Many Requests") is the correct code for rate limiting.
+    Added `limit_req_status 429;`/`limit_conn_status 429;` to the
+    hardened config, verified live with a burst test (429s then 200s),
+    then re-ran E6.
+  - **Fixing the `nginx-limit-req` jail created a new, real interaction**:
+    E6's own flood deliberately exceeds the rate limit, which now (jail
+    actually reading its log) legitimately bans the attacker mid-flood -
+    first discovered when the WITH-limiter wrk run returned "0 requests"
+    (connections hanging against a silent ufw DROP) and the follow-up
+    curl sample returned 504s. A second attempt added mid-script unban
+    calls, but the ban re-triggered faster than the flood completed. The
+    working fix: Fail2Ban's own `ignoreip` mechanism, adding the
+    attacker's IP to just the `nginx-limit-req` jail's ignore list for
+    just the duration of the deliberate WITH-limiter flood, removing it
+    after. A third attempt still saw a stray re-ban: Fail2Ban's
+    file-polling backend was still processing a backlog of tens of
+    thousands of matching log lines *after* the ignoreip entry was
+    removed, banning retroactively for violations that happened while
+    whitelisted. Fixed with a `sleep 15` before removing the ignoreip
+    entry, letting the backlog drain first. Confirmed clean on the next
+    run: `with_limit_req` showed real throughput and a realistic 429/200
+    mix, `without_limit_req` showed the already-known 504-dominated
+    overload pattern, and the jail's `ignoreip` list and ban state were
+    both empty afterward.
+  - **E1 and E2 were benchmarking Nginx's own 301 redirect, not real
+    content.** `run_E1.sh`/`run_E2.sh` tested "nginx" on port 80, but
+    port 80 unconditionally redirects to HTTPS - confirmed directly by
+    bytes-per-request math: the "nginx" run moved ~336 bytes/request
+    (matching a 301's `Content-Length: 162` plus headers exactly), while
+    Apache's same-test run on port 8080 moved ~1978 bytes/request (the
+    real ~1.8KB homepage). This invalidated the headline Nginx-vs-Apache
+    comparison and the HTTP-vs-HTTPS transport-cost comparison, both of
+    which had been reported as valid findings. Fixed with a new template,
+    `lab/configs/nginx/meridian-plainhttp.conf.template` (port 80 serves
+    the real site directly, same TLS/443 block as the real hardened
+    config), swapped in only for the duration of these two benchmarks
+    and swapped back immediately after (same backup/restore pattern
+    already used by `run_E7.sh`'s plaintext capture). Re-run and
+    reconfirmed against the same byte-per-request check (~2,050-2,060
+    bytes on both sides this time, matching the real page). The
+    corrected numbers are a real but much more modest Nginx advantage
+    (e.g. at c=200: Nginx 34,875 req/s vs Apache 13,708 req/s with
+    ~88,500 failed requests/run, vs the old invalid 57,990 vs 10,860).
+  - **E7's HTTPS capture looked like it had missed the actual
+    application-data exchange** - extracting `tls.record.content_type`
+    via `tshark -T fields` showed only handshake-phase values (22, 20),
+    never 23 (Application Data), across multiple re-runs with longer
+    capture windows (which didn't help, confirming it wasn't a timing
+    issue). Root cause found by inspecting the same frames directly
+    (`tshark -Y "frame.number==N"`): they were correctly labelled
+    `"TLSv1.3 ... Application Data"` (sometimes several per frame) in
+    Wireshark's own summary - the dissector simply doesn't always
+    populate that one per-record field once a stream is fully encrypted,
+    even though it identifies the content correctly. Fixed by reading
+    `tshark`'s default packet summary instead of extracting that field;
+    the corrected capture shows the full exchange end to end (TCP
+    handshake, TLS 1.3 Client/Server Hello, then 42 frames labelled
+    Application Data), finally substantiating the "HTTPS is opaque"
+    claim the experiment was designed to make.
+  - **Other reporting-only fixes** (no new data needed): E9's TLS grade
+    cap reason was guessed ("HTTP-01-style self-signed CA", a confused
+    reference to an ACME challenge type) rather than read from
+    `testssl.sh`'s own output, which states verbatim "Grade capped to B.
+    Issues with chain of trust (chain incomplete)" - now quoted directly.
+    An unverifiable "~33 seconds" claim about an earlier monitor-script
+    detection, not backed by any CSV, was removed from the report body
+    (it remains, correctly sourced, in this decisions log's Phase 6
+    entry on E8). Appendix B's browser screenshots were mislabelled as
+    showing a "CA imported as trusted" state; all five actually show
+    Chrome's own untrusted-connection warning (with its banner manually
+    dismissed for convenience in two of them) - renamed
+    `cert_trusted_*` to `cert_details_*` and recaptioned accurately,
+    and the false claim in Section 3.1 that the project demonstrates
+    both a trusted and an untrusted browser state was corrected.
+- **A hypervisor-level stall of the web VM required a full rebuild**
+  mid-session, unrelated to the above: the web VM's QEMU process stopped
+  advancing (CPU time flat for several minutes while `attacker`/`db`
+  stayed healthy and host load stayed low - the established signature of
+  a genuine stall, not the VM's own recurring short SSH-connectivity
+  blips). `multipass delete web --purge` followed by a fresh
+  `multipass launch` failed twice in a row with "timed out waiting for
+  response" during the VM's own start phase; the user restarted the
+  `multipassd` host daemon (`sudo launchctl kickstart -k
+  system/com.canonical.multipassd`), after which the same launch command
+  succeeded normally. The rebuilt VM got a new IP (192.168.252.17, not
+  .12), requiring `lab/.env` to be refreshed via `provision.sh` (which
+  also completes the rest of first-time setup it would otherwise have
+  skipped) before `deploy_site.sh`/`harden.sh`/`setup_monitoring.sh`
+  could run; since `lab/configs/`'s source files already had the day's
+  Fail2Ban-backend and 429-status fixes applied, the rebuilt VM came up
+  with both already correct, confirmed directly before re-running any
+  experiments.
+- E1/E2/E5/E6/E7's corrected results, and the report prose referencing
+  them (Sections 4.1, 4.2, 4.5, 4.6, 4.7, 5.1, 5.2, 5.3, Executive
+  Summary, Conclusion, Recommendations), were all updated together in
+  the same pass so no stale number or claim was left alongside the
+  fix that superseded it; `docs/viva_qa.md` and `slides/build_deck.py`
+  were updated the same way. The report's main body was also
+  restructured to meet a 10-15 page target: all 14 data figures (F1-F14,
+  previously embedded inline in Sections 3-4) were moved to a new
+  Appendix C, with in-text "(Appendix C)" pointers in their place, and
+  several redundant forced `\newpage` breaks between main-body sections
+  were removed (main body: ~27 pages before, 14 after - all from
+  relocating figures and trimming forced blank space, not from cutting
+  substance).

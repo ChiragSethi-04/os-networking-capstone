@@ -1,6 +1,6 @@
 openssl s_client -tls1_1 (expect failure):
-Connecting to 192.168.252.12
-E08C781D76F60000:error:0A0000BF:SSL routines:tls_setup_handshake:no protocols available:../ssl/statem/statem_lib.c:155:
+Connecting to 192.168.252.17
+E05C3A96C4EE0000:error:0A0000BF:SSL routines:tls_setup_handshake:no protocols available:../ssl/statem/statem_lib.c:155:
 CONNECTED(00000003)
 ---
 no peer certificate available
@@ -22,7 +22,7 @@ Verify return code: 0 (ok)
 ---
 
 openssl s_client -tls1_3 (expect success):
-Connecting to 192.168.252.12
+Connecting to 192.168.252.17
 Can't use SSL_get_servername
 depth=0 C=IN, O=Meridian Logistics, CN=web
 verify error:num=20:unable to get local issuer certificate
@@ -38,21 +38,21 @@ Certificate chain
  0 s:C=IN, O=Meridian Logistics, CN=web
    i:C=IN, O=Capstone Group 6, CN=Capstone Lab Root CA
    a:PKEY: EC, (prime256v1); sigalg: ecdsa-with-SHA256
-   v:NotBefore: Nov 21 10:31:12 2026 GMT; NotAfter: Nov 21 10:31:12 2027 GMT
+   v:NotBefore: Nov 23 16:10:55 2026 GMT; NotAfter: Nov 23 16:10:55 2027 GMT
 ---
 Server certificate
 -----BEGIN CERTIFICATE-----
-MIIB5TCCAYqgAwIBAgIUajlxpQJSIWxhnWt1dVGsNyYpmYkwCgYIKoZIzj0EAwIw
+MIIB5TCCAYqgAwIBAgIUajlxpQJSIWxhnWt1dVGsNyYpmYowCgYIKoZIzj0EAwIw
 RzELMAkGA1UEBhMCSU4xGTAXBgNVBAoMEENhcHN0b25lIEdyb3VwIDYxHTAbBgNV
-BAMMFENhcHN0b25lIExhYiBSb290IENBMB4XDTI2MTEyMTEwMzExMloXDTI3MTEy
-MTEwMzExMlowODELMAkGA1UEBhMCSU4xGzAZBgNVBAoMEk1lcmlkaWFuIExvZ2lz
-dGljczEMMAoGA1UEAwwDd2ViMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEM+N5
-snv9jgMqH1BcF9YbCN8mGJujJxS/szC7X+SEiB0jHjsWnCogjCNmkn6xSpnPXGv7
-Gb03ISqjlvLgkatgxqNjMGEwHwYDVR0RBBgwFoIDd2Vigglsb2NhbGhvc3SHBMCo
-/AwwHQYDVR0OBBYEFETPMVMiiUefAVz2nnpdYX4isOeSMB8GA1UdIwQYMBaAFDkF
-wA23dmIAqIbrVS4EeKGRvs3lMAoGCCqGSM49BAMCA0kAMEYCIQC3XyYd5awdRYGw
-r6S9Q0db4MyJI0co3MWpnB9kYoS2OwIhAJXz4xR3F2MAFWcPdXhRarb5o2/rqK3E
-aDjJnFpvauni
+BAMMFENhcHN0b25lIExhYiBSb290IENBMB4XDTI2MTEyMzE2MTA1NVoXDTI3MTEy
+MzE2MTA1NVowODELMAkGA1UEBhMCSU4xGzAZBgNVBAoMEk1lcmlkaWFuIExvZ2lz
+dGljczEMMAoGA1UEAwwDd2ViMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELViW
+No5bt78nsySMIFdc2gFyNooIdYTdsd9tkA4GwLuIF+2xkbCDN/Xzih9wDP9K/GXA
+0kCroaSVYhH/vUwTcqNjMGEwHwYDVR0RBBgwFoIDd2Vigglsb2NhbGhvc3SHBMCo
+/BEwHQYDVR0OBBYEFA3IZJ0DKZ3vF8rreMCaRfCjkwFQMB8GA1UdIwQYMBaAFDkF
+wA23dmIAqIbrVS4EeKGRvs3lMAoGCCqGSM49BAMCA0kAMEYCIQDKliVQKCvxa3dp
+Jr2jjzRQT0d0Ifb4asajNR1K2qCZ3AIhANxXvmXdxm1+QsN+XyvQUGaRukxDLg7/
+DM/zVKVw5Cdn
 -----END CERTIFICATE-----
 subject=C=IN, O=Meridian Logistics, CN=web
 issuer=C=IN, O=Capstone Group 6, CN=Capstone Lab Root CA
@@ -62,7 +62,7 @@ Peer signing digest: SHA256
 Peer signature type: ecdsa_secp256r1_sha256
 Negotiated TLS1.3 group: X25519MLKEM768
 ---
-SSL handshake has read 1948 bytes and written 1540 bytes
+SSL handshake has read 1949 bytes and written 1540 bytes
 Verification error: unable to verify the first certificate
 ---
 New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384

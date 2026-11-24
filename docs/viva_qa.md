@@ -11,10 +11,12 @@ benchmark chart out loud.
 1. **Why Nginx over Apache, Lighttpd, or IIS?**
    Nginx's event-driven worker model handles many concurrent connections
    in one process without a thread/process per connection, which our own
-   E1 benchmark shows directly: at c=200, Nginx sustained 57,990 req/s with
-   zero failed requests, while Apache fell to 10,860 req/s with over
-   70,500 failed requests per run, at similar mean CPU usage (47.2% vs
-   45.1%) - the same CPU doing far more useful work. Lighttpd
+   E1 benchmark shows directly: at c=200, both tested serving the real
+   homepage over HTTP, Nginx sustained 34,875 req/s with zero failed
+   requests, while Apache fell to 13,708 req/s with over 88,500 failed
+   requests per run (consistent with its configured MaxRequestWorkers=150
+   ceiling), at somewhat higher mean CPU for Nginx (58.1% vs 52.6%) - still
+   roughly 1.5x more requests per CPU-percent. Lighttpd
    uses a similar model but has a smaller ecosystem; IIS is Windows-only
    and our VMs run Ubuntu.
 
@@ -45,8 +47,10 @@ benchmark chart out loud.
 6. **Why a self-signed/local CA instead of Let's Encrypt?**
    Let's Encrypt's HTTP-01/DNS-01 validation needs a publicly resolvable
    domain pointing at a reachable host; a NAT'd lab VM has neither. Using
-   our own CA also lets us show the browser in both the warning
-   (untrusted) and trusted (CA imported) states for the demo.
+   our own CA also lets us show the browser's own untrusted-connection
+   warning and the certificate's own detail view directly for the demo
+   (a genuinely-trusted, CA-imported view was not captured for this
+   submission).
 
 7. **Why `ufw` instead of raw `nftables`/`iptables`?**
    Thinner, declarative syntax over the same kernel packet filter, lower
@@ -64,8 +68,8 @@ benchmark chart out loud.
 9. **Why TLS 1.3 over 1.2?**
    Removes legacy ciphers and static RSA key exchange, mandates forward
    secrecy, and completes a full handshake in one round trip instead of
-   two, which our E2 handshake-timing numbers show directly: a mean 4.50ms
-   total connect+handshake time for TLS 1.3 vs 8.04ms for TLS 1.2 - 1.79x
+   two, which our E2 handshake-timing numbers show directly: a mean 3.83ms
+   total connect+handshake time for TLS 1.3 vs 8.66ms for TLS 1.2 - 2.26x
    faster.
 
 10. **Why not allow TLS 1.0/1.1?**
@@ -93,9 +97,12 @@ benchmark chart out loud.
 
 14. **What TLS grade did testssl.sh give before vs after hardening?**
     Before: no grade - there was no TLS listener on port 443 yet. After:
-    B, with SSLv2/v3/TLS1.0/1.1 all "not offered", POODLE and LOGJAM both
-    "not vulnerable". Capped at B rather than A because the cert chain
-    comes from a local, not publicly-trusted, CA (Section 1.4).
+    a weighted score of 96/100 but an overall grade of B, with
+    SSLv2/v3/TLS1.0/1.1 all "not offered", POODLE and LOGJAM both "not
+    vulnerable". testssl.sh states its own reason for the cap verbatim:
+    "Grade capped to B. Issues with chain of trust (chain incomplete)" -
+    the local CA (Section 1.4) not forming a chain to a publicly trusted
+    root, not a protocol/cipher weakness.
 
 ## Firewall and attack surface
 
@@ -160,13 +167,19 @@ benchmark chart out loud.
 
 24. **What happened to the status code mix with vs without `limit_req`
     under flood (E6)?**
-    With `limit_req` active: 7x HTTP 200, 53x HTTP 503 in a 60-request
-    sample, at 28,882 req/s sustained. With it disabled: all 60 sampled
-    responses were 504 Gateway Timeout, at only 395 req/s - 73x lower, not
-    higher. Removing the limiter didn't help; it let the flood hit the
-    2-worker gunicorn backend directly until it saturated and every
-    request queued until Nginx's own upstream timeout fired. The limiter
-    is protective here, not just a throughput cost.
+    Nginx's `limit_req`/`limit_conn` default to HTTP 503; we added
+    `limit_req_status 429`/`limit_conn_status 429` since RFC 6585's 429
+    is the semantically correct code. With the limiter active: 4x HTTP
+    200, 56x HTTP 429 in a 60-request sample, at 33,931 req/s sustained.
+    With it disabled: all 60 sampled responses were 504 Gateway Timeout,
+    at only 383 req/s - 89x lower, not higher. Removing the limiter
+    didn't help; it let the flood hit the 2-worker gunicorn backend
+    directly until it saturated and every request queued until Nginx's
+    own upstream timeout fired. The limiter is protective here, not just
+    a throughput cost. (Side note: fixing a separate Fail2Ban bug meant
+    this same deliberate flood started tripping a real ban of our own
+    attacker VM mid-benchmark - correct behaviour, resolved with
+    Fail2Ban's `ignoreip` scoped to just this one test.)
 
 25. **Why did you pick those specific `limit_req` rates?**
     `/api/` is capped at 5 requests/sec per source IP (`burst=10,
@@ -198,9 +211,10 @@ benchmark chart out loud.
     (`systemctl kill -SIGKILL` then poll `systemctl is-active` every 3s) -
     well inside the 60-second target. That speed is systemd's own
     `Restart=on-failure` drop-in, not the custom monitor script, which
-    polls only every 30 seconds and in an earlier full-mode run was seen
-    to log the restart around 33 seconds later - after systemd had
-    already done the work.
+    only polls every 30 seconds and typically finds the service already
+    back up by its next check - by design, the custom monitor exists for
+    its own-logged record and the extra checks systemd doesn't do (TLS
+    expiry, DB reachability), not to be the fastest recovery path.
 
 29. **Why `logrotate` at all?**
     Unbounded log growth can eventually fill the disk; `logrotate`

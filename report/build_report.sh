@@ -19,7 +19,7 @@ if [[ ! -f "$CSL" ]]; then
 fi
 
 PANDOC_ARGS=(report.md -o Capstone_Report.pdf --from=markdown --pdf-engine=xelatex
-             --citeproc --toc -V geometry:margin=2.54cm -V secnumdepth=-2)
+             --citeproc --toc -V papersize=a4 -V geometry:a4paper,margin=2.54cm -V secnumdepth=-2)
 [[ -f "$CSL" ]] && PANDOC_ARGS+=(--csl "$CSL")
 
 if command -v xelatex >/dev/null 2>&1; then

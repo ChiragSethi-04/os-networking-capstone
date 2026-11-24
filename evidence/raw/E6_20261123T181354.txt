@@ -1,0 +1,222 @@
+=== E6 raw output ===
+date_utc=2026-11-23T07:13:54Z
+repeats=5 quick=0
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- WITH limit_req (current hardened config) ---
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.86ms    5.06ms  93.56ms   97.83%
+    Req/Sec     7.80k     3.39k   11.37k    57.14%
+  17804 requests in 20.14s, 10.10MB read
+  Non-2xx or 3xx responses: 17791
+Requests/sec:    883.96
+Transfer/sec:    513.56KB
+Linux 7.0.0-43-generic (web) 	11/23/26 	_aarch64_	(2 CPU)
+
+15:43:00      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:43:01       33      3156    1.00    0.00    0.00    1.00    1.00     0  gunicorn
+15:43:01       33     45075    1.00    0.00    0.00    0.00    1.00     1  gunicorn
+15:43:01        0     62422    0.00    1.00    0.00    0.00    1.00     0  kworker/u8:2-writeback
+15:43:01        0     67769   26.00   16.00    0.00    1.00   42.00     0  fail2ban-server
+15:43:01       33     69765    7.00   13.00    0.00   19.00   20.00     0  nginx
+15:43:01       33     69766   19.00   23.00    0.00    9.00   42.00     1  nginx
+
+15:43:01      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:43:02        0     67769   63.81   11.43    0.00    0.00   75.24     0  fail2ban-server
+
+15:43:02      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:43:03     1000     70048    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+15:43:03      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:43:04     1000     70048    0.99    0.99    0.00    0.00    1.98     1  pidstat
+
+15:43:04      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:43:05        0     67769    0.99    0.00    0.00    0.00    0.99     1  fail2ban-server
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:       33      3156    0.20    0.00    0.00    0.20    0.20     -  gunicorn
+Average:       33     45075    0.20    0.00    0.00    0.00    0.20     -  gunicorn
+Average:        0     62422    0.00    0.20    0.00    0.00    0.20     -  kworker/u8:2-events_unbound
+Average:        0     67769   18.54    5.52    0.00    0.20   24.06     -  fail2ban-server
+Average:       33     69765    1.38    2.56    0.00    3.75    3.94     -  nginx
+Average:       33     69766    3.75    4.54    0.00    1.78    8.28     -  nginx
+Average:     1000     70048    0.20    0.39    0.00    0.00    0.59     -  pidstat
+--- status code mix (sampled requests, limit_req active) ---
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+000
+--- temporarily disabling limit_req and limit_conn for comparison ---
+--- WITHOUT limit_req ---
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 4 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 5 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 6 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 7 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 8 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 9 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+unable to connect to 192.168.252.12:https Connection refused
+mp_retry: attempt 10 failed, retrying in 10s: multipass exec attacker -- bash -c wrk -t4 -c200 -d20s https://192.168.252.12/api/health
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   253.33ms   40.22ms 475.07ms   90.33%
+    Req/Sec   193.14     55.76   303.00     71.43%
+  7896 requests in 20.11s, 3.66MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+  Non-2xx or 3xx responses: 2
+Requests/sec:    392.71
+Transfer/sec:    186.39KB
+Linux 7.0.0-43-generic (web) 	11/23/26 	_aarch64_	(2 CPU)
+
+15:45:34      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:45:35     1000     70326    0.00    0.93    0.00    0.00    0.93     0  pidstat
+
+15:45:35      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:45:36        0     67769    0.00    0.96    0.00    0.00    0.96     0  fail2ban-server
+
+15:45:36      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:45:38     1000     70326    0.92    0.92    0.00    0.00    1.83     0  pidstat
+
+15:45:38      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:45:39        0     67769    1.00    0.00    0.00    0.00    1.00     0  fail2ban-server
+
+15:45:39      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:45:40     1000     70326    0.00    1.90    0.00    0.00    1.90     1  pidstat
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0     67769    0.19    0.19    0.00    0.00    0.38     -  fail2ban-server
+Average:     1000     70326    0.19    0.76    0.00    0.00    0.95     -  pidstat
+--- status code mix (sampled requests, limit_req disabled) ---
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504

@@ -1,0 +1,1490 @@
+=== E1 raw output ===
+date_utc=2026-11-23T16:34:05Z
+repeats=2 quick=1
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- temporarily serving the real site over plain HTTP for this benchmark ---
+== warm-up: nginx c=10 ==
+Running 5s test @ http://192.168.252.17/
+  2 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   683.88us    2.02ms  42.22ms   98.90%
+    Req/Sec     9.54k     0.92k   10.33k    92.00%
+  94906 requests in 5.00s, 185.82MB read
+Requests/sec:  18972.30
+Transfer/sec:     37.15MB
+== warm-up: nginx c=50 ==
+Running 5s test @ http://192.168.252.17/
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.37ms  670.09us   6.85ms   81.56%
+    Req/Sec    17.80k     1.33k   20.01k    57.00%
+  177263 requests in 5.00s, 347.06MB read
+Requests/sec:  35419.96
+Transfer/sec:     69.35MB
+== warm-up: nginx c=100 ==
+Running 5s test @ http://192.168.252.17/
+  2 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.54ms    1.60ms  15.48ms   83.70%
+    Req/Sec    19.63k     1.24k   21.77k    60.00%
+  195631 requests in 5.01s, 383.02MB read
+Requests/sec:  39031.16
+Transfer/sec:     76.42MB
+== warm-up: nginx c=200 ==
+Running 5s test @ http://192.168.252.17/
+  2 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.86ms   50.38ms 405.51ms   87.45%
+    Req/Sec    19.66k     5.26k   31.91k    72.73%
+  195462 requests in 5.18s, 382.69MB read
+Requests/sec:  37699.79
+Transfer/sec:     73.81MB
+--- server=apache port=8080 concurrency=10 run=1 ---
+Running 15s test @ http://192.168.252.17:8080/
+  2 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.95ms   15.38ms 221.77ms   95.95%
+    Req/Sec     5.22k     2.40k    8.17k    67.12%
+  Latency Distribution
+     50%  746.00us
+     75%    1.23ms
+     90%    4.66ms
+     99%   90.52ms
+  153584 requests in 15.01s, 303.80MB read
+Requests/sec:  10230.69
+Transfer/sec:     20.24MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:35:12      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:35:13       33      6906   11.00   29.00    0.00    0.00   40.00     1  apache2
+03:35:13       33      6907   12.00   24.00    0.00    0.00   36.00     0  apache2
+
+03:35:12      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:35:13       33      6906   4764.00      2.00 1219076   37104   1.86  apache2
+03:35:13       33      6907   4329.00      1.00 1219076   37144   1.86  apache2
+03:35:13     1000      7094      1.00      0.00    7040    2792   0.14  pidstat
+
+03:35:13      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:35:14       33      6906   21.00   48.00    0.00    0.00   69.00     1  apache2
+03:35:14       33      6907   20.00   43.00    0.00    0.00   63.00     0  apache2
+
+03:35:13      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:35:14       33      6906   7499.00      4.00 1219080   37104   1.86  apache2
+03:35:14       33      6907   6548.00     11.00 1219076   37144   1.86  apache2
+
+03:35:14      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:35:15        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+03:35:15        0      4910    4.00    2.00    0.00    0.00    6.00     1  fail2ban-server
+03:35:15       33      6906   16.00   36.00    0.00    0.00   52.00     1  apache2
+03:35:15       33      6907   10.00   25.00    0.00    0.00   35.00     0  apache2
+03:35:15     1000      7094    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+03:35:14      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:35:15       33      6906   1441.00      5.00 1219076   37104   1.86  apache2
+03:35:15       33      6907   1339.00      7.00 1219076   37144   1.86  apache2
+
+03:35:15      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:35:16        0        14    0.00    1.00    0.00    1.00    1.00     0  ksoftirqd/0
+03:35:16        0        15    0.00    1.00    0.00    2.00    1.00     0  rcu_preempt
+03:35:16       33      2879    1.00    0.00    0.00    1.00    1.00     0  gunicorn
+03:35:16       33      6906   11.00   31.00    0.00    0.00   42.00     1  apache2
+03:35:16       33      6907   16.00   29.00    0.00    0.00   45.00     0  apache2
+
+03:35:15      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:35:16       33      6906   2220.00     15.00 1219076   37104   1.86  apache2
+03:35:16       33      6907   2354.00     15.00 1219148   37144   1.86  apache2
+
+03:35:16      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:35:17        0        14    0.00    0.99    0.00    0.00    0.99     0  ksoftirqd/0
+03:35:17        0        24    0.00    0.99    0.00    0.00    0.99     1  ksoftirqd/1
+03:35:17       33      2868    0.99    0.00    0.00    0.00    0.99     0  gunicorn
+03:35:17        0      4910    0.99    0.00    0.00    0.00    0.99     1  fail2ban-server
+03:35:17       33      6906   13.86   25.74    0.00    0.00   39.60     1  apache2
+03:35:17       33      6907   11.88   27.72    0.00    0.00   39.60     0  apache2
+03:35:17     1000      7094    0.99    0.99    0.00    0.99    1.98     0  pidstat
+
+03:35:16      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:35:17       33      6906   1531.68      2.97 1219084   37104   1.86  apache2
+03:35:17       33      6907   1885.15      5.94 1219148   37144   1.86  apache2
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    0.80    0.00    0.20    0.80     -  ksoftirqd/0
+Average:        0        15    0.00    0.20    0.00    1.40    0.20     -  rcu_preempt
+Average:        0        24    0.00    0.20    0.00    0.00    0.20     -  ksoftirqd/1
+Average:       33      2868    0.20    0.00    0.00    0.00    0.20     -  gunicorn
+Average:       33      2879    0.20    0.00    0.00    0.20    0.20     -  gunicorn
+Average:        0      4910    1.00    0.40    0.00    0.00    1.40     -  fail2ban-server
+Average:       33      6906   14.57   33.93    0.00    0.00   48.50     -  apache2
+Average:       33      6907   13.97   29.74    0.00    0.00   43.71     -  apache2
+Average:     1000      7094    0.20    0.40    0.00    0.20    0.60     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:       33      6906   3487.23      5.79 1219078   37104   1.86  apache2
+Average:       33      6907   3288.22      7.98 1219105   37144   1.86  apache2
+Average:     1000      7094      0.20      0.00    7040    2792   0.14  pidstat
+--- server=nginx port=80 concurrency=10 run=1 ---
+Running 15s test @ http://192.168.252.17:80/
+  2 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.46ms   11.20ms 149.63ms   96.99%
+    Req/Sec     7.60k     2.54k   10.18k    84.80%
+  Latency Distribution
+     50%  546.00us
+     75%  741.00us
+     90%    1.52ms
+     99%   64.57ms
+  224496 requests in 15.08s, 439.54MB read
+Requests/sec:  14890.15
+Transfer/sec:     29.15MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:36:10      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:36:11       33      6759    6.93   22.77    0.00    0.00   29.70     0  nginx
+03:36:11       33      6760    8.91   20.79    0.00    0.99   29.70     1  nginx
+
+03:36:10      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:36:11        0         1    154.46      0.00   27772   18440   0.93  systemd
+03:36:11        0       586      3.96      0.00   51456   13064   0.66  systemd-journal
+03:36:11     1000      7295      0.99      0.00    7992    4228   0.21  pidstat
+
+03:36:11      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:36:12        0        39    0.00    1.00    0.00    0.00    1.00     0  khugepaged
+03:36:12        0        54    0.00    1.00    0.00    0.00    1.00     0  kworker/u8:2-events_unbound
+03:36:12        0      4910    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+03:36:12       33      6759    7.00   33.00    0.00    2.00   40.00     0  nginx
+03:36:12       33      6760    8.00   22.00    0.00    1.00   30.00     1  nginx
+
+03:36:11      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:36:12      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:36:13       33      6759   10.00   36.00    0.00    1.00   46.00     0  nginx
+03:36:13       33      6760    7.00   23.00    0.00    1.00   30.00     1  nginx
+03:36:13     1000      7295    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+03:36:12      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:36:13      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:36:14       33      6759    5.00   22.00    0.00    0.00   27.00     0  nginx
+03:36:14       33      6760   10.00   23.00    0.00    0.00   33.00     1  nginx
+
+03:36:13      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:36:14      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:36:15       33      6759    5.00   28.00    0.00    1.00   33.00     0  nginx
+03:36:15       33      6760    9.00   26.00    0.00    1.00   35.00     1  nginx
+
+03:36:14      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        39    0.00    0.20    0.00    0.00    0.20     -  khugepaged
+Average:        0        54    0.00    0.20    0.00    0.00    0.20     -  kworker/u8:2-events_power_efficient
+Average:        0      4910    0.20    0.00    0.00    0.00    0.20     -  fail2ban-server
+Average:       33      6759    6.79   28.34    0.00    0.80   35.13     -  nginx
+Average:       33      6760    8.58   22.95    0.00    0.80   31.54     -  nginx
+Average:     1000      7295    0.00    0.20    0.00    0.00    0.20     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     31.14      0.00   27772   18440   0.93  systemd
+Average:        0       586      0.80      0.00   51456   13064   0.66  systemd-journal
+Average:     1000      7295      0.20      0.00    7992    4228   0.21  pidstat
+--- server=apache port=8080 concurrency=10 run=2 ---
+Running 15s test @ http://192.168.252.17:8080/
+  2 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   688.08us  440.58us  16.48ms   94.30%
+    Req/Sec     7.43k   602.10     8.23k    86.33%
+  Latency Distribution
+     50%  614.00us
+     75%  771.00us
+     90%    0.98ms
+     99%    1.86ms
+  221914 requests in 15.00s, 438.97MB read
+Requests/sec:  14793.82
+Transfer/sec:     29.26MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:37:29      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:37:30        0      1015    1.00    0.00    0.00    0.00    1.00     1  systemd-logind
+03:37:30       33      7414   14.00   32.00    0.00    0.00   46.00     1  apache2
+03:37:30       33      7415   11.00   23.00    0.00    0.00   34.00     1  apache2
+
+03:37:29      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:37:30        0         1    160.00      0.00   27772   18440   0.93  systemd
+03:37:30        0       586     17.00      0.00   51456   13064   0.66  systemd-journal
+03:37:30        0      4910      1.00      0.00  714724   50200   2.52  fail2ban-server
+03:37:30       33      7414   5106.00     10.00 1219948   37032   1.86  apache2
+03:37:30       33      7415   3761.00      3.00 1219884   37088   1.86  apache2
+03:37:30     1000      7630      1.00      0.00    7628    2984   0.15  pidstat
+
+03:37:30      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:37:31        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:37:31        0        54    0.00    1.00    0.00    0.00    1.00     0  kworker/u8:2-writeback
+03:37:31       33      7414   20.00   45.00    0.00    0.00   65.00     1  apache2
+03:37:31       33      7415   17.00   45.00    0.00    0.00   62.00     1  apache2
+03:37:31     1000      7630    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:37:30      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:37:31       33      7414   7415.00      5.00 1219948   37032   1.86  apache2
+03:37:31       33      7415   6780.00     10.00 1219884   37088   1.86  apache2
+
+03:37:31      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:37:32        0        15    0.00    1.00    0.00    2.00    1.00     1  rcu_preempt
+03:37:32        0      4910    0.00    1.00    0.00    0.00    1.00     0  fail2ban-server
+03:37:32       33      7414   20.00   50.00    0.00    0.00   70.00     1  apache2
+03:37:32       33      7415   18.00   43.00    0.00    0.00   61.00     1  apache2
+
+03:37:31      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:37:32       33      7414   7067.00     17.00 1220016   37032   1.86  apache2
+03:37:32       33      7415   6926.00      9.00 1219948   37088   1.86  apache2
+
+03:37:32      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:37:33        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:37:33       33      7414   23.00   58.00    0.00    0.00   81.00     1  apache2
+03:37:33       33      7415   18.00   40.00    0.00    0.00   58.00     1  apache2
+
+03:37:32      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:37:33       33      7414   8301.00     10.00 1220012   37032   1.86  apache2
+03:37:33       33      7415   7319.00      5.00 1219948   37088   1.86  apache2
+
+03:37:33      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:37:34       33      7414   18.00   46.00    0.00    0.00   64.00     1  apache2
+03:37:34       33      7415   23.00   52.00    0.00    0.00   75.00     1  apache2
+03:37:34     1000      7630    1.00    1.00    0.00    1.00    2.00     0  pidstat
+
+03:37:33      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:37:34       33      7414   6593.00      6.00 1220016   37032   1.86  apache2
+03:37:34       33      7415   8609.00      8.00 1220012   37216   1.87  apache2
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    0.40    0.00    0.00    0.40     -  ksoftirqd/0
+Average:        0        15    0.00    0.20    0.00    1.40    0.20     -  rcu_preempt
+Average:        0        54    0.00    0.20    0.00    0.00    0.20     -  kworker/u8:2-writeback
+Average:        0      1015    0.20    0.00    0.00    0.00    0.20     -  systemd-logind
+Average:        0      4910    0.00    0.20    0.00    0.00    0.20     -  fail2ban-server
+Average:       33      7414   19.00   46.20    0.00    0.00   65.20     -  apache2
+Average:       33      7415   17.40   40.60    0.00    0.00   58.00     -  apache2
+Average:     1000      7630    0.20    0.40    0.00    0.20    0.60     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     32.00      0.00   27772   18440   0.93  systemd
+Average:        0       586      3.40      0.00   51456   13064   0.66  systemd-journal
+Average:        0      4910      0.20      0.00  714724   50200   2.52  fail2ban-server
+Average:       33      7414   6896.40      9.60 1219988   37032   1.86  apache2
+Average:       33      7415   6679.00      7.00 1219935   37114   1.86  apache2
+Average:     1000      7630      0.20      0.00    7628    2984   0.15  pidstat
+--- server=nginx port=80 concurrency=10 run=2 ---
+Running 15s test @ http://192.168.252.17:80/
+  2 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.05ms    7.29ms 114.58ms   95.77%
+    Req/Sec     7.11k     2.79k   10.23k    81.88%
+  Latency Distribution
+     50%  570.00us
+     75%  795.00us
+     90%    2.46ms
+     99%   36.60ms
+  211272 requests in 15.05s, 413.65MB read
+Requests/sec:  14035.52
+Transfer/sec:     27.48MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:38:16      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:38:17        0       586    0.99    0.00    0.00    0.00    0.99     0  systemd-journal
+03:38:17       33      6759    9.90   32.67    0.00    0.00   42.57     0  nginx
+03:38:17       33      6760    4.95   14.85    0.00    0.00   19.80     1  nginx
+03:38:17     1000      7815    0.00    0.99    0.00    0.00    0.99     0  pidstat
+
+03:38:16      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:38:17        0         1      1.98      0.00   27772   18440   0.93  systemd
+03:38:17        0      4910      1.98      0.00  714724   50200   2.52  fail2ban-server
+03:38:17     1000      7815      2.97      0.00    7464    2984   0.15  pidstat
+
+03:38:17      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:38:18        0      4910    0.99    0.00    0.00    0.00    0.99     1  fail2ban-server
+03:38:18       33      6759    6.93   27.72    0.00    0.99   34.65     0  nginx
+03:38:18       33      6760    7.92   19.80    0.00    0.99   27.72     1  nginx
+
+03:38:17      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:38:18      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:38:19       33      6759    5.00   25.00    0.00    1.00   30.00     0  nginx
+03:38:19       33      6760    4.00   14.00    0.00    0.00   18.00     1  nginx
+03:38:19     1000      7815    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:38:18      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:38:19      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:38:20      984      1009    1.00    0.00    0.00    0.00    1.00     1  polkitd
+03:38:20       33      6759   10.00   45.00    0.00    1.00   55.00     0  nginx
+03:38:20       33      6760    8.00   22.00    0.00    1.00   30.00     1  nginx
+
+03:38:19      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:38:20      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:38:21        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+03:38:21       33      6759   12.00   35.00    0.00    2.00   47.00     0  nginx
+03:38:21       33      6760    7.00   22.00    0.00    0.00   29.00     1  nginx
+
+03:38:20      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    0.40    0.00    0.00    0.40     -  ksoftirqd/0
+Average:        0       586    0.20    0.00    0.00    0.00    0.20     -  systemd-journal
+Average:      984      1009    0.20    0.00    0.00    0.00    0.20     -  polkitd
+Average:        0      4910    0.20    0.00    0.00    0.00    0.20     -  fail2ban-server
+Average:       33      6759    8.76   33.07    0.00    1.00   41.83     -  nginx
+Average:       33      6760    6.37   18.53    0.00    0.40   24.90     -  nginx
+Average:     1000      7815    0.00    0.40    0.00    0.00    0.40     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1      0.40      0.00   27772   18440   0.93  systemd
+Average:        0      4910      0.40      0.00  714724   50200   2.52  fail2ban-server
+Average:     1000      7815      0.60      0.00    7464    2984   0.15  pidstat
+--- server=apache port=8080 concurrency=50 run=1 ---
+Running 15s test @ http://192.168.252.17:8080/
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.35ms    4.02ms  72.61ms   88.70%
+    Req/Sec    10.29k     1.52k   12.35k    91.67%
+  Latency Distribution
+     50%    1.79ms
+     75%    3.88ms
+     90%    7.93ms
+     99%   20.11ms
+  307151 requests in 15.01s, 607.57MB read
+  Socket errors: connect 0, read 991, write 0, timeout 0
+Requests/sec:  20465.15
+Transfer/sec:     40.48MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:39:35      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:39:36       33      7951   17.00   45.00    0.00    0.00   62.00     1  apache2
+03:39:36       33      7952   18.00   42.00    0.00    0.00   60.00     0  apache2
+03:39:36     1000      8168    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:39:35      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:39:36        0         1    152.00      0.00   27772   18440   0.93  systemd
+03:39:36        0       586      3.00      0.00   51456   13064   0.66  systemd-journal
+03:39:36       33      7951   6969.00      1.00 1222060   40320   2.02  apache2
+03:39:36       33      7952   8552.00     18.00 1219816   38240   1.92  apache2
+03:39:36     1000      8168      1.00      0.00    7156    2964   0.15  pidstat
+
+03:39:36      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:39:37        0        14    0.00    3.00    0.00    0.00    3.00     0  ksoftirqd/0
+03:39:37       33      7951   22.00   51.00    0.00    0.00   73.00     1  apache2
+03:39:37       33      7952   23.00   42.00    0.00    0.00   65.00     0  apache2
+
+03:39:36      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:39:37       33      7951   6986.00      6.00 1222064   40320   2.02  apache2
+03:39:37       33      7952   6891.00      3.00 1219824   38240   1.92  apache2
+
+03:39:37      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:39:38       33      7951   28.00   67.00    0.00    0.00   95.00     1  apache2
+03:39:38       33      7952   27.00   64.00    0.00    0.00   91.00     0  apache2
+03:39:38     1000      8168    1.00    1.00    0.00    0.00    2.00     0  pidstat
+
+03:39:37      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:39:38       33      7951  10142.00     13.00 1222076   40320   2.02  apache2
+03:39:38       33      7952  11269.00     10.00 1219888   38240   1.92  apache2
+
+03:39:38      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:39:39        0        15    0.00    1.00    0.00    1.00    1.00     1  rcu_preempt
+03:39:39       33      7951   26.00   66.00    0.00    0.00   92.00     1  apache2
+03:39:39       33      7952   24.00   70.00    0.00    0.00   94.00     0  apache2
+
+03:39:38      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:39:39       33      7951  11416.00     25.00 1222060   40320   2.02  apache2
+03:39:39       33      7952   9751.00      1.00 1219880   38368   1.93  apache2
+
+03:39:39      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:39:40        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:39:40       33      7951   27.00   66.00    0.00    0.00   93.00     1  apache2
+03:39:40       33      7952   26.00   64.00    0.00    0.00   90.00     0  apache2
+03:39:40     1000      8168    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:39:39      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:39:40       33      7951  10037.00      4.00 1222056   40320   2.02  apache2
+03:39:40       33      7952  10675.00     21.00 1219880   38368   1.93  apache2
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    0.80    0.00    0.00    0.80     -  ksoftirqd/0
+Average:        0        15    0.00    0.20    0.00    1.80    0.20     -  rcu_preempt
+Average:       33      7951   24.00   59.00    0.00    0.00   83.00     -  apache2
+Average:       33      7952   23.60   56.40    0.00    0.00   80.00     -  apache2
+Average:     1000      8168    0.20    0.60    0.00    0.40    0.80     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     30.40      0.00   27772   18440   0.93  systemd
+Average:        0       586      0.60      0.00   51456   13064   0.66  systemd-journal
+Average:       33      7951   9110.00      9.80 1222063   40320   2.02  apache2
+Average:       33      7952   9427.60     10.60 1219858   38291   1.92  apache2
+Average:     1000      8168      0.20      0.00    7156    2964   0.15  pidstat
+--- server=nginx port=80 concurrency=50 run=1 ---
+Running 15s test @ http://192.168.252.17:80/
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.62ms    1.72ms  47.87ms   96.90%
+    Req/Sec    15.83k     2.06k   18.46k    90.67%
+  Latency Distribution
+     50%    1.37ms
+     75%    1.78ms
+     90%    2.35ms
+     99%    4.83ms
+  472889 requests in 15.01s, 0.90GB read
+Requests/sec:  31497.13
+Transfer/sec:     61.67MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:40:22      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:40:23        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+03:40:23        0       616    1.00    0.00    0.00    0.00    1.00     0  multipathd
+03:40:23        0      4910    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+03:40:23       33      6759    8.00   33.00    0.00    4.00   41.00     0  nginx
+03:40:23       33      6760   15.00   53.00    0.00    0.00   68.00     1  nginx
+03:40:23     1000      8383    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+03:40:22      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:40:23        0         1    165.00      0.00   27772   18440   0.93  systemd
+03:40:23     1000      8383      1.00      0.00    8256    4484   0.22  pidstat
+
+03:40:23      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:40:24        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:40:24       33      6759   10.00   45.00    0.00    6.00   55.00     0  nginx
+03:40:24       33      6760   20.00   55.00    0.00    1.00   75.00     1  nginx
+
+03:40:23      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:40:24      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:40:25        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:40:25       33      6759   14.00   62.00    0.00    3.00   76.00     0  nginx
+03:40:25       33      6760   16.00   49.00    0.00    0.00   65.00     1  nginx
+
+03:40:24      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:40:25      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:40:26        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:40:26       33      6759   14.00   65.00    0.00    3.00   79.00     0  nginx
+03:40:26       33      6760   16.00   46.00    0.00    1.00   62.00     1  nginx
+
+03:40:25      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:40:26      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:40:27        0        14    0.00    1.98    0.00    0.99    1.98     0  ksoftirqd/0
+03:40:27        0      4910    0.99    0.00    0.00    0.00    0.99     1  fail2ban-server
+03:40:27       33      6759    8.91   43.56    0.00    4.95   52.48     0  nginx
+03:40:27       33      6760   16.83   54.46    0.00    0.00   71.29     1  nginx
+03:40:27     1000      8383    0.00    0.99    0.00    0.00    0.99     1  pidstat
+
+03:40:26      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    1.40    0.00    0.20    1.40     -  ksoftirqd/0
+Average:        0       616    0.20    0.00    0.00    0.00    0.20     -  multipathd
+Average:        0      4910    0.40    0.00    0.00    0.00    0.40     -  fail2ban-server
+Average:       33      6759   10.98   49.70    0.00    4.19   60.68     -  nginx
+Average:       33      6760   16.77   51.50    0.00    0.40   68.26     -  nginx
+Average:     1000      8383    0.00    0.40    0.00    0.20    0.40     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     32.93      0.00   27772   18440   0.93  systemd
+Average:     1000      8383      0.20      0.00    8256    4484   0.22  pidstat
+--- server=apache port=8080 concurrency=50 run=2 ---
+Running 15s test @ http://192.168.252.17:8080/
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.93ms    5.28ms  83.38ms   90.82%
+    Req/Sec     8.97k     1.76k   11.70k    91.67%
+  Latency Distribution
+     50%    2.11ms
+     75%    4.33ms
+     90%    8.71ms
+     99%   26.90ms
+  268079 requests in 15.04s, 530.28MB read
+  Socket errors: connect 0, read 1335, write 0, timeout 0
+Requests/sec:  17822.26
+Transfer/sec:     35.25MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:41:44      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:41:45        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:41:45        0      4910    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+03:41:45       33      8506   16.00   37.00    0.00    0.00   53.00     1  apache2
+03:41:45       33      8507   16.00   36.00    0.00    0.00   52.00     0  apache2
+
+03:41:44      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:41:45        0         1    151.00      0.00   27772   18440   0.93  systemd
+03:41:45        0       586      3.00      0.00   51456   13192   0.66  systemd-journal
+03:41:45       33      8506   6150.00      6.00 1219996   38276   1.92  apache2
+03:41:45       33      8507   6519.00      4.00 1219988   38292   1.92  apache2
+03:41:45     1000      8722      1.00      0.00    7924    4164   0.21  pidstat
+
+03:41:45      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:41:46       33      8506   25.00   62.00    0.00    0.00   87.00     1  apache2
+03:41:46       33      8507   28.00   57.00    0.00    0.00   85.00     0  apache2
+
+03:41:45      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:41:46       33      8506   8090.00      0.00 1219996   38276   1.92  apache2
+03:41:46       33      8507  11016.00     32.00 1220008   38292   1.92  apache2
+
+03:41:46      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:41:47        0        15    0.00    1.00    0.00    2.00    1.00     1  rcu_preempt
+03:41:47       33      8506   25.00   59.00    0.00    0.00   84.00     1  apache2
+03:41:47       33      8507   23.00   61.00    0.00    0.00   84.00     0  apache2
+
+03:41:46      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:41:47       33      8506  10007.00     14.00 1219988   38404   1.93  apache2
+03:41:47       33      8507   8438.00     11.00 1219988   38292   1.92  apache2
+
+03:41:47      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:41:48        0        14    0.00    0.99    0.00    0.00    0.99     0  ksoftirqd/0
+03:41:48        0      5585    0.00    0.99    0.00    0.99    0.99     1  kworker/u8:1-events_power_efficient
+03:41:48       33      8506   14.85   39.60    0.00    0.00   54.46     1  apache2
+03:41:48       33      8507   13.86   40.59    0.00    0.00   54.46     0  apache2
+03:41:48     1000      8722    0.00    0.99    0.00    0.00    0.99     0  pidstat
+
+03:41:47      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:41:48       33      8506   6972.28      6.93 1219984   38404   1.93  apache2
+03:41:48       33      8507   5488.12      1.98 1220048   38292   1.92  apache2
+
+03:41:48      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:41:49        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:41:49       33      8506   21.00   51.00    0.00    0.00   72.00     1  apache2
+03:41:49       33      8507   20.00   52.00    0.00    0.00   72.00     0  apache2
+
+03:41:48      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:41:49       33      8506   8600.00     13.00 1219924   38400   1.93  apache2
+03:41:49       33      8507   7893.00      4.00 1220496   38676   1.94  apache2
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    0.60    0.00    0.00    0.60     -  ksoftirqd/0
+Average:        0        15    0.00    0.20    0.00    1.80    0.20     -  rcu_preempt
+Average:        0      4910    0.20    0.00    0.00    0.00    0.20     -  fail2ban-server
+Average:        0      5585    0.00    0.20    0.00    0.20    0.20     -  kworker/u8:1-events_unbound
+Average:       33      8506   20.36   49.70    0.00    0.00   70.06     -  apache2
+Average:       33      8507   20.16   49.30    0.00    0.00   69.46     -  apache2
+Average:     1000      8722    0.00    0.20    0.00    0.00    0.20     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     30.14      0.00   27772   18440   0.93  systemd
+Average:        0       586      0.60      0.00   51456   13192   0.66  systemd-journal
+Average:       33      8506   7961.88      7.98 1219978   38352   1.92  apache2
+Average:       33      8507   7866.07     10.58 1220106   38369   1.93  apache2
+Average:     1000      8722      0.20      0.00    7924    4164   0.21  pidstat
+--- server=nginx port=80 concurrency=50 run=2 ---
+Running 15s test @ http://192.168.252.17:80/
+  2 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.41ms    4.89ms 123.78ms   96.64%
+    Req/Sec    13.57k     3.19k   16.74k    91.67%
+  Latency Distribution
+     50%    1.57ms
+     75%    2.08ms
+     90%    2.98ms
+     99%   22.47ms
+  405668 requests in 15.10s, 794.25MB read
+Requests/sec:  26871.46
+Transfer/sec:     52.61MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:42:34      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:42:35        0        14    0.00    1.98    0.00    0.00    1.98     0  ksoftirqd/0
+03:42:35       33      6759    5.94   23.76    0.00    5.94   29.70     0  nginx
+03:42:35       33      6760   13.86   45.54    0.00    0.99   59.41     1  nginx
+03:42:35     1000      8958    0.00    0.99    0.00    0.00    0.99     0  pidstat
+
+03:42:34      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:42:35        0         1    160.40      0.00   27772   18440   0.93  systemd
+03:42:35     1000      8958      0.99      0.00    7208    2780   0.14  pidstat
+
+03:42:35      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:42:36        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:42:36        0      4910    0.00    1.00    0.00    0.00    1.00     0  fail2ban-server
+03:42:36       33      6759    7.00   32.00    0.00    5.00   39.00     0  nginx
+03:42:36       33      6760   18.00   52.00    0.00    0.00   70.00     1  nginx
+03:42:36     1000      8958    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:42:35      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:42:36      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:42:37        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+03:42:37        0      4910    1.00    0.00    0.00    0.00    1.00     0  fail2ban-server
+03:42:37       33      6759   10.00   47.00    0.00    7.00   57.00     0  nginx
+03:42:37       33      6760   17.00   53.00    0.00    0.00   70.00     1  nginx
+
+03:42:36      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:42:37      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:42:38        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:42:38       33      2868    1.00    0.00    0.00    0.00    1.00     0  gunicorn
+03:42:38       33      6759    5.00   24.00    0.00    2.00   29.00     0  nginx
+03:42:38       33      6760    6.00   24.00    0.00    1.00   30.00     1  nginx
+03:42:38     1000      8958    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:42:37      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:42:38      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:42:39        0        14    0.00    1.00    0.00    1.00    1.00     0  ksoftirqd/0
+03:42:39       33      6759   12.00   43.00    0.00    4.00   55.00     0  nginx
+03:42:39       33      6760   17.00   43.00    0.00    0.00   60.00     1  nginx
+03:42:39     1000      8958    1.00    0.00    0.00    0.00    1.00     1  pidstat
+
+03:42:38      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    1.40    0.00    0.20    1.40     -  ksoftirqd/0
+Average:       33      2868    0.20    0.00    0.00    0.00    0.20     -  gunicorn
+Average:        0      4910    0.20    0.20    0.00    0.00    0.40     -  fail2ban-server
+Average:       33      6759    7.98   33.93    0.00    4.79   41.92     -  nginx
+Average:       33      6760   14.37   43.51    0.00    0.40   57.88     -  nginx
+Average:     1000      8958    0.20    0.60    0.00    0.20    0.80     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     32.34      0.00   27772   18440   0.93  systemd
+Average:     1000      8958      0.20      0.00    7208    2780   0.14  pidstat
+--- server=apache port=8080 concurrency=100 run=1 ---
+Running 15s test @ http://192.168.252.17:8080/
+  2 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.99ms   12.99ms 152.50ms   88.02%
+    Req/Sec     9.26k     1.78k   15.83k    65.33%
+  Latency Distribution
+     50%    3.28ms
+     75%   10.72ms
+     90%   24.93ms
+     99%   61.97ms
+  276782 requests in 15.02s, 547.47MB read
+  Socket errors: connect 0, read 34304, write 0, timeout 0
+Requests/sec:  18424.58
+Transfer/sec:     36.44MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:43:58      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:43:59        0        14    0.00    1.98    0.00    0.00    1.98     0  ksoftirqd/0
+03:43:59        0        15    0.00    0.99    0.00    4.95    0.99     0  rcu_preempt
+03:43:59       33      9083   13.86   41.58    0.00    0.00   55.45     0  apache2
+03:43:59       33      9084   12.87   46.53    0.00    0.00   59.41     0  apache2
+03:43:59     1000      9307    0.00    0.99    0.00    0.00    0.99     0  pidstat
+
+03:43:58      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:43:59        0         1    159.41      0.00   27772   18440   0.93  systemd
+03:43:59        0       586      2.97      0.00   51456   13320   0.67  systemd-journal
+03:43:59       33      9083   9743.56      0.00 1221236   39216   1.97  apache2
+03:43:59       33      9084   8405.94      0.99 1220532   38672   1.94  apache2
+03:43:59     1000      9307      0.99      0.00    7432    2920   0.15  pidstat
+
+03:43:59      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:00        0         1    1.00    1.00    0.00    1.00    2.00     0  systemd
+03:44:00        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:44:00        0        15    0.00    1.00    0.00    6.00    1.00     1  rcu_preempt
+03:44:00        0       586    1.00    0.00    0.00    0.00    1.00     1  systemd-journal
+03:44:00       33      2879    1.00    0.00    0.00    0.00    1.00     1  gunicorn
+03:44:00        0      4910    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+03:44:00        0      9080    0.00    1.00    0.00    1.00    1.00     1  apache2
+03:44:00       33      9083   11.00   48.00    0.00    0.00   59.00     0  apache2
+03:44:00       33      9084   16.00   48.00    0.00    0.00   64.00     0  apache2
+03:44:00     1000      9307    0.00    1.00    0.00    1.00    1.00     0  pidstat
+03:44:00       33      9309    8.00   26.00    0.00    0.00   34.00     1  apache2
+
+03:43:59      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:44:00        0         1    570.00      0.00   27772   18440   0.93  systemd
+03:44:00        0       586      6.00      0.00   51456   13320   0.67  systemd-journal
+03:44:00       33      2879      1.00      0.00   52652   37548   1.88  gunicorn
+03:44:00        0      9080      8.00      0.00   11352    5948   0.30  apache2
+03:44:00       33      9083   8174.00      7.00 1220656   38848   1.95  apache2
+03:44:00       33      9084  10231.00     23.00 1220592   38804   1.95  apache2
+03:44:00       33      9309   5750.00      0.00 1220020   38260   1.92  apache2
+
+03:44:00      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:01        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:44:01       33      9083    9.00   24.00    0.00    0.00   33.00     0  apache2
+03:44:01       33      9084   15.00   33.00    0.00    0.00   48.00     0  apache2
+03:44:01     1000      9307    1.00    1.00    0.00    1.00    2.00     0  pidstat
+03:44:01       33      9309   10.00   33.00    0.00    0.00   43.00     1  apache2
+03:44:01       33      9355    8.00   16.00    0.00    0.00   24.00     1  apache2
+03:44:01       33      9356    5.00   19.00    0.00    1.00   24.00     1  apache2
+
+03:44:00      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:44:01        0         1     23.00      0.00   27772   18440   0.93  systemd
+03:44:01        0      9080     14.00      0.00   11352    5948   0.30  apache2
+03:44:01       33      9083   3005.00      3.00 1220468   38580   1.94  apache2
+03:44:01       33      9084   9733.00     24.00 1219960   38336   1.92  apache2
+03:44:01       33      9309   4131.00      2.00 1220592   38744   1.94  apache2
+03:44:01       33      9355   4171.00      2.00 1220016   38228   1.92  apache2
+03:44:01       33      9356   2518.00      1.00 1219652   37660   1.89  apache2
+
+03:44:01      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:02        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:44:02        0        15    0.00    1.00    0.00    4.00    1.00     1  rcu_preempt
+03:44:02       33      9083   11.00   21.00    0.00    0.00   32.00     0  apache2
+03:44:02       33      9084   11.00   26.00    0.00    0.00   37.00     0  apache2
+03:44:02     1000      9307    0.00    1.00    0.00    0.00    1.00     0  pidstat
+03:44:02       33      9309   11.00   25.00    0.00    0.00   36.00     1  apache2
+03:44:02       33      9355   13.00   24.00    0.00    0.00   37.00     1  apache2
+03:44:02       33      9356   12.00   27.00    0.00    0.00   39.00     1  apache2
+
+03:44:01      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:44:02        0      9080      1.00      0.00   11352    5948   0.30  apache2
+03:44:02       33      9083   4299.00      5.00 1219760   38064   1.91  apache2
+03:44:02       33      9084   4698.00      5.00 1220020   38336   1.92  apache2
+03:44:02     1000      9307      2.00      0.00    7432    2920   0.15  pidstat
+03:44:02       33      9309   3854.00      5.00 1220540   38744   1.94  apache2
+03:44:02       33      9355   4141.00      2.00 1220148   38356   1.92  apache2
+03:44:02       33      9356   3909.00      5.00 1219952   38044   1.91  apache2
+
+03:44:02      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:03       33      9083   13.00   31.00    0.00    0.00   44.00     0  apache2
+03:44:03       33      9084    4.00    9.00    0.00   15.00   13.00     1  apache2
+03:44:03       33      9309   12.00   31.00    0.00    0.00   43.00     1  apache2
+03:44:03       33      9355   10.00   27.00    0.00    0.00   37.00     1  apache2
+03:44:03       33      9356   10.00   32.00    0.00    0.00   42.00     1  apache2
+
+03:44:02      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:44:03        0         1      8.00      0.00   27772   18440   0.93  systemd
+03:44:03        0      9080      3.00      0.00   11352    5948   0.30  apache2
+03:44:03       33      9083   5658.00      7.00 1220208   38320   1.92  apache2
+03:44:03       33      9084   1195.00      0.00       0       0   0.00  apache2
+03:44:03       33      9309   4875.00     17.00 1220492   38744   1.94  apache2
+03:44:03       33      9355   4072.00      1.00 1220172   38356   1.92  apache2
+03:44:03       33      9356   4964.00     11.00 1220028   38300   1.92  apache2
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0         1    0.20    0.20    0.00    0.20    0.40     -  systemd
+Average:        0        14    0.00    1.00    0.00    0.00    1.00     -  ksoftirqd/0
+Average:        0        15    0.00    0.60    0.00    4.19    0.60     -  rcu_preempt
+Average:        0       586    0.20    0.00    0.00    0.00    0.20     -  systemd-journal
+Average:       33      2879    0.20    0.00    0.00    0.00    0.20     -  gunicorn
+Average:        0      4910    0.20    0.00    0.00    0.00    0.20     -  fail2ban-server
+Average:        0      9080    0.00    0.20    0.00    0.40    0.20     -  apache2
+Average:       33      9083   11.58   33.13    0.00    0.00   44.71     -  apache2
+Average:       33      9084   11.78   32.53    0.00    2.99   44.31     -  apache2
+Average:     1000      9307    0.20    0.80    0.00    0.40    1.00     -  pidstat
+Average:       33      9309    8.18   22.95    0.00    0.00   31.14     -  apache2
+Average:       33      9355    6.19   13.37    0.00    0.00   19.56     -  apache2
+Average:       33      9356    5.39   15.57    0.00    0.20   20.96     -  apache2
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1    152.10      0.00   27772   18440   0.93  systemd
+Average:        0       586      1.80      0.00   51456   13320   0.67  systemd-journal
+Average:       33      2879      0.20      0.00   52652   37548   1.88  gunicorn
+Average:        0      9080      5.19      0.00   11352    5948   0.30  apache2
+Average:       33      9083   6183.03      4.39 1220466   38606   1.94  apache2
+Average:       33      9084   6855.69     10.58  976221   30830   1.55  apache2
+Average:     1000      9307      0.60      0.00    7432    2920   0.15  pidstat
+Average:       33      9309   3714.57      4.79 1220411   38623   1.94  apache2
+Average:       33      9355   2471.86      1.00 1220112   38313   1.92  apache2
+Average:       33      9356   2273.65      3.39 1219877   38001   1.91  apache2
+--- server=nginx port=80 concurrency=100 run=1 ---
+Running 15s test @ http://192.168.252.17:80/
+  2 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.57ms    8.88ms 128.06ms   95.22%
+    Req/Sec    15.81k     4.46k   20.56k    86.24%
+  Latency Distribution
+     50%    2.54ms
+     75%    3.59ms
+     90%    6.22ms
+     99%   52.02ms
+  470442 requests in 15.07s, 0.90GB read
+Requests/sec:  31224.82
+Transfer/sec:     61.13MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:44:48      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:49        0        14    0.00    3.00    0.00    0.00    3.00     0  ksoftirqd/0
+03:44:49        0      4910    1.00    0.00    0.00    0.00    1.00     0  fail2ban-server
+03:44:49       33      6759   10.00   52.00    0.00    5.00   62.00     0  nginx
+03:44:49       33      6760   16.00   55.00    0.00    0.00   71.00     1  nginx
+03:44:49     1000      9619    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:44:48      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:44:49        0         1    160.00      0.00   27772   18440   0.93  systemd
+03:44:49        0       586      3.00      0.00   51456   13320   0.67  systemd-journal
+03:44:49     1000      9619      1.00      0.00    8248    4400   0.22  pidstat
+
+03:44:49      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:50        0        14    0.00    3.00    0.00    1.00    3.00     0  ksoftirqd/0
+03:44:50       33      6759   10.00   60.00    0.00    6.00   70.00     0  nginx
+03:44:50       33      6760   20.00   62.00    0.00    0.00   82.00     1  nginx
+
+03:44:49      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:44:50      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:51        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+03:44:51        0      4910    0.00    1.00    0.00    0.00    1.00     0  fail2ban-server
+03:44:51       33      6759   13.00   57.00    0.00    6.00   70.00     0  nginx
+03:44:51       33      6760   18.00   59.00    0.00    1.00   77.00     1  nginx
+03:44:51     1000      9619    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:44:50      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:44:51      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:52        0        14    0.00    6.93    0.00    8.91    6.93     0  ksoftirqd/0
+03:44:52        0        24    0.00    0.99    0.00    0.00    0.99     1  ksoftirqd/1
+03:44:52        0        54    0.00    0.99    0.00    0.99    0.99     1  kworker/u8:2-events_unbound
+03:44:52       33      2868    0.99    0.00    0.00    0.00    0.99     0  gunicorn
+03:44:52        0      4910    2.97    1.98    0.00    0.00    4.95     0  fail2ban-server
+03:44:52       33      6759    7.92   47.52    0.00   12.87   55.45     0  nginx
+03:44:52       33      6760   13.86   44.55    0.00    6.93   58.42     1  nginx
+03:44:52     1000      9619    0.99    1.98    0.00    0.99    2.97     0  pidstat
+
+03:44:51      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:44:52      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:44:53        0        14    0.00    4.00    0.00    4.00    4.00     0  ksoftirqd/0
+03:44:53        0        24    0.00    1.00    0.00    2.00    1.00     1  ksoftirqd/1
+03:44:53        0      4910    1.00    0.00    0.00    0.00    1.00     0  fail2ban-server
+03:44:53       33      6759   11.00   48.00    0.00    5.00   59.00     0  nginx
+03:44:53       33      6760   16.00   46.00    0.00    1.00   62.00     1  nginx
+03:44:53     1000      9619    0.00    1.00    0.00    1.00    1.00     1  pidstat
+
+03:44:52      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    3.79    0.00    2.79    3.79     -  ksoftirqd/0
+Average:        0        24    0.00    0.40    0.00    0.40    0.40     -  ksoftirqd/1
+Average:        0        54    0.00    0.20    0.00    0.20    0.20     -  kworker/u8:2-flush-8:0
+Average:       33      2868    0.20    0.00    0.00    0.00    0.20     -  gunicorn
+Average:        0      4910    1.00    0.60    0.00    0.00    1.60     -  fail2ban-server
+Average:       33      6759   10.38   52.89    0.00    6.99   63.27     -  nginx
+Average:       33      6760   16.77   53.29    0.00    1.80   70.06     -  nginx
+Average:     1000      9619    0.20    1.00    0.00    0.60    1.20     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     31.94      0.00   27772   18440   0.93  systemd
+Average:        0       586      0.60      0.00   51456   13320   0.67  systemd-journal
+Average:     1000      9619      0.20      0.00    8248    4400   0.22  pidstat
+--- server=apache port=8080 concurrency=100 run=2 ---
+Running 15s test @ http://192.168.252.17:8080/
+  2 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.08ms   13.61ms 235.66ms   89.20%
+    Req/Sec     8.78k     1.70k   12.29k    62.67%
+  Latency Distribution
+     50%    3.62ms
+     75%   10.27ms
+     90%   23.95ms
+     99%   65.13ms
+  262391 requests in 15.02s, 519.00MB read
+  Socket errors: connect 0, read 34762, write 0, timeout 0
+Requests/sec:  17471.22
+Transfer/sec:     34.56MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:46:12      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:46:13        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+03:46:13        0        15    0.00    1.00    0.00    5.00    1.00     0  rcu_preempt
+03:46:13        0      4910    0.00    1.00    0.00    0.00    1.00     1  fail2ban-server
+03:46:13       33      9760   12.00   45.00    0.00    0.00   57.00     0  apache2
+03:46:13       33      9761   12.00   40.00    0.00    0.00   52.00     1  apache2
+03:46:13       33      9983    1.00    4.00    0.00    1.00    5.00     1  apache2
+
+03:46:12      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:46:13        0         1    177.00      0.00   27772   18440   0.93  systemd
+03:46:13        0       586      4.00      0.00   51456   13320   0.67  systemd-journal
+03:46:13        0      9757      6.00      0.00   12276    5932   0.30  apache2
+03:46:13       33      9760   7834.00      0.00 1221836   38944   1.95  apache2
+03:46:13       33      9761   7765.00      2.00 1221468   38732   1.94  apache2
+03:46:13     1000      9981      1.00      0.00    7236    2984   0.15  pidstat
+03:46:13       33      9983   1564.00      1.00 1221068   38316   1.92  apache2
+
+03:46:13      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:46:14        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:46:14       33      9760   16.00   43.00    0.00    0.00   59.00     0  apache2
+03:46:14       33      9761   15.00   44.00    0.00    0.00   59.00     1  apache2
+03:46:14       33      9983   13.00   45.00    0.00    0.00   58.00     1  apache2
+
+03:46:13      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:46:14        0      9757      1.00      0.00   12276    5932   0.30  apache2
+03:46:14       33      9760   8636.00     19.00 1221456   38712   1.94  apache2
+03:46:14       33      9761   8029.00      9.00 1221528   38660   1.94  apache2
+03:46:14       33      9983   6393.00      9.00 1221644   38772   1.95  apache2
+
+03:46:14      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:46:15        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+03:46:15        0      4910    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+03:46:15       33      9760   16.00   46.00    0.00    0.00   62.00     0  apache2
+03:46:15       33      9761   15.00   45.00    0.00    0.00   60.00     1  apache2
+03:46:15       33      9983   14.00   39.00    0.00    0.00   53.00     1  apache2
+03:46:15       33     10011    0.00    2.00    0.00    3.00    2.00     1  apache2
+
+03:46:14      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:46:15        0         1      1.00      0.00   27772   18440   0.93  systemd
+03:46:15        0      9757      6.00      0.00   12276    5932   0.30  apache2
+03:46:15       33      9760   8500.00     10.00 1221476   38888   1.95  apache2
+03:46:15       33      9761   7323.00      0.00 1221648   38832   1.95  apache2
+03:46:15       33      9983   5813.00      4.00 1221584   38860   1.95  apache2
+03:46:15       33     10011    784.00      0.00 1220636   37748   1.89  apache2
+
+03:46:15      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:46:16        0        15    0.00    0.99    0.00    0.00    0.99     1  rcu_preempt
+03:46:16        0        24    0.00    0.99    0.00    0.00    0.99     1  ksoftirqd/1
+03:46:16       33      9760   14.85   33.66    0.00    0.00   48.51     0  apache2
+03:46:16       33      9761   16.83   31.68    0.00    0.00   48.51     1  apache2
+03:46:16       33      9983   13.86   28.71    0.00    0.00   42.57     1  apache2
+03:46:16       33     10011   10.89   26.73    0.00    0.00   37.62     1  apache2
+
+03:46:15      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:46:16        0      9757      1.98      0.00   12276    5932   0.30  apache2
+03:46:16       33      9760   5868.32     18.81 1221460   39016   1.96  apache2
+03:46:16       33      9761   6062.38     14.85 1221644   38832   1.95  apache2
+03:46:16       33      9983   4600.00      0.99 1221584   38860   1.95  apache2
+03:46:16       33     10011   4311.88      3.96 1221196   38388   1.93  apache2
+
+03:46:16      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:46:17        0        14    0.00    1.00    0.00    1.00    1.00     0  ksoftirqd/0
+03:46:17       33      9760   13.00   28.00    0.00    0.00   41.00     0  apache2
+03:46:17       33      9761   12.00   31.00    0.00    0.00   43.00     1  apache2
+03:46:17     1000      9981    0.00    1.00    0.00    0.00    1.00     1  pidstat
+03:46:17       33      9983   14.00   33.00    0.00    0.00   47.00     1  apache2
+03:46:17       33     10011   13.00   32.00    0.00    0.00   45.00     1  apache2
+
+03:46:16      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:46:17        0         1     14.00      0.00   27772   18440   0.93  systemd
+03:46:17        0      9757      3.00      0.00   12276    5932   0.30  apache2
+03:46:17       33      9760   4600.00      2.00 1221452   39016   1.96  apache2
+03:46:17       33      9761   3883.00      0.00 1221140   38444   1.93  apache2
+03:46:17       33      9983   4971.00      1.00 1221580   38988   1.96  apache2
+03:46:17       33     10011   6129.00     11.00 1221340   38516   1.93  apache2
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    1.00    0.00    0.20    1.00     -  ksoftirqd/0
+Average:        0        15    0.00    0.40    0.00    2.40    0.40     -  rcu_preempt
+Average:        0        24    0.00    0.20    0.00    0.00    0.20     -  ksoftirqd/1
+Average:        0      4910    0.20    0.20    0.00    0.00    0.40     -  fail2ban-server
+Average:       33      9760   14.37   39.12    0.00    0.00   53.49     -  apache2
+Average:       33      9761   14.17   38.32    0.00    0.00   52.50     -  apache2
+Average:     1000      9981    0.00    0.20    0.00    0.00    0.20     -  pidstat
+Average:       33      9983   11.18   29.94    0.00    0.20   41.12     -  apache2
+Average:       33     10011    4.79   12.18    0.00    0.60   16.97     -  apache2
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     38.32      0.00   27772   18440   0.93  systemd
+Average:        0       586      0.80      0.00   51456   13320   0.67  systemd-journal
+Average:        0      9757      3.59      0.00   12276    5932   0.30  apache2
+Average:       33      9760   7085.23      9.98 1221536   38915   1.95  apache2
+Average:       33      9761   6611.38      5.19 1221486   38700   1.94  apache2
+Average:     1000      9981      0.20      0.00    7236    2984   0.15  pidstat
+Average:       33      9983   4668.06      3.19 1221492   38759   1.94  apache2
+Average:       33     10011   2249.10      2.99 1221057   38217   1.92  apache2
+--- server=nginx port=80 concurrency=100 run=2 ---
+Running 15s test @ http://192.168.252.17:80/
+  2 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.49ms    9.44ms 224.82ms   97.64%
+    Req/Sec    13.45k     3.83k   21.14k    70.81%
+  Latency Distribution
+     50%    3.08ms
+     75%    4.50ms
+     90%    6.80ms
+     99%   23.51ms
+  400771 requests in 15.01s, 784.67MB read
+Requests/sec:  26703.91
+Transfer/sec:     52.28MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:47:02      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:47:03        0        14    0.00    2.97    0.00    0.00    2.97     0  ksoftirqd/0
+03:47:03       33      6759    8.91   39.60    0.00    4.95   48.51     0  nginx
+03:47:03       33      6760   14.85   36.63    0.00    0.00   51.49     1  nginx
+03:47:03     1000     10352    0.00    0.99    0.00    0.00    0.99     0  pidstat
+
+03:47:02      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:47:03        0         1    159.41      0.00   27772   18440   0.93  systemd
+03:47:03     1000     10352      0.99      0.00    7924    4096   0.21  pidstat
+
+03:47:03      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:47:04        0        14    0.00    4.00    0.00    1.00    4.00     0  ksoftirqd/0
+03:47:04        0      4910    0.00    1.00    0.00    0.00    1.00     0  fail2ban-server
+03:47:04       33      6759   12.00   48.00    0.00    6.00   60.00     0  nginx
+03:47:04       33      6760   16.00   52.00    0.00    1.00   68.00     1  nginx
+
+03:47:03      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:47:04      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:47:05        0        14    0.00    3.00    0.00    1.00    3.00     0  ksoftirqd/0
+03:47:05       33      6759   12.00   57.00    0.00    6.00   69.00     0  nginx
+03:47:05       33      6760   17.00   52.00    0.00    0.00   69.00     1  nginx
+03:47:05     1000     10352    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+03:47:04      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:47:05      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:47:06        0        14    0.00    3.00    0.00    1.00    3.00     0  ksoftirqd/0
+03:47:06       33      6759   14.00   61.00    0.00    4.00   75.00     0  nginx
+03:47:06       33      6760   17.00   50.00    0.00    1.00   67.00     1  nginx
+
+03:47:05      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:47:06      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:47:07        0        14    0.00    5.00    0.00    0.00    5.00     0  ksoftirqd/0
+03:47:07       33      6759    9.00   49.00    0.00    8.00   58.00     0  nginx
+03:47:07       33      6760   20.00   54.00    0.00    0.00   74.00     1  nginx
+
+03:47:06      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    3.59    0.00    0.60    3.59     -  ksoftirqd/0
+Average:        0      4910    0.00    0.20    0.00    0.00    0.20     -  fail2ban-server
+Average:       33      6759   11.18   50.90    0.00    5.79   62.08     -  nginx
+Average:       33      6760   16.97   48.90    0.00    0.40   65.87     -  nginx
+Average:     1000     10352    0.00    0.40    0.00    0.20    0.40     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     32.14      0.00   27772   18440   0.93  systemd
+Average:     1000     10352      0.20      0.00    7924    4096   0.21  pidstat
+--- server=apache port=8080 concurrency=200 run=1 ---
+Running 15s test @ http://192.168.252.17:8080/
+  2 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.89ms   23.46ms 312.99ms   90.03%
+    Req/Sec     6.81k     1.26k    9.70k    76.25%
+  Latency Distribution
+     50%    8.58ms
+     75%   19.13ms
+     90%   40.26ms
+     99%  119.67ms
+  203436 requests in 15.07s, 402.38MB read
+  Socket errors: connect 0, read 87199, write 0, timeout 0
+Requests/sec:  13501.54
+Transfer/sec:     26.70MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:48:26      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:48:27        0        14    0.00    1.98    0.00    0.00    1.98     0  ksoftirqd/0
+03:48:27       33     10493    9.90   35.64    0.00    0.00   45.54     0  apache2
+03:48:27       33     10494   11.88   28.71    0.00    0.00   40.59     0  apache2
+03:48:27       33     10719    4.95   13.86    0.00    0.00   18.81     1  apache2
+
+03:48:26      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:48:27        0         1    173.27      0.00   27772   18440   0.93  systemd
+03:48:27        0     10490      5.94      0.00   12136    5948   0.30  apache2
+03:48:27       33     10493   6572.28      0.00 1221188   38496   1.93  apache2
+03:48:27       33     10494   9100.99      0.99 1221508   38696   1.94  apache2
+03:48:27     1000     10717      0.99      0.00    8404    4640   0.23  pidstat
+03:48:27       33     10719   3559.41      0.00 1220928   38348   1.92  apache2
+
+03:48:27      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:48:28        0        14    0.00    4.00    0.00    1.00    4.00     0  ksoftirqd/0
+03:48:28        0        15    0.00    1.00    0.00    9.00    1.00     0  rcu_preempt
+03:48:28       33     10493   13.00   42.00    0.00    0.00   55.00     0  apache2
+03:48:28       33     10494   11.00   36.00    0.00    0.00   47.00     0  apache2
+03:48:28     1000     10717    0.00    1.00    0.00    0.00    1.00     1  pidstat
+03:48:28       33     10719   10.00   34.00    0.00    0.00   44.00     1  apache2
+03:48:28       33     10747    2.00   13.00    0.00    6.00   15.00     0  apache2
+03:48:28       33     10748    4.00    9.00    0.00    1.00   13.00     1  apache2
+
+03:48:27      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:48:28        0         1      5.00      0.00   27772   18440   0.93  systemd
+03:48:28        0     10490     12.00      0.00   12136    5948   0.30  apache2
+03:48:28       33     10493   8556.00      9.00 1221696   39100   1.96  apache2
+03:48:28       33     10494   9008.00      1.00 1221040   38544   1.93  apache2
+03:48:28       33     10719   8160.00      7.00 1221372   38820   1.95  apache2
+03:48:28       33     10747   1602.00      0.00 1221572   38940   1.95  apache2
+03:48:28       33     10748   4370.00      1.00 1221572   39132   1.96  apache2
+
+03:48:28      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:48:29        0        14    0.00   13.00    0.00    3.00   13.00     0  ksoftirqd/0
+03:48:29        0        39    0.00    1.00    0.00    0.00    1.00     0  khugepaged
+03:48:29        0      6462    0.00    3.00    0.00   10.00    3.00     0  kworker/u8:3-events_power_efficient
+03:48:29       33     10493    5.00   15.00    0.00    1.00   20.00     0  apache2
+03:48:29       33     10494    7.00   25.00    0.00    0.00   32.00     0  apache2
+03:48:29       33     10719   11.00   36.00    0.00    0.00   47.00     1  apache2
+03:48:29       33     10747    9.00   23.00    0.00    0.00   32.00     0  apache2
+03:48:29       33     10748    8.00   21.00    0.00    0.00   29.00     1  apache2
+
+03:48:28      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:48:29        0     10490      1.00      0.00   12136    5948   0.30  apache2
+03:48:29       33     10493   2085.00      4.00       0       0   0.00  apache2
+03:48:29       33     10494   5141.00      0.00 1221356   38440   1.93  apache2
+03:48:29       33     10719   5599.00      0.00 1223748   40384   2.03  apache2
+03:48:29       33     10747   5265.00      0.00 1221056   38452   1.93  apache2
+03:48:29       33     10748   5497.00      0.00 1221696   38884   1.95  apache2
+
+03:48:29      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:48:30        0         1    1.00    0.00    0.00    0.00    1.00     1  systemd
+03:48:30        0        14    0.00    2.00    0.00    1.00    2.00     0  ksoftirqd/0
+03:48:30       33     10494   10.00   32.00    0.00    0.00   42.00     0  apache2
+03:48:30       33     10719    8.00   31.00    0.00    0.00   39.00     1  apache2
+03:48:30       33     10747   15.00   37.00    0.00    0.00   52.00     0  apache2
+03:48:30       33     10748   10.00   30.00    0.00    0.00   40.00     1  apache2
+03:48:30       33     10803    1.00    4.00    0.00    2.00    5.00     1  apache2
+
+03:48:29      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:48:30        0         1     22.00      0.00   27772   18440   0.93  systemd
+03:48:30        0     10490     10.00      0.00   12136    5948   0.30  apache2
+03:48:30       33     10494   6427.00      3.00 1221252   38660   1.94  apache2
+03:48:30       33     10719   4168.00      0.00 1221440   38732   1.94  apache2
+03:48:30       33     10747  13950.00      4.00 1222208   39536   1.98  apache2
+03:48:30       33     10748   7383.00      2.00 1221572   38840   1.95  apache2
+03:48:30       33     10803   1726.00      5.00 1221312   38620   1.94  apache2
+
+03:48:30      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:48:31        0        14    0.00    2.00    0.00    1.00    2.00     0  ksoftirqd/0
+03:48:31        0        15    0.00    1.00    0.00    3.00    1.00     1  rcu_preempt
+03:48:31        0      4910    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+03:48:31       33     10494    9.00   23.00    0.00    0.00   32.00     0  apache2
+03:48:31       33     10719   12.00   30.00    0.00    0.00   42.00     1  apache2
+03:48:31       33     10747    9.00   31.00    0.00    0.00   40.00     0  apache2
+03:48:31       33     10748    8.00   26.00    0.00    0.00   34.00     1  apache2
+03:48:31       33     10803    7.00   19.00    0.00    0.00   26.00     1  apache2
+03:48:31       33     10831    2.00    6.00    0.00    1.00    8.00     1  apache2
+
+03:48:30      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:48:31        0         1      2.00      0.00   27772   18440   0.93  systemd
+03:48:31        0     10490      7.00      0.00   12136    5948   0.30  apache2
+03:48:31       33     10494   4917.00     26.00 1221312   38612   1.94  apache2
+03:48:31       33     10719   9090.00      0.00 1221696   38932   1.95  apache2
+03:48:31       33     10747   4049.00     31.00 1221384   38728   1.94  apache2
+03:48:31       33     10748   4051.00     25.00 1221268   38888   1.95  apache2
+03:48:31       33     10803   3797.00     27.00 1221584   38824   1.95  apache2
+03:48:31       33     10831   1099.00      0.00 1221124   38336   1.92  apache2
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0         1    0.20    0.00    0.00    0.00    0.20     -  systemd
+Average:        0        14    0.00    4.59    0.00    1.20    4.59     -  ksoftirqd/0
+Average:        0        15    0.00    0.40    0.00    5.39    0.40     -  rcu_preempt
+Average:        0        39    0.00    0.20    0.00    0.00    0.20     -  khugepaged
+Average:        0      4910    0.20    0.00    0.00    0.00    0.20     -  fail2ban-server
+Average:        0      6462    0.00    0.60    0.00    2.00    0.60     -  kworker/u8:3-events_power_efficient
+Average:       33     10494    9.78   28.94    0.00    0.00   38.72     -  apache2
+Average:     1000     10717    0.00    0.20    0.00    0.00    0.20     -  pidstat
+Average:       33     10719    9.18   28.94    0.00    0.00   38.12     -  apache2
+Average:       33     10747    6.99   20.76    0.00    1.20   27.74     -  apache2
+Average:       33     10748    5.99   17.17    0.00    0.20   23.15     -  apache2
+Average:       33     10803    1.60    4.59    0.00    0.40    6.19     -  apache2
+Average:       33     10831    0.40    1.20    0.00    0.20    1.60     -  apache2
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     40.72      0.00   27772   18440   0.93  systemd
+Average:        0     10490      7.19      0.00   12136    5948   0.30  apache2
+Average:       33     10494   6923.15      6.19 1221294   38590   1.94  apache2
+Average:     1000     10717      0.20      0.00    8404    4640   0.23  pidstat
+Average:       33     10719   6110.18      1.40 1221837   39043   1.96  apache2
+Average:       33     10747   4963.27      6.99 1221555   38914   1.95  apache2
+Average:       33     10748   4251.70      5.59 1221527   38936   1.95  apache2
+Average:       33     10803   1102.40      6.39 1221448   38722   1.94  apache2
+Average:       33     10831    219.36      0.00 1221124   38336   1.92  apache2
+--- server=nginx port=80 concurrency=200 run=1 ---
+Running 15s test @ http://192.168.252.17:80/
+  2 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.22ms   47.53ms 424.71ms   88.42%
+    Req/Sec    17.75k     3.53k   28.17k    72.00%
+  Latency Distribution
+     50%    4.28ms
+     75%    6.60ms
+     90%   89.19ms
+     99%  204.29ms
+  531945 requests in 15.07s, 1.02GB read
+Requests/sec:  35289.68
+Transfer/sec:     69.09MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:49:16      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:49:17        0        14    0.00    7.00    0.00    0.00    7.00     0  ksoftirqd/0
+03:49:17       33      6759    9.00   43.00    0.00    9.00   52.00     0  nginx
+03:49:17       33      6760   20.00   57.00    0.00    1.00   77.00     1  nginx
+
+03:49:16      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:49:17        0         1    159.00      0.00   27772   18440   0.93  systemd
+03:49:17        0       586      4.00      0.00   51456   13576   0.68  systemd-journal
+03:49:17     1000     11089      1.00      0.00    7512    2776   0.14  pidstat
+
+03:49:17      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:49:18        0        14    0.00    6.00    0.00    1.00    6.00     0  ksoftirqd/0
+03:49:18        0      4910    0.00    1.00    0.00    0.00    1.00     0  fail2ban-server
+03:49:18       33      6759   10.00   54.00    0.00    9.00   64.00     0  nginx
+03:49:18       33      6760   18.00   72.00    0.00    0.00   90.00     1  nginx
+03:49:18     1000     11089    0.00    2.00    0.00    1.00    2.00     0  pidstat
+
+03:49:17      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:49:18      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:49:19        0        14    0.00    5.00    0.00    2.00    5.00     0  ksoftirqd/0
+03:49:19       33      6759    9.00   59.00    0.00    8.00   68.00     0  nginx
+03:49:19       33      6760   22.00   63.00    0.00    0.00   85.00     1  nginx
+03:49:19     1000     11089    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+03:49:18      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:49:19      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:49:20        0        14    0.00    5.00    0.00    1.00    5.00     0  ksoftirqd/0
+03:49:20       33      6759   13.00   59.00    0.00    7.00   72.00     0  nginx
+03:49:20       33      6760   20.00   65.00    0.00    0.00   85.00     1  nginx
+
+03:49:19      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:49:20      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:49:21        0        14    0.00    5.00    0.00    1.00    5.00     0  ksoftirqd/0
+03:49:21       33      6759   13.00   59.00    0.00    7.00   72.00     0  nginx
+03:49:21       33      6760   19.00   65.00    0.00    1.00   84.00     1  nginx
+
+03:49:20      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    5.60    0.00    1.00    5.60     -  ksoftirqd/0
+Average:        0      4910    0.00    0.20    0.00    0.00    0.20     -  fail2ban-server
+Average:       33      6759   10.80   54.80    0.00    8.00   65.60     -  nginx
+Average:       33      6760   19.80   64.40    0.00    0.40   84.20     -  nginx
+Average:     1000     11089    0.00    0.60    0.00    0.20    0.60     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     31.80      0.00   27772   18440   0.93  systemd
+Average:        0       586      0.80      0.00   51456   13576   0.68  systemd-journal
+Average:     1000     11089      0.20      0.00    7512    2776   0.14  pidstat
+--- server=apache port=8080 concurrency=200 run=2 ---
+Running 15s test @ http://192.168.252.17:8080/
+  2 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.37ms   27.80ms 373.96ms   91.20%
+    Req/Sec     7.00k     1.14k   13.17k    70.67%
+  Latency Distribution
+     50%    8.86ms
+     75%   20.82ms
+     90%   42.05ms
+     99%  146.37ms
+  209474 requests in 15.06s, 414.32MB read
+  Socket errors: connect 0, read 89921, write 0, timeout 0
+Requests/sec:  13913.60
+Transfer/sec:     27.52MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:50:39      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:50:40        0        14    0.00    1.98    0.00    0.00    1.98     0  ksoftirqd/0
+03:50:40        0        15    0.00    0.99    0.00    5.94    0.99     0  rcu_preempt
+03:50:40       33     11230   12.87   40.59    0.00    0.00   53.47     0  apache2
+03:50:40       33     11231   13.86   43.56    0.00    0.00   57.43     0  apache2
+
+03:50:39      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:50:40        0         1    163.37      0.00   27772   18440   0.93  systemd
+03:50:40        0       586      3.96      0.00   51456   13576   0.68  systemd-journal
+03:50:40       33     11230   9487.13      1.98 1221496   39464   1.98  apache2
+03:50:40       33     11231  10441.58      0.99 1221736   39316   1.97  apache2
+03:50:40     1000     11456      0.99      0.00    8300    4536   0.23  pidstat
+
+03:50:40      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:50:41        0        14    0.00    3.00    0.00    0.00    3.00     0  ksoftirqd/0
+03:50:41       33     11230   21.00   66.00    0.00    0.00   87.00     0  apache2
+03:50:41       33     11231   19.00   65.00    0.00    0.00   84.00     0  apache2
+
+03:50:40      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:50:41       33     11230  12956.00      5.00 1221168   39144   1.96  apache2
+03:50:41       33     11231  14275.00     23.00 1221120   39260   1.97  apache2
+
+03:50:41      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:50:42        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+03:50:42        0        15    0.00    1.00    0.00    8.00    1.00     0  rcu_preempt
+03:50:42        0        68    0.00    1.00    0.00    1.00    1.00     0  kworker/u8:4-events_power_efficient
+03:50:42       33     11230   14.00   52.00    0.00    0.00   66.00     0  apache2
+03:50:42       33     11231   17.00   46.00    0.00    0.00   63.00     0  apache2
+03:50:42       33     11458    9.00   35.00    0.00    0.00   44.00     1  apache2
+
+03:50:41      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:50:42        0         1     15.00      0.00   27772   18440   0.93  systemd
+03:50:42        0     11227      7.00      0.00   11536    5936   0.30  apache2
+03:50:42       33     11230   7975.00      0.00 1221100   39040   1.96  apache2
+03:50:42       33     11231  13510.00     14.00 1220840   38740   1.94  apache2
+03:50:42       33     11458   9901.00      3.00 1220456   38408   1.93  apache2
+
+03:50:42      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:50:43        0        14    0.00    2.00    0.00    0.00    2.00     0  ksoftirqd/0
+03:50:43       33     11230   11.00   38.00    0.00    0.00   49.00     0  apache2
+03:50:43       33     11231   11.00   35.00    0.00    0.00   46.00     0  apache2
+03:50:43       33     11458   12.00   28.00    0.00    0.00   40.00     1  apache2
+03:50:43       33     11486    4.00   16.00    0.00    1.00   20.00     1  apache2
+03:50:43       33     11487    7.00   17.00    0.00    1.00   24.00     1  apache2
+
+03:50:42      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:50:43        0     11227     14.00      0.00   11536    5936   0.30  apache2
+03:50:43       33     11230   5189.00      8.00 1220200   38080   1.91  apache2
+03:50:43       33     11231   6898.00      1.00 1220648   38624   1.94  apache2
+03:50:43       33     11458   7997.00      0.00 1220452   38544   1.93  apache2
+03:50:43       33     11486   3981.00      0.00 1220976   38848   1.95  apache2
+03:50:43       33     11487   7473.00     12.00 1220016   37940   1.90  apache2
+
+03:50:43      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:50:44        0        14    0.00    3.00    0.00    1.00    3.00     0  ksoftirqd/0
+03:50:44        0        15    0.00    1.00    0.00    8.00    1.00     1  rcu_preempt
+03:50:44      989       635    1.00    0.00    0.00    0.00    1.00     1  systemd-resolve
+03:50:44       33     11230    8.00   25.00    0.00    0.00   33.00     0  apache2
+03:50:44       33     11231    6.00   22.00    0.00    0.00   28.00     0  apache2
+03:50:44       33     11458    7.00   22.00    0.00    0.00   29.00     1  apache2
+03:50:44       33     11486   10.00   26.00    0.00    0.00   36.00     1  apache2
+03:50:44       33     11487    7.00   23.00    0.00    0.00   30.00     1  apache2
+03:50:44       33     11542    5.00   14.00    0.00    1.00   19.00     1  apache2
+
+03:50:43      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:50:44        0     11227      8.00      0.00   11536    5936   0.30  apache2
+03:50:44       33     11230   5050.00      1.00 1220712   38788   1.95  apache2
+03:50:44       33     11231   3148.00      0.00 1220456   38584   1.94  apache2
+03:50:44       33     11458   3211.00      1.00 1220456   38496   1.93  apache2
+03:50:44       33     11486   7767.00      1.00 1220844   38608   1.94  apache2
+03:50:44       33     11487   5970.00      3.00 1220720   38712   1.94  apache2
+03:50:44       33     11542   3045.00      0.00 1220928   38908   1.95  apache2
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    2.40    0.00    0.20    2.40     -  ksoftirqd/0
+Average:        0        15    0.00    0.60    0.00    7.78    0.60     -  rcu_preempt
+Average:        0        68    0.00    0.20    0.00    0.20    0.20     -  kworker/u8:4-events_power_efficient
+Average:      989       635    0.20    0.00    0.00    0.00    0.20     -  systemd-resolve
+Average:       33     11230   13.37   44.31    0.00    0.00   57.68     -  apache2
+Average:       33     11231   13.37   42.32    0.00    0.00   55.69     -  apache2
+Average:       33     11458    5.59   16.97    0.00    0.00   22.55     -  apache2
+Average:       33     11486    2.79    8.38    0.00    0.20   11.18     -  apache2
+Average:       33     11487    2.79    7.98    0.00    0.20   10.78     -  apache2
+Average:       33     11542    1.00    2.79    0.00    0.20    3.79     -  apache2
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     35.93      0.00   27772   18440   0.93  systemd
+Average:        0       586      0.80      0.00   51456   13576   0.68  systemd-journal
+Average:        0     11227      5.79      0.00   11536    5936   0.30  apache2
+Average:       33     11230   8134.13      3.19 1220935   38903   1.95  apache2
+Average:       33     11231   9656.09      7.78 1220960   38905   1.95  apache2
+Average:     1000     11456      0.20      0.00    8300    4536   0.23  pidstat
+Average:       33     11458   4213.37      0.80 1220455   38483   1.93  apache2
+Average:       33     11486   2344.91      0.20 1220910   38728   1.94  apache2
+Average:       33     11487   2683.23      2.99 1220368   38326   1.92  apache2
+Average:       33     11542    607.78      0.00 1220928   38908   1.95  apache2
+--- server=nginx port=80 concurrency=200 run=2 ---
+Running 15s test @ http://192.168.252.17:80/
+  2 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.61ms   45.53ms 424.81ms   89.32%
+    Req/Sec    17.33k     3.36k   27.12k    71.33%
+  Latency Distribution
+     50%    4.35ms
+     75%    6.94ms
+     90%   75.51ms
+     99%  203.41ms
+  519366 requests in 15.07s, 0.99GB read
+Requests/sec:  34459.82
+Transfer/sec:     67.47MB
+Linux 7.0.0-43-generic (web) 	11/24/26 	_aarch64_	(2 CPU)
+
+03:51:29      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:51:30        0        14    0.00    3.96    0.00    0.99    3.96     0  ksoftirqd/0
+03:51:30       33      6759    8.91   58.42    0.00    6.93   67.33     0  nginx
+03:51:30       33      6760   15.84   59.41    0.00    0.99   75.25     1  nginx
+03:51:30     1000     11771    0.00    0.99    0.00    0.00    0.99     0  pidstat
+
+03:51:29      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+03:51:30        0         1    108.91      0.00   27772   18440   0.93  systemd
+03:51:30        0       586      4.95      0.00   51456   13576   0.68  systemd-journal
+03:51:30     1000     11771      0.99      0.00    8584    4820   0.24  pidstat
+
+03:51:30      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:51:31        0        14    0.00    5.00    0.00    2.00    5.00     0  ksoftirqd/0
+03:51:31        0       616    0.00    1.00    0.00    0.00    1.00     0  multipathd
+03:51:31        0      4910    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+03:51:31       33      6759   10.00   63.00    0.00    7.00   73.00     0  nginx
+03:51:31       33      6760   17.00   70.00    0.00    0.00   87.00     1  nginx
+03:51:31     1000     11771    0.00    1.00    0.00    1.00    1.00     0  pidstat
+
+03:51:30      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:51:31      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:51:32        0        14    0.00    5.00    0.00    1.00    5.00     0  ksoftirqd/0
+03:51:32       33      6759   10.00   67.00    0.00    7.00   77.00     0  nginx
+03:51:32       33      6760   19.00   67.00    0.00    0.00   86.00     1  nginx
+03:51:32     1000     11771    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+03:51:31      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:51:32      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:51:33        0        14    0.00    5.00    0.00    3.00    5.00     0  ksoftirqd/0
+03:51:33       33      6759   10.00   60.00    0.00    8.00   70.00     0  nginx
+03:51:33       33      6760   20.00   65.00    0.00    0.00   85.00     1  nginx
+03:51:33        0     11013    0.00    1.00    0.00    0.00    1.00     0  kworker/0:3-events
+03:51:33     1000     11771    1.00    0.00    0.00    0.00    1.00     1  pidstat
+
+03:51:32      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+03:51:33      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+03:51:34        0        14    0.00    6.00    0.00    1.00    6.00     0  ksoftirqd/0
+03:51:34       33      6759   11.00   65.00    0.00    7.00   76.00     0  nginx
+03:51:34       33      6760   20.00   65.00    0.00    1.00   85.00     1  nginx
+
+03:51:33      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    4.99    0.00    1.60    4.99     -  ksoftirqd/0
+Average:        0       616    0.00    0.20    0.00    0.00    0.20     -  multipathd
+Average:        0      4910    0.20    0.00    0.00    0.00    0.20     -  fail2ban-server
+Average:       33      6759    9.98   62.67    0.00    7.19   72.65     -  nginx
+Average:       33      6760   18.36   65.27    0.00    0.40   83.63     -  nginx
+Average:        0     11013    0.00    0.20    0.00    0.20    0.20     -  kworker/0:3-events
+Average:     1000     11771    0.20    0.60    0.00    0.40    0.80     -  pidstat
+
+Average:      UID       PID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+Average:        0         1     21.96      0.00   27772   18440   0.93  systemd
+Average:        0       586      1.00      0.00   51456   13576   0.68  systemd-journal
+Average:     1000     11771      0.20      0.00    8584    4820   0.24  pidstat
+--- apache2 error log (last 80 lines, for the worker-capacity claim in Section 4.1) ---
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- sudo tail -n 80 /var/log/apache2/error.log
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- sudo tail -n 80 /var/log/apache2/error.log
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- sudo tail -n 80 /var/log/apache2/error.log
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:35:00.826389 2026] [mpm_event:notice] [pid 6903:tid 6903] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:35:00.826430 2026] [core:notice] [pid 6903:tid 6903] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+[Tue Nov 24 03:35:39.497841 2026] [mpm_event:notice] [pid 6903:tid 6903] AH00492: caught SIGWINCH, shutting down gracefully
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:36:27.001116 2026] [mpm_event:notice] [pid 7411:tid 7411] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:36:27.001162 2026] [core:notice] [pid 7411:tid 7411] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+[Tue Nov 24 03:37:46.072343 2026] [mpm_event:notice] [pid 7411:tid 7411] AH00492: caught SIGWINCH, shutting down gracefully
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:38:33.433391 2026] [mpm_event:notice] [pid 7948:tid 7948] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:38:33.433435 2026] [core:notice] [pid 7948:tid 7948] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+[Tue Nov 24 03:39:52.405293 2026] [mpm_event:notice] [pid 7948:tid 7948] AH00492: caught SIGWINCH, shutting down gracefully
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:40:39.454049 2026] [mpm_event:notice] [pid 8503:tid 8503] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:40:39.454610 2026] [core:notice] [pid 8503:tid 8503] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+[Tue Nov 24 03:42:01.124714 2026] [mpm_event:notice] [pid 8503:tid 8503] AH00492: caught SIGWINCH, shutting down gracefully
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:42:50.931620 2026] [mpm_event:notice] [pid 9080:tid 9080] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:42:50.931665 2026] [core:notice] [pid 9080:tid 9080] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+[Tue Nov 24 03:44:15.210204 2026] [mpm_event:notice] [pid 9080:tid 9080] AH00492: caught SIGWINCH, shutting down gracefully
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:45:05.040649 2026] [mpm_event:notice] [pid 9757:tid 9757] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:45:05.041306 2026] [core:notice] [pid 9757:tid 9757] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+[Tue Nov 24 03:46:28.838682 2026] [mpm_event:notice] [pid 9757:tid 9757] AH00492: caught SIGWINCH, shutting down gracefully
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:47:18.795858 2026] [mpm_event:notice] [pid 10490:tid 10490] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:47:18.795952 2026] [core:notice] [pid 10490:tid 10490] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+[Tue Nov 24 03:48:32.847842 2026] [mpm_event:error] [pid 10490:tid 10490] AH00484: server reached MaxRequestWorkers setting, consider raising the MaxRequestWorkers setting
+[Tue Nov 24 03:48:35.851198 2026] [mpm_event:error] [pid 10490:tid 10490] AH10159: server is within MinSpareThreads of MaxRequestWorkers, consider raising the MaxRequestWorkers setting
+[Tue Nov 24 03:48:43.026904 2026] [mpm_event:notice] [pid 10490:tid 10490] AH00492: caught SIGWINCH, shutting down gracefully
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:49:32.689912 2026] [mpm_event:notice] [pid 11227:tid 11227] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:49:32.689979 2026] [core:notice] [pid 11227:tid 11227] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+[Tue Nov 24 03:50:46.024810 2026] [mpm_event:error] [pid 11227:tid 11227] AH00484: server reached MaxRequestWorkers setting, consider raising the MaxRequestWorkers setting
+[Tue Nov 24 03:50:48.026525 2026] [mpm_event:error] [pid 11227:tid 11227] AH10159: server is within MinSpareThreads of MaxRequestWorkers, consider raising the MaxRequestWorkers setting
+[Tue Nov 24 03:50:56.549252 2026] [mpm_event:notice] [pid 11227:tid 11227] AH00492: caught SIGWINCH, shutting down gracefully
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 192.168.252.17. Set the 'ServerName' directive globally to suppress this message
+[Tue Nov 24 03:51:46.278453 2026] [mpm_event:notice] [pid 11909:tid 11909] AH00489: Apache/2.4.66 (Ubuntu) configured -- resuming normal operations
+[Tue Nov 24 03:51:46.278512 2026] [core:notice] [pid 11909:tid 11909] AH00094: Command line: '/usr/sbin/apache2 -D FOREGROUND'
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c apache2ctl -V 2>&1 | grep -i mpm
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c apache2ctl -V 2>&1 | grep -i mpm
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c apache2ctl -V 2>&1 | grep -i mpm
+Server MPM:     event
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 1 failed, retrying in 10s: multipass exec web -- bash -c grep -rn 'MaxRequestWorkers\|ServerLimit\|MaxClients' /etc/apache2/ 2>/dev/null || echo '(no explicit override - package default MPM limits apply)'
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 2 failed, retrying in 10s: multipass exec web -- bash -c grep -rn 'MaxRequestWorkers\|ServerLimit\|MaxClients' /etc/apache2/ 2>/dev/null || echo '(no explicit override - package default MPM limits apply)'
+exec failed: ssh connection failed: 'Connection refused'
+mp_retry: attempt 3 failed, retrying in 10s: multipass exec web -- bash -c grep -rn 'MaxRequestWorkers\|ServerLimit\|MaxClients' /etc/apache2/ 2>/dev/null || echo '(no explicit override - package default MPM limits apply)'
+/etc/apache2/mods-available/mpm_worker.conf:9:# MaxRequestWorkers: maximum number of threads
+/etc/apache2/mods-available/mpm_worker.conf:17:MaxRequestWorkers       150
+/etc/apache2/mods-available/mpm_event.conf:6:# MaxRequestWorkers: maximum number of worker threads
+/etc/apache2/mods-available/mpm_event.conf:13:MaxRequestWorkers       150
+/etc/apache2/mods-available/mpm_prefork.conf:5:# MaxRequestWorkers: maximum number of server processes allowed to start
+/etc/apache2/mods-available/mpm_prefork.conf:11:MaxRequestWorkers       150

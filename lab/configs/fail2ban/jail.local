@@ -14,14 +14,25 @@ enabled = true
 port = ssh
 logpath = %(sshd_log)s
 
+; nginx writes per-request error lines (auth failures, limit_req rejections)
+; directly to logpath below as a plain file - never through journald (only
+; nginx's own master-process lifecycle notices reach the journal, confirmed
+; by direct testing; see docs/decisions.md). [DEFAULT]'s backend=systemd is
+; correct for sshd (which does log via journald) but means Fail2Ban reads
+; no file at all for these two jails (`fail2ban-client get <jail> logpath`
+; literally reports "No file is currently monitored"), so they can never
+; register a failure no matter how the regex is written. Overridden to the
+; file-based backend here, which actually tails logpath.
 [nginx-http-auth]
 enabled = true
 port = http,https
+backend = auto
 logpath = /var/log/nginx/error.log
 
 [nginx-limit-req]
 enabled = true
 port = http,https
+backend = auto
 logpath = /var/log/nginx/error.log
 maxretry = 10
 findtime = 2m

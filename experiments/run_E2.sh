@@ -11,10 +11,26 @@ mkdir -p evidence/raw
 OUT="evidence/raw/E2_$(date +%Y%m%dT%H%M%S).txt"
 raw_header "E2" > "$OUT"
 
+# Same issue as E1 (see docs/decisions.md): port 80 normally 301-redirects
+# to HTTPS, so "mode=http" against the real hardened config would only
+# ever measure the redirect's own tiny response, not the real page -
+# which would also make the HTTP-vs-HTTPS "transport cost" comparison
+# below meaningless (comparing a redirect's cost against the real page's
+# TLS cost, not TLS's actual cost on the same content). Swap in the real
+# site on port 80 for this one mode, then swap back immediately.
+echo "--- temporarily serving the real site over plain HTTP for mode=http ---" >> "$OUT"
+mp_retry multipass transfer lab/configs/nginx/meridian-plainhttp.conf.template web:/tmp/meridian-plainhttp.conf
+mp_retry multipass exec web -- sudo bash -c 'cp /etc/nginx/sites-available/meridian.conf /tmp/meridian.conf.e2-backup && mv /tmp/meridian-plainhttp.conf /etc/nginx/sites-available/meridian.conf && nginx -t && systemctl reload nginx'
+
 for run in $(seq 1 "$REPEATS"); do
   echo "--- run=$run mode=http ---" >> "$OUT"
   mp_retry multipass exec attacker -- bash -c "wrk -t2 -c50 -d15s --latency http://${WEB_IP}/" >> "$OUT" 2>&1
+done
 
+echo "--- restoring the real hardened config (301 redirect) ---" >> "$OUT"
+mp_retry multipass exec web -- sudo bash -c 'mv /tmp/meridian.conf.e2-backup /etc/nginx/sites-available/meridian.conf && nginx -t && systemctl reload nginx'
+
+for run in $(seq 1 "$REPEATS"); do
   echo "--- run=$run mode=https ---" >> "$OUT"
   mp_retry multipass exec attacker -- bash -c "wrk -t2 -c50 -d15s --latency https://${WEB_IP}/" >> "$OUT" 2>&1
 

@@ -1,0 +1,241 @@
+=== E6 raw output ===
+date_utc=2026-11-23T07:44:07Z
+repeats=5 quick=0
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- WITH limit_req (current hardened config) ---
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.86ms    3.67ms  84.79ms   81.59%
+    Req/Sec     8.59k     1.18k   21.75k    79.82%
+  681799 requests in 20.09s, 386.86MB read
+  Non-2xx or 3xx responses: 681688
+Requests/sec:  33930.72
+Transfer/sec:     19.25MB
+Linux 7.0.0-43-generic (web) 	11/23/26 	_aarch64_	(2 CPU)
+
+16:00:15      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:16        0        14    0.00    0.99    0.00    0.00    0.99     0  ksoftirqd/0
+16:00:16       33     45075    0.99    0.00    0.00    0.99    0.99     1  gunicorn
+16:00:16        0     67769   16.83    4.95    0.00    0.00   21.78     1  fail2ban-server
+16:00:16       33     72798   14.85   24.75    0.00    6.93   39.60     0  nginx
+16:00:16       33     72800   12.87   15.84    0.00   15.84   28.71     1  nginx
+
+16:00:16      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:17       33      3156    1.00    1.00    0.00    1.00    2.00     1  gunicorn
+16:00:17        0     67769   42.00   18.00    0.00    0.00   60.00     1  fail2ban-server
+16:00:17       33     72798   19.00   47.00    0.00   26.00   66.00     0  nginx
+16:00:17       33     72800   18.00   36.00    0.00   36.00   54.00     1  nginx
+
+16:00:17      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:18        0     67769   48.00   12.00    0.00    1.00   60.00     1  fail2ban-server
+16:00:18       33     72798   25.00   51.00    0.00   16.00   76.00     0  nginx
+16:00:18       33     72800   17.00   29.00    0.00   45.00   46.00     1  nginx
+
+16:00:18      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:19       33      3156    0.00    1.00    0.00    0.00    1.00     1  gunicorn
+16:00:19       33     45075    1.00    1.00    0.00    1.00    2.00     0  gunicorn
+16:00:19        0     67769   45.00   14.00    0.00    0.00   59.00     1  fail2ban-server
+16:00:19       33     72798   18.00   47.00    0.00   26.00   65.00     0  nginx
+16:00:19       33     72800   18.00   39.00    0.00   34.00   57.00     1  nginx
+16:00:19     1000     73194    0.00    1.00    0.00    0.00    1.00     1  pidstat
+
+16:00:19      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:20        0     67769   41.00   20.00    0.00    0.00   61.00     1  fail2ban-server
+16:00:20       33     72798   15.00   42.00    0.00   34.00   57.00     0  nginx
+16:00:20       33     72800   20.00   44.00    0.00   27.00   64.00     1  nginx
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    0.20    0.00    0.00    0.20     -  ksoftirqd/0
+Average:       33      3156    0.20    0.40    0.00    0.60    0.60     -  gunicorn
+Average:       33     45075    0.40    0.20    0.00    0.40    0.60     -  gunicorn
+Average:        0     67769   38.52   13.77    0.00    0.20   52.30     -  fail2ban-server
+Average:       33     72798   18.36   42.32    0.00   21.76   60.68     -  nginx
+Average:       33     72800   17.17   32.73    0.00   31.54   49.90     -  nginx
+Average:     1000     73194    0.00    0.20    0.00    0.00    0.20     -  pidstat
+--- status code mix (sampled requests, limit_req active) ---
+429
+200
+429
+429
+429
+429
+429
+429
+200
+200
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+429
+200
+429
+429
+429
+--- temporarily disabling limit_req and limit_conn for comparison ---
+--- WITHOUT limit_req ---
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   321.54ms  121.02ms 877.61ms   83.44%
+    Req/Sec   155.67     84.58   420.00     65.29%
+  7775 requests in 20.29s, 3.60MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+  Non-2xx or 3xx responses: 2
+Requests/sec:    383.22
+Transfer/sec:    181.88KB
+Linux 7.0.0-43-generic (web) 	11/23/26 	_aarch64_	(2 CPU)
+
+16:00:53      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:54       33      3156   14.85    8.91    0.00    4.95   23.76     0  gunicorn
+16:00:54       33     45075   15.84    8.91    0.00    4.95   24.75     0  gunicorn
+16:00:54       33     73387    2.97    4.95    0.00    3.96    7.92     0  nginx
+16:00:54       33     73388    4.95    5.94    0.00    4.95   10.89     1  nginx
+
+16:00:54      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:55        0        15    0.00    1.00    0.00    1.00    1.00     0  rcu_preempt
+16:00:55       33      3156   20.00    8.00    0.00    4.00   28.00     0  gunicorn
+16:00:55       33     45075   17.00   10.00    0.00    4.00   27.00     0  gunicorn
+16:00:55        0     67769    1.00    0.00    0.00    0.00    1.00     1  fail2ban-server
+16:00:55       33     73387    1.00    3.00    0.00    4.00    4.00     0  nginx
+16:00:55       33     73388    3.00    5.00    0.00    6.00    8.00     1  nginx
+
+16:00:55      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:56       33      3156   19.00   10.00    0.00    5.00   29.00     1  gunicorn
+16:00:56       33     45075   17.00   10.00    0.00    5.00   27.00     1  gunicorn
+16:00:56       33     73387    1.00    4.00    0.00    4.00    5.00     0  nginx
+16:00:56       33     73388    3.00    5.00    0.00    6.00    8.00     1  nginx
+16:00:56     1000     73441    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+16:00:56      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:57        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+16:00:57        0        15    0.00    1.00    0.00    2.00    1.00     0  rcu_preempt
+16:00:57       33      3156   10.00    3.00    0.00    1.00   13.00     1  gunicorn
+16:00:57       33     45075   16.00    7.00    0.00    2.00   23.00     0  gunicorn
+16:00:57        0     67769    0.00    1.00    0.00    0.00    1.00     1  fail2ban-server
+16:00:57       33     73387    1.00    2.00    0.00    2.00    3.00     0  nginx
+16:00:57       33     73388    1.00    2.00    0.00   14.00    3.00     1  nginx
+
+16:00:57      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:00:58       33      3156   14.00    9.00    0.00    3.00   23.00     1  gunicorn
+16:00:58       33     45075   14.00    7.00    0.00    3.00   21.00     0  gunicorn
+16:00:58       33     73387    1.00    3.00    0.00    3.00    4.00     0  nginx
+16:00:58       33     73388    2.00    5.00    0.00    4.00    7.00     1  nginx
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0        14    0.00    0.20    0.00    0.00    0.20     -  ksoftirqd/0
+Average:        0        15    0.00    0.40    0.00    2.20    0.40     -  rcu_preempt
+Average:       33      3156   15.57    7.78    0.00    3.59   23.35     -  gunicorn
+Average:       33     45075   15.97    8.58    0.00    3.79   24.55     -  gunicorn
+Average:        0     67769    0.20    0.20    0.00    0.00    0.40     -  fail2ban-server
+Average:       33     73387    1.40    3.39    0.00    3.39    4.79     -  nginx
+Average:       33     73388    2.79    4.59    0.00    6.99    7.39     -  nginx
+Average:     1000     73441    0.00    0.20    0.00    0.00    0.20     -  pidstat
+--- status code mix (sampled requests, limit_req disabled) ---
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+--- restoring limit_req and limit_conn ---

@@ -1,0 +1,220 @@
+=== E6 raw output ===
+date_utc=2026-11-23T07:19:57Z
+repeats=5 quick=0
+web_cpus=2
+web_mem=1.9Gi
+attacker_wrk debian/4.1.0-4build3 [epoll] Copyright (C) 2012 Will Glozer
+web_nginx version: nginx/1.28.3 (Ubuntu)
+web_Server version: Apache/2.4.66 (Ubuntu)
+--- WITH limit_req (current hardened config) ---
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us     nan%
+    Req/Sec     0.00      0.00     0.00       nan%
+  0 requests in 20.19s, 0.00B read
+Requests/sec:      0.00
+Transfer/sec:       0.00B
+Linux 7.0.0-43-generic (web) 	11/23/26 	_aarch64_	(2 CPU)
+
+15:47:54      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:47:55       33     70272    4.00    2.00    0.00    0.00    6.00     0  nginx
+15:47:55       33     70273    4.00    2.00    0.00    0.00    6.00     1  nginx
+15:47:55     1000     70787    0.00    1.00    0.00    0.00    1.00     0  pidstat
+
+15:47:55      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+
+15:47:56      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:47:57     1000     70787    0.97    0.97    0.00    0.00    1.94     0  pidstat
+
+15:47:57      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+
+15:47:58      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:48:00        0     67769    0.88    0.00    0.00    0.00    0.88     1  fail2ban-server
+15:48:00     1000     70787    0.00    0.88    0.00    0.00    0.88     1  pidstat
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0     67769    0.19    0.00    0.00    0.00    0.19     -  fail2ban-server
+Average:       33     70272    0.75    0.37    0.00    0.00    1.12     -  nginx
+Average:       33     70273    0.75    0.37    0.00    0.00    1.12     -  nginx
+Average:     1000     70787    0.19    0.56    0.00    0.00    0.75     -  pidstat
+--- status code mix (sampled requests, limit_req active) ---
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+504
+--- temporarily disabling limit_req and limit_conn for comparison ---
+--- WITHOUT limit_req ---
+Running 20s test @ https://192.168.252.12/api/health
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   341.78ms  329.59ms   2.00s    91.96%
+    Req/Sec   194.22     41.23   282.00     81.25%
+  6883 requests in 20.26s, 3.19MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+  Non-2xx or 3xx responses: 2
+Requests/sec:    339.69
+Transfer/sec:    161.22KB
+Linux 7.0.0-43-generic (web) 	11/23/26 	_aarch64_	(2 CPU)
+
+15:49:28      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:49:29       33      3156    1.72    0.86    0.00    0.00    2.59     1  gunicorn
+15:49:29       33     71049    0.86    0.86    0.00    0.00    1.72     0  nginx
+15:49:29       33     71050    3.45    1.72    0.00    0.00    5.17     1  nginx
+15:49:29     1000     71103    0.00    0.86    0.00    0.00    0.86     1  pidstat
+
+15:49:29      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:49:30      984      1023    0.00    0.95    0.00    0.00    0.95     0  polkitd
+15:49:30     1000     71103    0.95    0.95    0.00    0.00    1.90     1  pidstat
+
+15:49:30      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:49:31        0         1    1.00    0.00    0.00    1.00    1.00     1  systemd
+15:49:31        0        14    0.00    1.00    0.00    0.00    1.00     0  ksoftirqd/0
+15:49:31        0       587    0.00    1.00    0.00    0.00    1.00     1  systemd-journal
+15:49:31       33      3156   19.00    8.00    0.00    7.00   27.00     1  gunicorn
+15:49:31       33     45075   18.00   10.00    0.00    6.00   28.00     1  gunicorn
+15:49:31       33     71049    1.00    2.00    0.00    2.00    3.00     0  nginx
+15:49:31       33     71050    3.00    5.00    0.00    6.00    8.00     1  nginx
+
+15:49:31      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:49:32        0        15    0.00    1.00    0.00    1.00    1.00     0  rcu_preempt
+15:49:32       33      3156   19.00   12.00    0.00    4.00   31.00     0  gunicorn
+15:49:32       33     45075   18.00   12.00    0.00    5.00   30.00     1  gunicorn
+15:49:32       33     71049    1.00    2.00    0.00    2.00    3.00     0  nginx
+15:49:32       33     71050    4.00    6.00    0.00    7.00   10.00     1  nginx
+
+15:49:32      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+15:49:33       33      3156   20.00    8.00    0.00    4.00   28.00     1  gunicorn
+15:49:33       33     45075   19.00   10.00    0.00    4.00   29.00     1  gunicorn
+15:49:33       33     71049    1.00    2.00    0.00    4.00    3.00     0  nginx
+15:49:33       33     71050    4.00    5.00    0.00    6.00    9.00     1  nginx
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:        0         1    0.19    0.00    0.00    0.19    0.19     -  systemd
+Average:        0        14    0.00    0.19    0.00    0.00    0.19     -  ksoftirqd/0
+Average:        0        15    0.00    0.19    0.00    1.15    0.19     -  rcu_preempt
+Average:        0       587    0.00    0.19    0.00    0.00    0.19     -  systemd-journal
+Average:      984      1023    0.00    0.19    0.00    0.00    0.19     -  polkitd
+Average:       33      3156   11.52    5.57    0.00    2.88   17.08     -  gunicorn
+Average:       33     45075   10.56    6.14    0.00    2.88   16.70     -  gunicorn
+Average:       33     71049    0.77    1.34    0.00    1.54    2.11     -  nginx
+Average:       33     71050    2.88    3.45    0.00    3.65    6.33     -  nginx
+Average:     1000     71103    0.19    0.38    0.00    0.00    0.58     -  pidstat
+--- status code mix (sampled requests, limit_req disabled) ---
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+--- restoring limit_req and limit_conn ---
